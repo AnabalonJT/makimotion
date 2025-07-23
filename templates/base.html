@@ -10,7 +10,7 @@
 <body>
     <header class="header">
         <div class="container">
-            <h1 class="logo">MakiMotion</h1>
+            <a href="{% url 'dashboard' %}" class="logo">MakiMotion</a>
             {% if user.is_authenticated %}
                 <nav class="nav">
                     <span class="user-info">Hola, {{ user.username }}</span>

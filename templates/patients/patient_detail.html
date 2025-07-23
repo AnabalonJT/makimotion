@@ -18,7 +18,7 @@
             <a href="{% url 'dashboard' %}" class="btn btn-secondary">Volver al Dashboard</a>
         </div>
     </div>
-    
+
     <div class="patient-content">
         <div class="patient-details-section">
             <div class="card">
@@ -36,10 +36,10 @@
                     <span>{{ patient.diagnosis }}</span>
                 </div>
                 {% if patient.general_notes %}
-                    <div class="detail-item">
-                        <strong>Notas Generales:</strong>
-                        <span>{{ patient.general_notes|linebreaks }}</span>
-                    </div>
+                <div class="detail-item">
+                    <strong>Notas Generales:</strong>
+                    <span>{{ patient.general_notes|linebreaks }}</span>
+                </div>
                 {% endif %}
                 <div class="detail-item">
                     <strong>Última Actualización:</strong>
@@ -47,56 +47,56 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="appointments-section">
             <div class="appointments-header">
                 <h3>Historial de Citas</h3>
                 <a href="#" class="btn btn-primary">Nueva Cita</a>
             </div>
-            
+
             {% if appointments %}
-                <div class="appointments-list">
-                    {% for appointment in appointments %}
-                        <div class="appointment-card">
-                            <div class="appointment-header">
-                                <div class="appointment-date">
-                                    <strong>{{ appointment.date_time|date:"d/m/Y" }}</strong>
-                                    <span class="appointment-time">{{ appointment.date_time|date:"H:i" }}</span>
-                                </div>
-                                <div class="appointment-evaluation">
-                                    <span class="evaluation-badge evaluation-{{ appointment.evaluation }}">
-                                        {{ appointment.get_evaluation_display }}
-                                    </span>
-                                </div>
-                            </div>
-                            
-                            <div class="appointment-content">
-                                <div class="appointment-description">
-                                    <strong>Sesión:</strong>
-                                    <p>{{ appointment.session_description }}</p>
-                                </div>
-                                
-                                {% if appointment.additional_notes %}
-                                    <div class="appointment-notes">
-                                        <strong>Notas Adicionales:</strong>
-                                        <p>{{ appointment.additional_notes|linebreaks }}</p>
-                                    </div>
-                                {% endif %}
-                            </div>
-                            
-                            <div class="appointment-actions">
-                                <a href="#" class="btn btn-sm btn-primary">Editar</a>
-                                <a href="#" class="btn btn-sm btn-danger">Eliminar</a>
-                                <small class="text-muted">Creado: {{ appointment.created_at|date:"d/m/Y H:i" }}</small>
-                            </div>
+            <div class="appointments-list">
+                {% for appointment in appointments %}
+                <div class="appointment-card">
+                    <div class="appointment-header">
+                        <div class="appointment-date">
+                            <strong>{{ appointment.date_time|date:"d/m/Y" }}</strong>
+                            <span class="appointment-time">{{ appointment.date_time|date:"H:i" }}</span>
                         </div>
-                    {% endfor %}
+                        <div class="appointment-evaluation">
+                            <span class="evaluation-badge evaluation-{{ appointment.evaluation }}">
+                                {{ appointment.get_evaluation_display }}
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="appointment-content">
+                        <div class="appointment-description">
+                            <strong>Sesión:</strong>
+                            <p>{{ appointment.session_description }}</p>
+                        </div>
+
+                        {% if appointment.additional_notes %}
+                        <div class="appointment-notes">
+                            <strong>Notas Adicionales:</strong>
+                            <p>{{ appointment.additional_notes|linebreaks }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="appointment-actions">
+                        <a href="#" class="btn btn-sm btn-primary" title="Funcionalidad próximamente">Editar Cita</a>
+                        <a href="#" class="btn btn-sm btn-danger" title="Funcionalidad próximamente">Eliminar Cita</a>
+                        <small class="text-muted">Creado: {{ appointment.created_at|date:"d/m/Y H:i" }}</small>
+                    </div>
                 </div>
+                {% endfor %}
+            </div>
             {% else %}
-                <div class="empty-appointments">
-                    <p>Este paciente no tiene citas registradas aún.</p>
-                    <a href="#" class="btn btn-primary">Programar Primera Cita</a>
-                </div>
+            <div class="empty-appointments">
+                <p>Este paciente no tiene citas registradas aún.</p>
+                <a href="#" class="btn btn-primary">Programar Primera Cita</a>
+            </div>
             {% endif %}
         </div>
     </div>

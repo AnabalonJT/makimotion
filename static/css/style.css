@@ -532,6 +532,223 @@ textarea.form-control {
     font-style: italic;
 }
 
+/* Patient Detail Styles */
+.patient-detail-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.patient-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background-color: var(--accent);
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.patient-info h2 {
+    color: var(--contrast);
+    margin-bottom: 0.5rem;
+}
+
+.patient-meta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.patient-age {
+    background-color: var(--secondary);
+    color: var(--text-dark);
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.875rem;
+}
+
+.patient-created {
+    color: var(--text-light);
+    font-size: 0.875rem;
+}
+
+.patient-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.patient-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.patient-details-section .card {
+    margin-bottom: 0;
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.detail-item:last-child {
+    border-bottom: none;
+}
+
+.detail-item strong {
+    color: var(--text-dark);
+    min-width: 150px;
+    flex-shrink: 0;
+}
+
+.detail-item span {
+    color: var(--text-light);
+    text-align: right;
+    flex: 1;
+}
+
+.appointments-section {
+    display: flex;
+    flex-direction: column;
+}
+
+.appointments-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.appointments-header h3 {
+    color: var(--contrast);
+    margin: 0;
+}
+
+.appointments-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.appointment-card {
+    background-color: var(--accent);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-left: 4px solid var(--primary);
+}
+
+.appointment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.appointment-date {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.appointment-date strong {
+    color: var(--contrast);
+    font-size: 1.1rem;
+}
+
+.appointment-time {
+    color: var(--text-light);
+    font-size: 0.875rem;
+}
+
+.appointment-content {
+    margin-bottom: 1rem;
+}
+
+.appointment-description,
+.appointment-notes {
+    margin-bottom: 1rem;
+}
+
+.appointment-description strong,
+.appointment-notes strong {
+    color: var(--text-dark);
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.appointment-description p,
+.appointment-notes p {
+    color: var(--text-light);
+    margin: 0;
+    line-height: 1.5;
+}
+
+.appointment-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+}
+
+.appointment-actions .btn {
+    margin-right: 0.5rem;
+}
+
+.empty-appointments {
+    text-align: center;
+    padding: 3rem 1rem;
+    background-color: var(--accent);
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.empty-appointments p {
+    color: var(--text-light);
+    margin-bottom: 1rem;
+}
+
+.btn-danger {
+    background-color: var(--error);
+    color: var(--accent);
+}
+
+.btn-danger:hover {
+    background-color: #ef4444;
+    transform: translateY(-2px);
+}
+
+/* Delete Confirmation Styles */
+.patient-summary {
+    background-color: var(--neutral);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+    border: 1px solid var(--border);
+}
+
+.patient-summary h3 {
+    color: var(--contrast);
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.delete-form {
+    margin-top: 2rem;
+}
+
+.delete-form .form-actions {
+    justify-content: center;
+    gap: 1.5rem;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .header .container {
@@ -546,5 +763,41 @@ textarea.form-control {
     
     .dashboard-content {
         grid-template-columns: 1fr;
+    }
+    
+    .patient-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+    
+    .patient-actions {
+        justify-content: center;
+    }
+    
+    .patient-content {
+        grid-template-columns: 1fr;
+    }
+    
+    .detail-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.25rem;
+    }
+    
+    .detail-item span {
+        text-align: left;
+    }
+    
+    .appointment-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .appointment-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: flex-start;
     }
 }
