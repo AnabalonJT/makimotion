@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ patient.full_name }} - MakiMotion{% endblock %}
+
+{% block content %}
+<div class="patient-detail-container">
+    <div class="patient-header">
+        <div class="patient-info">
+            <h2>{{ patient.full_name }}</h2>
+            <div class="patient-meta">
+                <span class="patient-age">{{ patient.age }} años</span>
+                <span class="patient-created">Registrado: {{ patient.created_at|date:"d/m/Y" }}</span>
+            </div>
+        </div>
+        <div class="patient-actions">
+            <a href="{% url 'patient_update' patient.pk %}" class="btn btn-primary">Editar Paciente</a>
+            <a href="{% url 'patient_delete' patient.pk %}" class="btn btn-danger">Eliminar</a>
+            <a href="{% url 'dashboard' %}" class="btn btn-secondary">Volver al Dashboard</a>
+        </div>
+    </div>
+    
+    <div class="patient-content">
+        <div class="patient-details-section">
+            <div class="card">
+                <h3>Información del Paciente</h3>
+                <div class="detail-item">
+                    <strong>Nombre Completo:</strong>
+                    <span>{{ patient.full_name }}</span>
+                </div>
+                <div class="detail-item">
+                    <strong>Edad:</strong>
+                    <span>{{ patient.age }} años</span>
+                </div>
+                <div class="detail-item">
+                    <strong>Diagnóstico:</strong>
+                    <span>{{ patient.diagnosis }}</span>
+                </div>
+                {% if patient.general_notes %}
+                    <div class="detail-item">
+                        <strong>Notas Generales:</strong>
+                        <span>{{ patient.general_notes|linebreaks }}</span>
+                    </div>
+                {% endif %}
+                <div class="detail-item">
+                    <strong>Última Actualización:</strong>
+                    <span>{{ patient.updated_at|date:"d/m/Y H:i" }}</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="appointments-section">
+            <div class="appointments-header">
+                <h3>Historial de Citas</h3>
+                <a href="#" class="btn btn-primary">Nueva Cita</a>
+            </div>
+            
+            {% if appointments %}
+                <div class="appointments-list">
+                    {% for appointment in appointments %}
+                        <div class="appointment-card">
+                            <div class="appointment-header">
+                                <div class="appointment-date">
+                                    <strong>{{ appointment.date_time|date:"d/m/Y" }}</strong>
+                                    <span class="appointment-time">{{ appointment.date_time|date:"H:i" }}</span>
+                                </div>
+                                <div class="appointment-evaluation">
+                                    <span class="evaluation-badge evaluation-{{ appointment.evaluation }}">
+                                        {{ appointment.get_evaluation_display }}
+                                    </span>
+                                </div>
+                            </div>
+                            
+                            <div class="appointment-content">
+                                <div class="appointment-description">
+                                    <strong>Sesión:</strong>
+                                    <p>{{ appointment.session_description }}</p>
+                                </div>
+                                
+                                {% if appointment.additional_notes %}
+                                    <div class="appointment-notes">
+                                        <strong>Notas Adicionales:</strong>
+                                        <p>{{ appointment.additional_notes|linebreaks }}</p>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="appointment-actions">
+                                <a href="#" class="btn btn-sm btn-primary">Editar</a>
+                                <a href="#" class="btn btn-sm btn-danger">Eliminar</a>
+                                <small class="text-muted">Creado: {{ appointment.created_at|date:"d/m/Y H:i" }}</small>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-appointments">
+                    <p>Este paciente no tiene citas registradas aún.</p>
+                    <a href="#" class="btn btn-primary">Programar Primera Cita</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

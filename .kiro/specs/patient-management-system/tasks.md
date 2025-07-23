@@ -121,14 +121,26 @@
     - Implement responsive grid layout for patient cards
     - _Requirements: 2.2, 5.1, 5.4_
 
-- [ ] 7. Implement patient CRUD operations
-  - [ ] 7.1 Create patient form and validation
+- [-] 7. Implement patient CRUD operations
+
+
+
+
+
+  - [x] 7.1 Create patient form and validation
+
+
     - Write Django form for Patient model with all required fields
     - Add form validation for age, name, and diagnosis fields
     - Create form template with error message display
     - _Requirements: 3.1, 3.3_
   
-  - [ ] 7.2 Implement patient creation view
+  - [x] 7.2 Implement patient creation view
+
+
+
+
+
     - Write patient create view with form handling
     - Add user association to ensure data isolation
     - Redirect to patient detail view after successful creation
