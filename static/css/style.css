@@ -749,6 +749,71 @@ textarea.form-control {
     gap: 1.5rem;
 }
 
+/* Appointment Detail Styles */
+.appointment-detail-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.appointment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background-color: var(--accent);
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.appointment-info h2 {
+    color: var(--contrast);
+    margin-bottom: 0.5rem;
+}
+
+.appointment-meta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.appointment-date {
+    color: var(--text-dark);
+    font-weight: 500;
+    font-size: 1.1rem;
+}
+
+.appointment-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.appointment-details-section .card,
+.appointment-description-section .card {
+    margin-bottom: 1rem;
+}
+
+.session-content,
+.notes-content {
+    padding: 1rem 0;
+}
+
+.session-content p,
+.notes-content p {
+    color: var(--text-light);
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Appointment Form Styles */
+.appointment-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .header .container {

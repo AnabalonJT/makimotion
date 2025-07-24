@@ -113,3 +113,78 @@ def patient_delete(request, pk):
         'appointment_count': patient.appointments.count(),
     }
     return render(request, 'patients/patient_confirm_delete.html', context)
+
+
+@login_required
+def appointment_create(request, patient_id):
+    """Create a new appointment for a specific patient"""
+    patient = get_object_or_404(Patient, pk=patient_id, user=request.user)
+    
+    if request.method == 'POST':
+        form = AppointmentForm(request.POST)
+        if form.is_valid():
+            appointment = form.save(commit=False)
+            appointment.patient = patient
+            appointment.save()
+            messages.success(request, f'Cita para {patient.full_name} creada exitosamente.')
+            return redirect('patient_detail', pk=patient.pk)
+    else:
+        form = AppointmentForm()
+    
+    context = {
+        'form': form,
+        'patient': patient,
+    }
+    return render(request, 'appointments/appointment_form.html', context)
+
+
+@login_required
+def appointment_update(request, pk):
+    """Update appointment information"""
+    appointment = get_object_or_404(Appointment, pk=pk, patient__user=request.user)
+    
+    if request.method == 'POST':
+        form = AppointmentForm(request.POST, instance=appointment)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f'Cita de {appointment.patient.full_name} actualizada exitosamente.')
+            return redirect('patient_detail', pk=appointment.patient.pk)
+    else:
+        form = AppointmentForm(instance=appointment)
+    
+    context = {
+        'form': form,
+        'patient': appointment.patient,
+    }
+    return render(request, 'appointments/appointment_form.html', context)
+
+
+@login_required
+def appointment_detail(request, pk):
+    """View appointment details"""
+    appointment = get_object_or_404(Appointment, pk=pk, patient__user=request.user)
+    
+    context = {
+        'appointment': appointment,
+        'patient': appointment.patient,
+    }
+    return render(request, 'appointments/appointment_detail.html', context)
+
+
+@login_required
+def appointment_delete(request, pk):
+    """Delete appointment with confirmation"""
+    appointment = get_object_or_404(Appointment, pk=pk, patient__user=request.user)
+    patient = appointment.patient
+    
+    if request.method == 'POST':
+        appointment_date = appointment.date_time.strftime('%d/%m/%Y %H:%M')
+        appointment.delete()
+        messages.success(request, f'Cita del {appointment_date} para {patient.full_name} ha sido eliminada.')
+        return redirect('patient_detail', pk=patient.pk)
+    
+    context = {
+        'appointment': appointment,
+        'patient': patient,
+    }
+    return render(request, 'appointments/appointment_confirm_delete.html', context)

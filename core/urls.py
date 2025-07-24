@@ -17,9 +17,9 @@ urlpatterns = [
     path('patients/<int:pk>/edit/', views.patient_update, name='patient_update'),
     path('patients/<int:pk>/delete/', views.patient_delete, name='patient_delete'),
     
-    # Appointment URLs (will be implemented in later tasks)
-    # path('patients/<int:patient_id>/appointments/add/', views.appointment_create, name='appointment_create'),
-    # path('appointments/<int:pk>/', views.appointment_detail, name='appointment_detail'),
-    # path('appointments/<int:pk>/edit/', views.appointment_update, name='appointment_update'),
-    # path('appointments/<int:pk>/delete/', views.appointment_delete, name='appointment_delete'),
+    # Appointment URLs
+    path('patients/<int:patient_id>/appointments/add/', views.appointment_create, name='appointment_create'),
+    path('appointments/<int:pk>/', views.appointment_detail, name='appointment_detail'),
+    path('appointments/<int:pk>/edit/', views.appointment_update, name='appointment_update'),
+    path('appointments/<int:pk>/delete/', views.appointment_delete, name='appointment_delete'),
 ]

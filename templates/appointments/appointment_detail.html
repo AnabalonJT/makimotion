@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{% block title %}Cita de {{ patient.full_name }} - MakiMotion{% endblock %}
+
+{% block content %}
+<div class="appointment-detail-container">
+    <div class="appointment-header">
+        <div class="appointment-info">
+            <h2>Cita de {{ patient.full_name }}</h2>
+            <div class="appointment-meta">
+                <span class="appointment-date">{{ appointment.date_time|date:"d/m/Y H:i" }}</span>
+                <span class="evaluation-badge evaluation-{{ appointment.evaluation }}">
+                    {{ appointment.get_evaluation_display }}
+                </span>
+            </div>
+        </div>
+        <div class="appointment-actions">
+            <a href="{% url 'appointment_update' appointment.pk %}" class="btn btn-primary">Editar Cita</a>
+            <a href="{% url 'appointment_delete' appointment.pk %}" class="btn btn-danger">Eliminar Cita</a>
+            <a href="{% url 'patient_detail' patient.pk %}" class="btn btn-secondary">Volver al Paciente</a>
+        </div>
+    </div>
+    
+    <div class="appointment-content">
+        <div class="appointment-details-section">
+            <div class="card">
+                <h3>Detalles de la Cita</h3>
+                <div class="detail-item">
+                    <strong>Paciente:</strong>
+                    <span>{{ patient.full_name }}</span>
+                </div>
+                <div class="detail-item">
+                    <strong>Fecha y Hora:</strong>
+                    <span>{{ appointment.date_time|date:"d/m/Y H:i" }}</span>
+                </div>
+                <div class="detail-item">
+                    <strong>Evaluación:</strong>
+                    <span class="evaluation-badge evaluation-{{ appointment.evaluation }}">
+                        {{ appointment.get_evaluation_display }}
+                    </span>
+                </div>
+                <div class="detail-item">
+                    <strong>Creado:</strong>
+                    <span>{{ appointment.created_at|date:"d/m/Y H:i" }}</span>
+                </div>
+                {% if appointment.updated_at != appointment.created_at %}
+                    <div class="detail-item">
+                        <strong>Última Actualización:</strong>
+                        <span>{{ appointment.updated_at|date:"d/m/Y H:i" }}</span>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="appointment-description-section">
+            <div class="card">
+                <h3>Descripción de la Sesión</h3>
+                <div class="session-content">
+                    <p>{{ appointment.session_description|linebreaks }}</p>
+                </div>
+            </div>
+            
+            {% if appointment.additional_notes %}
+                <div class="card">
+                    <h3>Notas Adicionales</h3>
+                    <div class="notes-content">
+                        <p>{{ appointment.additional_notes|linebreaks }}</p>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

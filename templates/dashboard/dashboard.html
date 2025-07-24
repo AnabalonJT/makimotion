@@ -60,7 +60,7 @@
                             </div>
                             <div class="patient-actions">
                                 <a href="{% url 'patient_detail' patient.pk %}" class="btn btn-sm btn-primary">Ver Detalles</a>
-                                <a href="#" class="btn btn-sm btn-secondary">Nueva Cita</a>
+                                <a href="{% url 'appointment_create' patient.pk %}" class="btn btn-sm btn-secondary">Nueva Cita</a>
                             </div>
                         </div>
                     {% endfor %}

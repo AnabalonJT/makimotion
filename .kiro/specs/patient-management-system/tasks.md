@@ -104,8 +104,6 @@
 
   - [ ] 5.1 Implement base HTML template with navigation
     - Create base.html with header, navigation, and footer structure
-
-
     - Add MakiMotion logo as styled text in header
     - Include user information and logout button in navigation
     - _Requirements: 5.5_
@@ -183,27 +181,32 @@
     - _Requirements: 3.5_
   
   - [x] 7.5 Add patient deletion with confirmation
-
+v 
     - Create patient delete view with confirmation dialog
     - Display warning about cascade deletion of appointments
     - Implement actual deletion and redirect to dashboard
     - _Requirements: 3.6_
 
 - [ ] 8. Implement appointment CRUD operations
-  - [-] 8.1 Create appointment form with validation
+  - [x] 8.1 Create appointment form with validation
+
 
     - Write Django form for Appointment model with all fields
     - Add date/time validation and evaluation choice display
     - Create form template with proper field styling
     - _Requirements: 4.1, 4.5_
   
-  - [ ] 8.2 Implement appointment creation within patient context
+  - [x] 8.2 Implement appointment creation within patient context
+
+
     - Write appointment create view linked to specific patient
     - Ensure appointment is properly associated with patient
     - Redirect to patient detail view after creation
     - _Requirements: 4.1, 4.3_
   
   - [x] 8.3 Create appointment detail and edit views
+
+
 
 
     - Write appointment detail view showing all appointment information
@@ -213,7 +216,10 @@
   
 
 
-  - [ ] 8.4 Add appointment deletion functionality
+  - [x] 8.4 Add appointment deletion functionality
+
+
+
     - Create appointment delete view with confirmation
     - Implement deletion and redirect to patient detail
     - Ensure proper cleanup of appointment data

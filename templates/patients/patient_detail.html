@@ -51,7 +51,7 @@
         <div class="appointments-section">
             <div class="appointments-header">
                 <h3>Historial de Citas</h3>
-                <a href="#" class="btn btn-primary">Nueva Cita</a>
+                <a href="{% url 'appointment_create' patient.pk %}" class="btn btn-primary">Nueva Cita</a>
             </div>
 
             {% if appointments %}
@@ -85,8 +85,8 @@
                     </div>
 
                     <div class="appointment-actions">
-                        <a href="#" class="btn btn-sm btn-primary" title="Funcionalidad próximamente">Editar Cita</a>
-                        <a href="#" class="btn btn-sm btn-danger" title="Funcionalidad próximamente">Eliminar Cita</a>
+                        <a href="{% url 'appointment_update' appointment.pk %}" class="btn btn-sm btn-primary">Editar Cita</a>
+                        <a href="{% url 'appointment_delete' appointment.pk %}" class="btn btn-sm btn-danger">Eliminar Cita</a>
                         <small class="text-muted">Creado: {{ appointment.created_at|date:"d/m/Y H:i" }}</small>
                     </div>
                 </div>
@@ -95,7 +95,7 @@
             {% else %}
             <div class="empty-appointments">
                 <p>Este paciente no tiene citas registradas aún.</p>
-                <a href="#" class="btn btn-primary">Programar Primera Cita</a>
+                <a href="{% url 'appointment_create' patient.pk %}" class="btn btn-primary">Programar Primera Cita</a>
             </div>
             {% endif %}
         </div>
