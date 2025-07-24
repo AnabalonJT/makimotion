@@ -35,7 +35,8 @@
     - _Requirements: 3.1, 3.2, 7.3_
   
 
-  - [ ] 2.3 Create Appointment model with patient relationship
+  - [x] 2.3 Create Appointment model with patient relationship
+
     - Write Appointment model with patient foreign key and evaluation choices
 
 
@@ -50,7 +51,8 @@
 
 
 
-- [ ] 3. Configure Django admin interface for development
+- [x] 3. Configure Django admin interface for development
+
   - Register all models (UserProfile, Patient, Appointment) in admin.py
   - Customize admin display with list_display and search_fields
   - Add inline editing for appointments within patient admin
@@ -64,7 +66,8 @@
 - [x] 4. Implement authentication system
 
 
-  - [ ] 4.1 Create custom login view and template
+  - [x] 4.1 Create custom login view and template
+
     - Write login view using Django's authentication
     - Create login template with MakiMotion branding and color palette
 
@@ -89,7 +92,8 @@
 
     - _Requirements: 1.4_
   
-  - [ ] 4.3 Add login required middleware and decorators
+  - [x] 4.3 Add login required middleware and decorators
+
     - Configure login_required decorators for all patient/appointment views
 
 
@@ -102,7 +106,8 @@
 
 - [x] 5. Create base template and styling system
 
-  - [ ] 5.1 Implement base HTML template with navigation
+  - [x] 5.1 Implement base HTML template with navigation
+
     - Create base.html with header, navigation, and footer structure
     - Add MakiMotion logo as styled text in header
     - Include user information and logout button in navigation
@@ -110,7 +115,8 @@
   
 
 
-  - [ ] 5.2 Create CSS with MakiMotion color palette
+  - [x] 5.2 Create CSS with MakiMotion color palette
+
     - Write CSS file implementing the defined color variables
     - Style forms, buttons, cards, and navigation using color palette
     - Add responsive design rules for mobile and tablet views
@@ -119,19 +125,22 @@
     - _Requirements: 5.1, 5.2, 5.4_
 
 - [ ] 6. Implement dashboard functionality
-  - [ ] 6.1 Create dashboard view with patient list
+  - [x] 6.1 Create dashboard view with patient list
+
     - Write dashboard view that queries user's patients
     - Implement patient card display with name, age, and diagnosis
     - Add sorting functionality for name (A-Z, Z-A)
     - _Requirements: 2.1, 2.2, 2.3_
   
-  - [ ] 6.2 Add appointment-based sorting to dashboard
+  - [x] 6.2 Add appointment-based sorting to dashboard
+
     - Implement sorting by last appointment date (recent to old, old to recent)
     - Handle patients with no appointments in sorting logic
     - Add sorting controls to dashboard template
     - _Requirements: 2.4, 2.5_
   
-  - [ ] 6.3 Create dashboard template with patient cards
+  - [x] 6.3 Create dashboard template with patient cards
+
     - Design patient card layout with proper styling
     - Add "Add Patient" button with proper styling
     - Implement responsive grid layout for patient cards
@@ -172,7 +181,8 @@
 
 
   
-  - [ ] 7.4 Implement patient edit functionality
+  - [x] 7.4 Implement patient edit functionality
+
     - Create patient update view using existing form
     - Pre-populate form with current patient data
 
@@ -234,14 +244,17 @@ v
   - Test all form validation scenarios and error display
   - _Requirements: 3.3, 4.1, 5.3_
 
-- [ ] 10. Create URL routing and navigation system
+- [x] 10. Create URL routing and navigation system
+
   - Configure URL patterns for all views in core/urls.py
   - Set up main project URL routing to include core app URLs
   - Add proper URL naming for template reverse lookups
   - Test all navigation paths and URL accessibility
   - _Requirements: 1.2, 2.1, 3.4_
 
-- [ ] 11. Implement user data isolation and security
+- [x] 11. Implement user data isolation and security
+
+
   - Add user filtering to all patient and appointment queries
   - Ensure users can only access their own data
   - Add permission checks to all views
@@ -271,7 +284,9 @@ v
     - _Requirements: 3.3, 4.1_
 
 - [ ] 13. Set up deployment configuration for Render
-  - [ ] 13.1 Create requirements.txt with all dependencies
+  - [x] 13.1 Create requirements.txt with all dependencies
+
+
     - List Django and all required packages with specific versions
     - Include database drivers for both SQLite and PostgreSQL
     - Add WhiteNoise for static file serving
