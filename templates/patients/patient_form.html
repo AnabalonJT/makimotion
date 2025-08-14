@@ -1,86 +1,681 @@
 {% extends 'base.html' %}
 
 {% block title %}
-    {% if form.instance.pk %}Editar Paciente{% else %}Agregar Paciente{% endif %} - MakiMotion
+    {% if form.instance.pk %}Editar Ficha Clínica{% else %}Nueva Ficha Clínica{% endif %} - MakiMotion
 {% endblock %}
 
 {% block content %}
-<div class="form-container">
+<div class="clinical-form-container">
     <div class="form-header">
         <h2>
             {% if form.instance.pk %}
-                Editar Paciente: {{ form.instance.full_name }}
+                Editar Ficha Clínica: {{ form.instance.full_name }}
             {% else %}
-                Agregar Nuevo Paciente
+                Nueva Ficha Clínica - Piso Pélvico
             {% endif %}
         </h2>
         <p class="form-subtitle">
             {% if form.instance.pk %}
-                Actualiza la información del paciente
+                Actualiza la información de la ficha clínica
             {% else %}
-                Completa los datos del nuevo paciente
+                Completa los datos de la ficha clínica del paciente
             {% endif %}
         </p>
     </div>
     
-    <div class="form-card">
-        {% if form.errors %}
-            <div class="alert alert-error">
-                <strong>Por favor corrige los siguientes errores:</strong>
-                <ul>
-                    {% for field, errors in form.errors.items %}
-                        {% for error in errors %}
-                            <li>{{ error }}</li>
-                        {% endfor %}
+    {% if form.errors %}
+        <div class="alert alert-error">
+            <strong>Por favor corrige los siguientes errores:</strong>
+            <ul>
+                {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                        <li>{{ error }}</li>
                     {% endfor %}
-                </ul>
-            </div>
-        {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    
+    <form method="post" class="clinical-form">
+        {% csrf_token %}
         
-        <form method="post" class="patient-form">
-            {% csrf_token %}
-            
-            <div class="form-row">
+        <!-- SECCIÓN 1: DATOS DEL PACIENTE -->
+        <div class="form-section">
+            <h3 class="section-title">📋 Datos del Paciente</h3>
+            <div class="section-content">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.full_name.id_for_label }}">Nombre Completo *</label>
+                        {{ form.full_name }}
+                        {% if form.full_name.errors %}<span class="field-error">{{ form.full_name.errors.0 }}</span>{% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.age.id_for_label }}">Edad *</label>
+                        {{ form.age }}
+                        {% if form.age.errors %}<span class="field-error">{{ form.age.errors.0 }}</span>{% endif %}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.profession.id_for_label }}">Profesión</label>
+                        {{ form.profession }}
+                        {% if form.profession.errors %}<span class="field-error">{{ form.profession.errors.0 }}</span>{% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.phone.id_for_label }}">Teléfono</label>
+                        {{ form.phone }}
+                        {% if form.phone.errors %}<span class="field-error">{{ form.phone.errors.0 }}</span>{% endif %}
+                    </div>
+                </div>
                 <div class="form-group">
-                    <label for="{{ form.full_name.id_for_label }}">{{ form.full_name.label }} *</label>
-                    {{ form.full_name }}
-                    {% if form.full_name.errors %}
-                        <span class="field-error">{{ form.full_name.errors.0 }}</span>
-                    {% endif %}
+                    <label for="{{ form.address.id_for_label }}">Dirección</label>
+                    {{ form.address }}
+                    {% if form.address.errors %}<span class="field-error">{{ form.address.errors.0 }}</span>{% endif %}
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.consultation_reason.id_for_label }}">Motivo de Consulta</label>
+                    {{ form.consultation_reason }}
+                    {% if form.consultation_reason.errors %}<span class="field-error">{{ form.consultation_reason.errors.0 }}</span>{% endif %}
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.medications.id_for_label }}">Medicamentos</label>
+                        {{ form.medications }}
+                        {% if form.medications.errors %}<span class="field-error">{{ form.medications.errors.0 }}</span>{% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.musculoskeletal_history.id_for_label }}">Antecedentes Músculo Esquelético</label>
+                        {{ form.musculoskeletal_history }}
+                        {% if form.musculoskeletal_history.errors %}<span class="field-error">{{ form.musculoskeletal_history.errors.0 }}</span>{% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 2: ANTECEDENTES GINECOLÓGICOS -->
+        <div class="form-section">
+            <h3 class="section-title">🩺 Antecedentes Ginecológicos</h3>
+            <div class="section-content">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.menopause.id_for_label }}">Menopausia</label>
+                        {{ form.menopause }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.menopause_time.id_for_label }}">Hace Cuánto</label>
+                        {{ form.menopause_time }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.regular_menstrual_cycle.id_for_label }}">Ciclo Menstrual Regular</label>
+                        {{ form.regular_menstrual_cycle }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.pregnancies_g.id_for_label }}">G (Gestaciones)</label>
+                        {{ form.pregnancies_g }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.abortions_a.id_for_label }}">A (Abortos)</label>
+                        {{ form.abortions_a }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.losses_p.id_for_label }}">P (Pérdidas)</label>
+                        {{ form.losses_p }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.child_weight.id_for_label }}">Peso del Hijo</label>
+                        {{ form.child_weight }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.delivery_type.id_for_label }}">Tipo de Parto</label>
+                        {{ form.delivery_type }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.episiotomies.id_for_label }}">Episiotomías</label>
+                        {{ form.episiotomies }}
+                    </div>
+                </div>
+                
+                <!-- Checkboxes ginecológicos -->
+                <div class="checkbox-group">
+                    <h4>Indicadores</h4>
+                    <div class="checkbox-row">
+                        <div class="checkbox-item">
+                            {{ form.io }} <label for="{{ form.io.id_for_label }}">IO</label>
+                        </div>
+                        <div class="checkbox-item">
+                            {{ form.if_field }} <label for="{{ form.if_field.id_for_label }}">IF</label>
+                        </div>
+                        <div class="checkbox-item">
+                            {{ form.ig }} <label for="{{ form.ig.id_for_label }}">IG</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.prolapse.id_for_label }}">Prolapso</label>
+                        {{ form.prolapse }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.prolapse_type.id_for_label }}">¿Cuál Prolapso?</label>
+                        {{ form.prolapse_type }}
+                    </div>
                 </div>
                 
                 <div class="form-group">
-                    <label for="{{ form.age.id_for_label }}">{{ form.age.label }} *</label>
-                    {{ form.age }}
-                    {% if form.age.errors %}
-                        <span class="field-error">{{ form.age.errors.0 }}</span>
-                    {% endif %}
+                    <label for="{{ form.allergies.id_for_label }}">Alergias</label>
+                    {{ form.allergies }}
                 </div>
             </div>
-            
-            <div class="form-group">
-                <label for="{{ form.diagnosis.id_for_label }}">{{ form.diagnosis.label }} *</label>
-                {{ form.diagnosis }}
-                {% if form.diagnosis.errors %}
-                    <span class="field-error">{{ form.diagnosis.errors.0 }}</span>
+        </div>
+
+        <!-- SECCIÓN 3: HÁBITOS DE VIDA -->
+        <div class="form-section">
+            <h3 class="section-title">🏃‍♀️ Hábitos de Vida</h3>
+            <div class="section-content">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.smoking.id_for_label }}">Fuma</label>
+                        {{ form.smoking }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.alcohol.id_for_label }}">Alcohol</label>
+                        {{ form.alcohol }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.daily_liquid_consumption.id_for_label }}">Consumo Líquido Diario</label>
+                        {{ form.daily_liquid_consumption }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.physical_activity.id_for_label }}">Actividad Física</label>
+                        {{ form.physical_activity }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.diet.id_for_label }}">Dieta</label>
+                        {{ form.diet }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 4: FUNCIÓN URINARIA -->
+        <div class="form-section">
+            <h3 class="section-title">💧 Función Urinaria</h3>
+            <div class="section-content">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.daily_frequency.id_for_label }}">Frecuencia Diaria</label>
+                        {{ form.daily_frequency }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.nocturnal_frequency.id_for_label }}">Frecuencia Nocturna</label>
+                        {{ form.nocturnal_frequency }}
+                    </div>
+                </div>
+                
+                <!-- Checkboxes función urinaria -->
+                <div class="checkbox-group">
+                    <h4>Síntomas Urinarios</h4>
+                    <div class="checkbox-grid">
+                        <div class="checkbox-item">{{ form.pollakiuria }} <label for="{{ form.pollakiuria.id_for_label }}">Polaquiuria</label></div>
+                        <div class="checkbox-item">{{ form.nocturia }} <label for="{{ form.nocturia.id_for_label }}">Nocturia</label></div>
+                        <div class="checkbox-item">{{ form.urgency }} <label for="{{ form.urgency.id_for_label }}">Urgencia</label></div>
+                        <div class="checkbox-item">{{ form.polyuria }} <label for="{{ form.polyuria.id_for_label }}">Poliuria</label></div>
+                        <div class="checkbox-item">{{ form.dysuria }} <label for="{{ form.dysuria.id_for_label }}">Disuria</label></div>
+                        <div class="checkbox-item">{{ form.latency }} <label for="{{ form.latency.id_for_label }}">Latencia</label></div>
+                        <div class="checkbox-item">{{ form.effort_to_urinate }} <label for="{{ form.effort_to_urinate.id_for_label }}">Esfuerzo para Orinar</label></div>
+                        <div class="checkbox-item">{{ form.incomplete_emptying }} <label for="{{ form.incomplete_emptying.id_for_label }}">Vaciamiento Incompleto</label></div>
+                        <div class="checkbox-item">{{ form.immediate_need }} <label for="{{ form.immediate_need.id_for_label }}">Necesidad Inmediata</label></div>
+                        <div class="checkbox-item">{{ form.terminal_dripping }} <label for="{{ form.terminal_dripping.id_for_label }}">Goteo Terminal</label></div>
+                        <div class="checkbox-item">{{ form.nocturnal_urgency }} <label for="{{ form.nocturnal_urgency.id_for_label }}">Urgencia Nocturna</label></div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.urination_position.id_for_label }}">Posición Adoptada para Micción</label>
+                        {{ form.urination_position }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.stream_description.id_for_label }}">Descripción del Chorro</label>
+                        {{ form.stream_description }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SUBSECCIÓN: INCONTINENCIA ORINA -->
+        <div class="form-section subsection">
+            <h3 class="section-title">💦 Incontinencia Orina</h3>
+            <div class="section-content">
+                <!-- Checkboxes incontinencia -->
+                <div class="checkbox-group">
+                    <h4>Tipos de Incontinencia</h4>
+                    <div class="checkbox-row">
+                        <div class="checkbox-item">{{ form.iue }} <label for="{{ form.iue.id_for_label }}">IUE</label></div>
+                        <div class="checkbox-item">{{ form.iuu }} <label for="{{ form.iuu.id_for_label }}">IUU</label></div>
+                        <div class="checkbox-item">{{ form.ium }} <label for="{{ form.ium.id_for_label }}">IUM</label></div>
+                        <div class="checkbox-item">{{ form.iu_posture }} <label for="{{ form.iu_posture.id_for_label }}">IU Postura</label></div>
+                        <div class="checkbox-item">{{ form.iu_sensitivity }} <label for="{{ form.iu_sensitivity.id_for_label }}">IU Sensibilidad</label></div>
+                        <div class="checkbox-item">{{ form.iu_coital }} <label for="{{ form.iu_coital.id_for_label }}">IU Coital</label></div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.incontinence_other.id_for_label }}">Otros</label>
+                        {{ form.incontinence_other }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.since_when.id_for_label }}">Hace Cuánto</label>
+                        {{ form.since_when }}
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.when_occurs_daily.id_for_label }}">Cuándo Ocurre por Día</label>
+                        {{ form.when_occurs_daily }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.how_daily.id_for_label }}">Cómo es por Día</label>
+                        {{ form.how_daily }}
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.protection_type.id_for_label }}">Tipo de Protección</label>
+                        {{ form.protection_type }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.activities_stopped.id_for_label }}">Actividades Dejadas</label>
+                        {{ form.activities_stopped }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 5: FUNCIONAMIENTO INTESTINAL -->
+        <div class="form-section">
+            <h3 class="section-title">🦴 Funcionamiento Intestinal</h3>
+            <div class="section-content">
+                <!-- Checkboxes intestinales -->
+                <div class="checkbox-group">
+                    <h4>Síntomas Intestinales</h4>
+                    <div class="checkbox-grid">
+                        <div class="checkbox-item">{{ form.constipation }} <label for="{{ form.constipation.id_for_label }}">Estreñimiento</label></div>
+                        <div class="checkbox-item">{{ form.fecal_incontinence }} <label for="{{ form.fecal_incontinence.id_for_label }}">Incontinencia</label></div>
+                        <div class="checkbox-item">{{ form.gas_incontinence }} <label for="{{ form.gas_incontinence.id_for_label }}">Incontinencia Gases</label></div>
+                        <div class="checkbox-item">{{ form.hemorrhoids }} <label for="{{ form.hemorrhoids.id_for_label }}">Hemorroides</label></div>
+                        <div class="checkbox-item">{{ form.rectocele }} <label for="{{ form.rectocele.id_for_label }}">Rectocele</label></div>
+                        <div class="checkbox-item">{{ form.position_frequency }} <label for="{{ form.position_frequency.id_for_label }}">Frecuencia Posiciones</label></div>
+                        <div class="checkbox-item">{{ form.gas_stool_discrimination }} <label for="{{ form.gas_stool_discrimination.id_for_label }}">Discriminación Gas/Caca</label></div>
+                        <div class="checkbox-item">{{ form.painful_evacuation }} <label for="{{ form.painful_evacuation.id_for_label }}">Evacuación Dolorosa</label></div>
+                        <div class="checkbox-item">{{ form.straining_defecation }} <label for="{{ form.straining_defecation.id_for_label }}">Puja para Defecar</label></div>
+                        <div class="checkbox-item">{{ form.complete_evacuation }} <label for="{{ form.complete_evacuation.id_for_label }}">Evacuación Completa</label></div>
+                        <div class="checkbox-item">{{ form.laxatives }} <label for="{{ form.laxatives.id_for_label }}">Laxantes</label></div>
+                        <div class="checkbox-item">{{ form.plugging_sensation }} <label for="{{ form.plugging_sensation.id_for_label }}">Sensación de Tapón</label></div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.defecation_position.id_for_label }}">Posición para Defecar</label>
+                        {{ form.defecation_position }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.bristol_scale.id_for_label }}">Escala Bristol (1-7)</label>
+                        {{ form.bristol_scale }}
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.bowel_inconsistency.id_for_label }}">¿Sufre Inconsistencia? ¿Cuándo?</label>
+                        {{ form.bowel_inconsistency }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.bowel_conscious.id_for_label }}">¿Es Consciente?</label>
+                        {{ form.bowel_conscious }}
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.bowel_pad.id_for_label }}">¿Apósito?</label>
+                        {{ form.bowel_pad }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.bowel_activities_stopped.id_for_label }}">Actividades Dejadas</label>
+                        {{ form.bowel_activities_stopped }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN 6: HISTORIAL SEXUAL -->
+        <div class="form-section">
+            <h3 class="section-title">💕 Historial Sexual</h3>
+            <div class="section-content">
+                <div class="checkbox-group">
+                    <h4>Estado Sexual</h4>
+                    <div class="checkbox-row">
+                        <div class="checkbox-item">
+                            {{ form.sexually_active }} <label for="{{ form.sexually_active.id_for_label }}">Activo Sexualmente</label>
+                        </div>
+                    </div>
+                </div>
+                
+                {% if form.sexually_active_when %}
+                    <div class="form-group">
+                        <label for="{{ form.sexually_active_when.id_for_label }}">¿Cuándo?</label>
+                        {{ form.sexually_active_when }}
+                    </div>
                 {% endif %}
+                
+                <div class="checkbox-group">
+                    <h4>Incontinencia Durante Actividad Sexual</h4>
+                    <div class="checkbox-row">
+                        <div class="checkbox-item">
+                            {{ form.urinary_incontinence_sexual }} <label for="{{ form.urinary_incontinence_sexual.id_for_label }}">Incontinencia Orina</label>
+                        </div>
+                        <div class="checkbox-item">
+                            {{ form.fecal_incontinence_sexual }} <label for="{{ form.fecal_incontinence_sexual.id_for_label }}">Incontinencia Fecal</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.urinary_incontinence_sexual_when.id_for_label }}">Incontinencia Orina - ¿Cuándo?</label>
+                        {{ form.urinary_incontinence_sexual_when }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.fecal_incontinence_sexual_when.id_for_label }}">Incontinencia Fecal - ¿Cuándo?</label>
+                        {{ form.fecal_incontinence_sexual_when }}
+                    </div>
+                </div>
+                
+                <div class="checkbox-group">
+                    <h4>Síntomas Sexuales</h4>
+                    <div class="checkbox-grid">
+                        <div class="checkbox-item">{{ form.sexual_desire }} <label for="{{ form.sexual_desire.id_for_label }}">Deseo Sexual</label></div>
+                        <div class="checkbox-item">{{ form.sexual_excitement }} <label for="{{ form.sexual_excitement.id_for_label }}">Excitación</label></div>
+                        <div class="checkbox-item">{{ form.orgasm }} <label for="{{ form.orgasm.id_for_label }}">Orgasmo</label></div>
+                        <div class="checkbox-item">{{ form.dyspareunia }} <label for="{{ form.dyspareunia.id_for_label }}">Dispareunia</label></div>
+                        <div class="checkbox-item">{{ form.urge_to_urinate_during_sex }} <label for="{{ form.urge_to_urinate_during_sex.id_for_label }}">Deseo de Orinar Durante</label></div>
+                        <div class="checkbox-item">{{ form.vaginal_dryness }} <label for="{{ form.vaginal_dryness.id_for_label }}">Resequedad</label></div>
+                        <div class="checkbox-item">{{ form.impaired_by_incontinence }} <label for="{{ form.impaired_by_incontinence.id_for_label }}">Perjudicado por Incontinencia</label></div>
+                    </div>
+                </div>
             </div>
-            
-            <div class="form-group">
-                <label for="{{ form.general_notes.id_for_label }}">{{ form.general_notes.label }}</label>
-                {{ form.general_notes }}
-                {% if form.general_notes.errors %}
-                    <span class="field-error">{{ form.general_notes.errors.0 }}</span>
-                {% endif %}
+        </div>
+
+        <!-- SECCIÓN 7: EXAMEN FÍSICO -->
+        <div class="form-section">
+            <h3 class="section-title">🔍 Examen Físico</h3>
+            <div class="section-content">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.diastasis.id_for_label }}">Diastasis</label>
+                        {{ form.diastasis }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.scars.id_for_label }}">Cicatrices</label>
+                        {{ form.scars }}
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.adherences.id_for_label }}">Adherencias</label>
+                        {{ form.adherences }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.skin_coloration.id_for_label }}">Coloración de la Piel</label>
+                        {{ form.skin_coloration }}
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.push_exam.id_for_label }}">Pujo</label>
+                    {{ form.push_exam }}
+                </div>
+                
+                <!-- NLP - Tono -->
+                <div class="subsection-group">
+                    <h4>NLP - Tono</h4>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="{{ form.nlp_tone_contraction.id_for_label }}">Contracción</label>
+                            {{ form.nlp_tone_contraction }}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.nlp_tone_relaxation.id_for_label }}">Relajación</label>
+                            {{ form.nlp_tone_relaxation }}
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="{{ form.nlp_tone_push.id_for_label }}">Pujo</label>
+                            {{ form.nlp_tone_push }}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.nlp_tone_pain.id_for_label }}">Dolor</label>
+                            {{ form.nlp_tone_pain }}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Sensibilidad y reflejo -->
+                <div class="checkbox-group">
+                    <h4>Sensibilidad y Reflejo (Dermatoma S2-S4)</h4>
+                    <div class="checkbox-row">
+                        <div class="checkbox-item">{{ form.anal_cutaneous_reflex }} <label for="{{ form.anal_cutaneous_reflex.id_for_label }}">Reflejo Cutáneo Anal</label></div>
+                        <div class="checkbox-item">{{ form.vulvo_cavernous_reflex }} <label for="{{ form.vulvo_cavernous_reflex.id_for_label }}">Reflejo Vulvo Cavernoso</label></div>
+                        <div class="checkbox-item">{{ form.cough_reflex }} <label for="{{ form.cough_reflex.id_for_label }}">Reflejo Tusígeno</label></div>
+                    </div>
+                </div>
             </div>
-            
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary">
-                    {% if form.instance.pk %}Actualizar Paciente{% else %}Crear Paciente{% endif %}
-                </button>
-                <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancelar</a>
+        </div>
+
+        <!-- SECCIÓN 8: EXAMEN INTRACAVITARIO -->
+        <div class="form-section">
+            <h3 class="section-title">🔬 Examen Intracavitario</h3>
+            <div class="section-content">
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        {{ form.intracavitary_consent }} <label for="{{ form.intracavitary_consent.id_for_label }}">Consentimiento</label>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.intracavitary_scars.id_for_label }}">Cicatrices</label>
+                        {{ form.intracavitary_scars }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.intracavitary_mucosa.id_for_label }}">Mucosa</label>
+                        {{ form.intracavitary_mucosa }}
+                    </div>
+                </div>
+                
+                <!-- MEA -->
+                <div class="subsection-group">
+                    <h4>MEA (Músculos del Elevador del Ano)</h4>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="{{ form.mea_tonicity_rest.id_for_label }}">Tonicidad MEA Reposo</label>
+                            {{ form.mea_tonicity_rest }}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.mea_perception.id_for_label }}">Percepción MEA</label>
+                            {{ form.mea_perception }}
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="{{ form.mea_contraction.id_for_label }}">Contracción MEA</label>
+                            {{ form.mea_contraction }}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.mea_voluntary_relaxation.id_for_label }}">Relajación Voluntaria MEA</label>
+                            {{ form.mea_voluntary_relaxation }}
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="{{ form.mea_symmetry_rest.id_for_label }}">Simetría MEA Reposo</label>
+                            {{ form.mea_symmetry_rest }}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.mea_symmetry_contraction.id_for_label }}">Simetría MEA Contracción</label>
+                            {{ form.mea_symmetry_contraction }}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Dolor MEA -->
+                <div class="subsection-group">
+                    <h4>Dolor MEA</h4>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="{{ form.mea_pain_eva.id_for_label }}">EVA (0-10)</label>
+                            {{ form.mea_pain_eva }}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.mea_pain_location.id_for_label }}">Dónde</label>
+                            {{ form.mea_pain_location }}
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="{{ form.mea_pain_when.id_for_label }}">Cuándo</label>
+                            {{ form.mea_pain_when }}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.mea_pain_description.id_for_label }}">Descripción</label>
+                            {{ form.mea_pain_description }}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Otros exámenes -->
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.urethral_movement.id_for_label }}">Movimiento Uretral</label>
+                        {{ form.urethral_movement }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.transverse_urethral_tone.id_for_label }}">Tono del Transverso Uretral</label>
+                        {{ form.transverse_urethral_tone }}
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.oxford_force.id_for_label }}">Fuerza (Oxford)</label>
+                        {{ form.oxford_force }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.superficial_muscle.id_for_label }}">Muscular Superficial</label>
+                        {{ form.superficial_muscle }}
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.deep_musculature.id_for_label }}">Musculatura Profunda</label>
+                    {{ form.deep_musculature }}
+                </div>
             </div>
-        </form>
-    </div>
+        </div>
+
+        <!-- SECCIÓN 9: EXAMEN COLOPROCTOLÓGICO -->
+        <div class="form-section">
+            <h3 class="section-title">🩻 Examen Coloproctológico</h3>
+            <div class="section-content">
+                <div class="checkbox-group">
+                    <h4>Consentimiento y Observaciones</h4>
+                    <div class="checkbox-grid">
+                        <div class="checkbox-item">{{ form.coloproctologic_consent }} <label for="{{ form.coloproctologic_consent.id_for_label }}">Consentimiento</label></div>
+                        <div class="checkbox-item">{{ form.anal_canal_closure }} <label for="{{ form.anal_canal_closure.id_for_label }}">Cierre Canal Anal</label></div>
+                        <div class="checkbox-item">{{ form.irritation }} <label for="{{ form.irritation.id_for_label }}">Irritación</label></div>
+                        <div class="checkbox-item">{{ form.stool_remains }} <label for="{{ form.stool_remains.id_for_label }}">Resto de Deposiciones</label></div>
+                        <div class="checkbox-item">{{ form.blind_rectum }} <label for="{{ form.blind_rectum.id_for_label }}">Recto Ciego</label></div>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.coloproctologic_scars.id_for_label }}">Cicatriz - ¿Dónde?</label>
+                        {{ form.coloproctologic_scars }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.coloproctologic_hemorrhoids.id_for_label }}">Hemorroides - ¿Dónde?</label>
+                        {{ form.coloproctologic_hemorrhoids }}
+                    </div>
+                </div>
+                
+                <!-- Tono y resistencia -->
+                <div class="subsection-group">
+                    <h4>Tono y Resistencia</h4>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="{{ form.rest_tone.id_for_label }}">Tono en Reposo</label>
+                            {{ form.rest_tone }}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.resistance.id_for_label }}">Resistencia</label>
+                            {{ form.resistance }}
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="{{ form.eae_tonicity_rest.id_for_label }}">Tonicidad EAE Reposo</label>
+                            {{ form.eae_tonicity_rest }}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.eae_contraction.id_for_label }}">Contracción EAE</label>
+                            {{ form.eae_contraction }}
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Oxford -->
+                <div class="subsection-group">
+                    <h4>Oxford</h4>
+                    <div class="form-group">
+                        <label for="{{ form.oxford_anorectal_angle.id_for_label }}">Ángulo Ano Rectal</label>
+                        {{ form.oxford_anorectal_angle }}
+                    </div>
+                </div>
+                
+                <!-- Empujo -->
+                <div class="checkbox-group">
+                    <h4>Empujo</h4>
+                    <div class="checkbox-row">
+                        <div class="checkbox-item">{{ form.anorectal_opening }} <label for="{{ form.anorectal_opening.id_for_label }}">Apertura Ano Rectal</label></div>
+                        <div class="checkbox-item">{{ form.rectal_torso_synchronization }} <label for="{{ form.rectal_torso_synchronization.id_for_label }}">Sincronización Torso Rectal</label></div>
+                        <div class="checkbox-item">{{ form.anal_canal_relaxation }} <label for="{{ form.anal_canal_relaxation.id_for_label }}">Relajación Canal Anal</label></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BOTONES DE ACCIÓN -->
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">
+                {% if form.instance.pk %}Actualizar Ficha Clínica{% else %}Crear Ficha Clínica{% endif %}
+            </button>
+            <a href="{% url 'dashboard' %}" class="btn btn-secondary">Cancelar</a>
+        </div>
+    </form>
 </div>
 {% endblock %}

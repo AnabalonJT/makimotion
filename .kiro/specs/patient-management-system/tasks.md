@@ -40,6 +40,7 @@
     - Write Appointment model with patient foreign key and evaluation choices
 
 
+
     - Add date_time, session_description, evaluation, and notes fields
     - Configure chronological ordering and proper relationships
     - Create and run migration for Appointment model
