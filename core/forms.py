@@ -70,22 +70,25 @@ class PatientForm(forms.ModelForm):
         fields = [
             # Datos del paciente (esenciales)
             'full_name', 'age', 'profession', 'address', 'phone', 
-            'medications', 'musculoskeletal_history', 'consultation_reason',
+            'medications', 'musculoskeletal_history', 'consultation_reason', 'patient_data_other',
+            
+            # Embarazo
+            'is_pregnant', 'pregnancy_weeks_at_registration', 'pregnancy_week_day',
             
             # Antecedentes ginecológicos
             'menopause', 'menopause_time', 'regular_menstrual_cycle', 'previous_surgeries',
             'pregnancies_g', 'abortions_a', 'losses_p', 'child_weight', 'delivery_type',
             'episiotomies', 'postpartum', 'instrumentation', 'muscle_tear',
-            'io', 'if_field', 'ig', 'prolapse', 'prolapse_type', 'allergies',
+            'io', 'if_field', 'ig', 'prolapse', 'prolapse_type', 'allergies', 'gynecological_other',
             
             # Hábitos de vida
-            'smoking', 'alcohol', 'physical_activity', 'diet', 'daily_liquid_consumption',
+            'smoking', 'alcohol', 'physical_activity', 'diet', 'daily_liquid_consumption', 'lifestyle_other',
             
             # Función urinaria
             'daily_frequency', 'nocturnal_frequency',
             'pollakiuria', 'nocturia', 'urgency', 'polyuria', 'dysuria', 'latency',
             'effort_to_urinate', 'incomplete_emptying', 'immediate_need', 'terminal_dripping', 'nocturnal_urgency',
-            'urination_position', 'stream_description',
+            'urination_position', 'stream_description', 'urinary_function_other',
             
             # Incontinencia orina
             'iue', 'iuu', 'ium', 'iu_posture', 'iu_sensitivity', 'iu_coital', 'incontinence_other',
@@ -94,31 +97,31 @@ class PatientForm(forms.ModelForm):
             
             # Funcionamiento intestinal
             'constipation', 'fecal_incontinence', 'gas_incontinence', 'hemorrhoids', 'rectocele',
-            'position_frequency', 'gas_stool_discrimination', 'painful_evacuation', 'straining_defecation',
+            'gas_stool_discrimination', 'painful_evacuation', 'straining_defecation',
             'complete_evacuation', 'laxatives', 'plugging_sensation',
-            'defecation_position', 'bristol_scale', 'bowel_inconsistency', 'bowel_conscious', 'bowel_pad', 'bowel_activities_stopped',
+            'defecation_position', 'bristol_scale', 'position_frequency', 'bowel_inconsistency', 'bowel_conscious', 'bowel_pad', 'bowel_activities_stopped', 'bowel_function_other',
             
             # Historial sexual
-            'sexually_active', 'sexually_active_when', 'urinary_incontinence_sexual', 'urinary_incontinence_sexual_when',
+            'sexual_status', 'urinary_incontinence_sexual', 'urinary_incontinence_sexual_when',
             'fecal_incontinence_sexual', 'fecal_incontinence_sexual_when',
-            'sexual_desire', 'sexual_excitement', 'orgasm', 'dyspareunia', 'urge_to_urinate_during_sex', 'vaginal_dryness', 'impaired_by_incontinence',
+            'sexual_desire', 'sexual_excitement', 'orgasm', 'dyspareunia', 'urge_to_urinate_during_sex', 'vaginal_dryness', 'impaired_by_incontinence', 'sexual_history_other',
             
             # Examen físico
             'diastasis', 'scars', 'adherences', 'skin_coloration', 'push_exam',
-            'nlp_tone_contraction', 'nlp_tone_relaxation', 'nlp_tone_push', 'nlp_tone_pain',
-            'anal_cutaneous_reflex', 'vulvo_cavernous_reflex', 'cough_reflex',
+            'ncp_tone_contraction', 'ncp_tone_relaxation', 'ncp_tone_push', 'ncp_tone_pain',
+            'anal_cutaneous_reflex', 'vulvo_cavernous_reflex', 'cough_reflex', 'physical_exam_other',
             
             # Examen intracavitario
             'intracavitary_consent', 'intracavitary_scars', 'intracavitary_mucosa',
             'mea_tonicity_rest', 'mea_perception', 'mea_contraction', 'mea_symmetry_rest', 'mea_symmetry_contraction', 'mea_voluntary_relaxation',
             'mea_pain_eva', 'mea_pain_location', 'mea_pain_when', 'mea_pain_description',
-            'urethral_movement', 'transverse_urethral_tone', 'oxford_force', 'superficial_muscle', 'deep_musculature',
+            'urethral_movement', 'transverse_abdominal_tone', 'oxford_force', 'superficial_musculature', 'deep_musculature', 'intracavitary_exam_other',
             
             # Examen coloproctológico
-            'coloproctologic_consent', 'anal_canal_closure', 'irritation', 'stool_remains', 'blind_rectum',
+            'coloproctologic_consent', 'anal_canal_closure', 'irritation', 'stool_remains', 'rectocele_exam',
             'coloproctologic_scars', 'coloproctologic_hemorrhoids',
             'rest_tone', 'resistance', 'eae_tonicity_rest', 'eae_contraction',
-            'oxford_anorectal_angle', 'anorectal_opening', 'rectal_torso_synchronization', 'anal_canal_relaxation'
+            'oxford_anorectal_angle', 'oxford_notes', 'anorectal_opening', 'thoracic_rectal_synchronization', 'anal_canal_relaxation', 'coloproctologic_exam_other'
         ]
         
         widgets = {
@@ -131,6 +134,11 @@ class PatientForm(forms.ModelForm):
             'medications': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'musculoskeletal_history': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'consultation_reason': forms.Textarea(attrs={'class': 'form-control', 'required': True, 'rows': 3}),
+            'patient_data_other': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
+            
+            # Embarazo
+            'pregnancy_weeks_at_registration': forms.NumberInput(attrs={'class': 'form-control', 'min': 1, 'max': 42, 'placeholder': 'Ej: 12'}),
+            'pregnancy_week_day': forms.Select(attrs={'class': 'form-control'}),
             
             # Antecedentes ginecológicos
             'menopause': forms.Select(attrs={'class': 'form-control'}),
@@ -149,6 +157,7 @@ class PatientForm(forms.ModelForm):
             'prolapse': forms.Select(attrs={'class': 'form-control'}),
             'prolapse_type': forms.TextInput(attrs={'class': 'form-control'}),
             'allergies': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
+            'gynecological_other': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
             
             # Hábitos de vida
             'smoking': forms.Select(attrs={'class': 'form-control'}),
@@ -156,12 +165,14 @@ class PatientForm(forms.ModelForm):
             'physical_activity': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
             'diet': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
             'daily_liquid_consumption': forms.TextInput(attrs={'class': 'form-control'}),
+            'lifestyle_other': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
             
             # Función urinaria
             'daily_frequency': forms.TextInput(attrs={'class': 'form-control'}),
             'nocturnal_frequency': forms.TextInput(attrs={'class': 'form-control'}),
             'urination_position': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
             'stream_description': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
+            'urinary_function_other': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
             
             # Incontinencia
             'incontinence_other': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
@@ -183,11 +194,14 @@ class PatientForm(forms.ModelForm):
             'bowel_conscious': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
             'bowel_pad': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
             'bowel_activities_stopped': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
+            'bowel_function_other': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
+            'position_frequency': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
             
             # Historial sexual
-            'sexually_active_when': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
+            'sexual_status': forms.Select(attrs={'class': 'form-control'}),
             'urinary_incontinence_sexual_when': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
             'fecal_incontinence_sexual_when': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
+            'sexual_history_other': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
             
             # Examen físico
             'diastasis': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
@@ -195,10 +209,14 @@ class PatientForm(forms.ModelForm):
             'adherences': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
             'skin_coloration': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
             'push_exam': forms.Select(attrs={'class': 'form-control'}),
-            'nlp_tone_contraction': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
-            'nlp_tone_relaxation': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
-            'nlp_tone_push': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
-            'nlp_tone_pain': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
+            'ncp_tone_contraction': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
+            'ncp_tone_relaxation': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
+            'ncp_tone_push': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
+            'ncp_tone_pain': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
+            'anal_cutaneous_reflex': forms.Select(attrs={'class': 'form-control'}),
+            'vulvo_cavernous_reflex': forms.Select(attrs={'class': 'form-control'}),
+            'cough_reflex': forms.Select(attrs={'class': 'form-control'}),
+            'physical_exam_other': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
             
             # Examen intracavitario
             'intracavitary_scars': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
@@ -214,10 +232,11 @@ class PatientForm(forms.ModelForm):
             'mea_pain_when': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
             'mea_pain_description': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
             'urethral_movement': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
-            'transverse_urethral_tone': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
+            'transverse_abdominal_tone': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
             'oxford_force': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
-            'superficial_muscle': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
+            'superficial_musculature': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
             'deep_musculature': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
+            'intracavitary_exam_other': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
             
             # Examen coloproctológico
             'coloproctologic_scars': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
@@ -227,6 +246,8 @@ class PatientForm(forms.ModelForm):
             'eae_tonicity_rest': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
             'eae_contraction': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
             'oxford_anorectal_angle': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
+            'oxford_notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
+            'coloproctologic_exam_other': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
         }
     
     def clean_age(self):
@@ -254,6 +275,25 @@ class PatientForm(forms.ModelForm):
         if not consultation_reason:
             raise forms.ValidationError("El motivo de consulta es requerido.")
         return consultation_reason
+    
+    def save(self, commit=True):
+        """Save the patient and set pregnancy registration date if needed"""
+        patient = super().save(commit=False)
+        
+        # Si está embarazada y tiene semanas registradas, establecer fecha de registro
+        if patient.is_pregnant and patient.pregnancy_weeks_at_registration and not patient.pregnancy_registration_date:
+            from django.utils import timezone
+            patient.pregnancy_registration_date = timezone.now().date()
+        
+        # Si ya no está embarazada, limpiar campos de embarazo
+        if not patient.is_pregnant:
+            patient.pregnancy_weeks_at_registration = None
+            patient.pregnancy_week_day = ''
+            patient.pregnancy_registration_date = None
+        
+        if commit:
+            patient.save()
+        return patient
 
 
 class AppointmentForm(forms.ModelForm):

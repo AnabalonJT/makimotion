@@ -13,88 +13,98 @@
             </span>
         </div>
     </div>
-    
+
     <div class="dashboard-actions">
         <a href="{% url 'patient_create' %}" class="btn btn-primary">Agregar Paciente</a>
         <div class="sort-controls">
             <span>Ordenar por:</span>
-            <a href="?sort=name&order=asc" class="sort-link {% if current_sort == 'name' and current_order == 'asc' %}active{% endif %}">
+            <a href="?sort=name&order=asc"
+                class="sort-link {% if current_sort == 'name' and current_order == 'asc' %}active{% endif %}">
                 Nombre A-Z
             </a>
-            <a href="?sort=name&order=desc" class="sort-link {% if current_sort == 'name' and current_order == 'desc' %}active{% endif %}">
+            <a href="?sort=name&order=desc"
+                class="sort-link {% if current_sort == 'name' and current_order == 'desc' %}active{% endif %}">
                 Nombre Z-A
             </a>
-            <a href="?sort=appointment&order=desc" class="sort-link {% if current_sort == 'appointment' and current_order == 'desc' %}active{% endif %}">
+            <a href="?sort=appointment&order=desc"
+                class="sort-link {% if current_sort == 'appointment' and current_order == 'desc' %}active{% endif %}">
                 Última Cita
             </a>
-            <a href="?sort=appointment&order=asc" class="sort-link {% if current_sort == 'appointment' and current_order == 'asc' %}active{% endif %}">
+            <a href="?sort=appointment&order=asc"
+                class="sort-link {% if current_sort == 'appointment' and current_order == 'asc' %}active{% endif %}">
                 Cita Más Antigua
             </a>
         </div>
     </div>
-    
+
     <div class="dashboard-content">
         <div class="patients-section">
             <h3>Mis Pacientes</h3>
             {% if patients %}
-                <div class="patients-grid">
-                    {% for patient in patients %}
-                        <div class="patient-card">
-                            <div class="patient-header">
-                                <h4>{{ patient.full_name }}</h4>
-                                <span class="patient-age">{{ patient.age }} años</span>
-                            </div>
-                            <div class="patient-info">
-                                <p class="patient-diagnosis">{{ patient.diagnosis|truncatewords:10 }}</p>
-                                {% with last_appointment=patient.get_last_appointment %}
-                                    {% if last_appointment %}
-                                        <p class="patient-last-appointment">
-                                            <small>Última cita: {{ last_appointment.date_time|date:"d/m/Y" }}</small>
-                                        </p>
-                                    {% else %}
-                                        <p class="patient-last-appointment">
-                                            <small class="text-muted">Sin citas registradas</small>
-                                        </p>
-                                    {% endif %}
-                                {% endwith %}
-                            </div>
-                            <div class="patient-actions">
-                                <a href="{% url 'patient_detail' patient.pk %}" class="btn btn-sm btn-primary">Ver Detalles</a>
-                                <a href="{% url 'appointment_create' patient.pk %}" class="btn btn-sm btn-secondary">Nueva Cita</a>
-                            </div>
+            <div class="patients-grid">
+                {% for patient in patients %}
+                <div class="patient-card">
+                    <div class="patient-header">
+                        <h4>{{ patient.full_name }}</h4>
+                        <div class="patient-badges">
+                            <span class="patient-age">{{ patient.age }} años</span>
+                            {% if patient.get_pregnancy_display %}
+                            <span class="pregnancy-badge">{{ patient.get_pregnancy_display }}</span>
+                            {% endif %}
                         </div>
-                    {% endfor %}
+                    </div>
+                    <div class="patient-info">
+                        <p class="patient-diagnosis">{{ patient.diagnosis|truncatewords:10 }}</p>
+                        {% with last_appointment=patient.get_last_appointment %}
+                        {% if last_appointment %}
+                        <p class="patient-last-appointment">
+                            <small>Última cita: {{ last_appointment.date_time|date:"d/m/Y" }}</small>
+                        </p>
+                        {% else %}
+                        <p class="patient-last-appointment">
+                            <small class="text-muted">Sin citas registradas</small>
+                        </p>
+                        {% endif %}
+                        {% endwith %}
+                    </div>
+                    <div class="patient-actions">
+                        <a href="{% url 'patient_detail' patient.pk %}" class="btn btn-sm btn-primary">Ver Detalles</a>
+                        <a href="{% url 'appointment_create' patient.pk %}" class="btn btn-sm btn-secondary">Nueva
+                            Cita</a>
+                    </div>
                 </div>
+                {% endfor %}
+            </div>
             {% else %}
-                <div class="empty-state">
-                    <p>No tienes pacientes registrados aún.</p>
-                    <a href="{% url 'patient_create' %}" class="btn btn-primary">Agregar tu primer paciente</a>
-                </div>
+            <div class="empty-state">
+                <p>No tienes pacientes registrados aún.</p>
+                <a href="{% url 'patient_create' %}" class="btn btn-primary">Agregar tu primer paciente</a>
+            </div>
             {% endif %}
         </div>
-        
+
         <div class="recent-appointments-section">
             <h3>Citas Recientes</h3>
             {% if recent_appointments %}
-                <div class="appointments-list">
-                    {% for appointment in recent_appointments %}
-                        <div class="appointment-item">
-                            <div class="appointment-patient">
-                                <strong>{{ appointment.patient.full_name }}</strong>
-                            </div>
-                            <div class="appointment-date">
-                                {{ appointment.date_time|date:"d/m/Y H:i" }}
-                            </div>
-                            <div class="appointment-evaluation">
-                                <span class="evaluation-badge evaluation-{{ appointment.evaluation }}">
-                                    {{ appointment.get_evaluation_display }}
-                                </span>
-                            </div>
-                        </div>
-                    {% endfor %}
+            <div class="appointments-list">
+                {% for appointment in recent_appointments %}
+                <div class="appointment-item">
+                    <div class="appointment-patient">
+                        <strong>{{ appointment.patient.full_name }}</strong>
+                    </div>
+                    <div class="appointment-date">
+                        {{ appointment.date_time|date:"d/m/Y H:i" }}
+                    </div>
+                    <div class="appointment-evaluation">
+                        <span class="evaluation-badge evaluation-{{ appointment.evaluation }}">
+                            {{ appointment.get_evaluation_display }}
+                        </span>
+                    </div>
                 </div>
+                {% endfor %}
+            </div>
             {% else %}
-                <p class="text-muted">No hay citas registradas aún.</p>
+            <p class="text-muted">No hay citas registradas aún.</p>
             {% endif %}
         </div>
     </div>

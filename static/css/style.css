@@ -339,12 +339,28 @@ body {
     margin: 0;
 }
 
+.patient-badges {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    align-items: flex-end;
+}
+
 .patient-age {
     background-color: var(--secondary);
     color: var(--text-dark);
     padding: 0.25rem 0.75rem;
     border-radius: 12px;
     font-size: 0.875rem;
+}
+
+.pregnancy-badge {
+    background-color: #ff69b4;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.875rem;
+    font-weight: 500;
 }
 
 .patient-info {
@@ -1191,5 +1207,73 @@ textarea.form-control {
         flex-direction: column;
         gap: 0.5rem;
         align-items: flex-start;
+    }
+}
+/* Floating Actions */
+.floating-actions {
+    position: fixed;
+    top: 50%;
+    right: 30px;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    z-index: 9999;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 20px 15px;
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-floating {
+    min-width: 120px;
+    padding: 14px 20px;
+    border-radius: 30px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+}
+
+.btn-floating.btn-primary {
+    background: linear-gradient(135deg, var(--contrast), var(--primary));
+    color: white;
+}
+
+.btn-floating.btn-secondary {
+    background: linear-gradient(135deg, #6c757d, #5a6268);
+    color: white;
+}
+
+.btn-floating:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.btn-floating:active {
+    transform: translateY(-1px);
+}
+
+
+
+/* Hide floating buttons on mobile and tablets */
+@media (max-width: 1024px) {
+    .floating-actions {
+        display: none !important;
+    }
+}
+
+/* Hide normal form actions on desktop */
+@media (min-width: 1025px) {
+    .form-actions {
+        display: none !important;
     }
 }

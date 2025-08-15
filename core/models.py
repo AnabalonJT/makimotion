@@ -30,6 +30,16 @@ class Patient(models.Model):
     medications = models.TextField(blank=True, help_text="Medicamentos actuales")
     musculoskeletal_history = models.TextField(blank=True, help_text="Antecedentes músculo esquelético quirúrgico")
     consultation_reason = models.TextField(default="", blank=True, help_text="Motivo de consulta")
+    patient_data_other = models.TextField(blank=True, help_text="Otros - Datos del paciente")
+    
+    # === EMBARAZO ===
+    is_pregnant = models.BooleanField(default=False, help_text="¿Está embarazada?")
+    pregnancy_weeks_at_registration = models.PositiveIntegerField(null=True, blank=True, help_text="Semanas de embarazo al momento del registro")
+    pregnancy_week_day = models.CharField(max_length=10, choices=[
+        ('lunes', 'Lunes'), ('martes', 'Martes'), ('miercoles', 'Miércoles'), 
+        ('jueves', 'Jueves'), ('viernes', 'Viernes'), ('sabado', 'Sábado'), ('domingo', 'Domingo')
+    ], blank=True, help_text="Día de la semana para contar semanas")
+    pregnancy_registration_date = models.DateField(null=True, blank=True, help_text="Fecha cuando se registraron las semanas")
     
     # === ANTECEDENTES GINECOLÓGICOS ===
     menopause = models.CharField(max_length=10, choices=[('si', 'Sí'), ('no', 'No')], blank=True, help_text="Menopausia")
@@ -51,6 +61,7 @@ class Patient(models.Model):
     prolapse = models.CharField(max_length=10, choices=[('si', 'Sí'), ('no', 'No')], blank=True, help_text="Prolapso")
     prolapse_type = models.TextField(blank=True, help_text="¿Cuál prolapso?")
     allergies = models.TextField(blank=True, help_text="Alergias")
+    gynecological_other = models.TextField(blank=True, help_text="Otros")
     
     # === HÁBITOS DE VIDA ===
     smoking = models.CharField(max_length=10, choices=[('si', 'Sí'), ('no', 'No')], blank=True, help_text="Fuma")
@@ -58,6 +69,7 @@ class Patient(models.Model):
     physical_activity = models.TextField(blank=True, help_text="Actividad física")
     diet = models.TextField(blank=True, help_text="Dieta")
     daily_liquid_consumption = models.TextField(blank=True, help_text="Consumo líquido diario")
+    lifestyle_other = models.TextField(blank=True, help_text="Otros")
     
     # === FUNCIÓN URINARIA ===
     daily_frequency = models.CharField(max_length=50, blank=True, help_text="Frecuencia diaria")
@@ -77,6 +89,7 @@ class Patient(models.Model):
     
     urination_position = models.TextField(blank=True, help_text="Micción posición adoptada")
     stream_description = models.TextField(blank=True, help_text="Descripción de chorro")
+    urinary_function_other = models.TextField(blank=True, help_text="Otros")
     
     # === INCONTINENCIA ORINA (Subsección) ===
     iue = models.BooleanField(default=False, help_text="IUE")
@@ -103,7 +116,6 @@ class Patient(models.Model):
     gas_incontinence = models.BooleanField(default=False, help_text="Incontinencia gases")
     hemorrhoids = models.BooleanField(default=False, help_text="Hemorroides")
     rectocele = models.BooleanField(default=False, help_text="Rectocele")
-    position_frequency = models.BooleanField(default=False, help_text="Frecuencia de posiciones")
     gas_stool_discrimination = models.BooleanField(default=False, help_text="Discriminación gas de caca")
     painful_evacuation = models.BooleanField(default=False, help_text="Evacuación dolorosa")
     straining_defecation = models.BooleanField(default=False, help_text="Puja para defecar")
@@ -113,14 +125,15 @@ class Patient(models.Model):
     
     defecation_position = models.TextField(blank=True, help_text="Posición para hacer caca")
     bristol_scale = models.PositiveIntegerField(null=True, blank=True, help_text="Bristol (1-7)")
+    position_frequency = models.TextField(blank=True, help_text="Frecuencia de posiciones")
     bowel_inconsistency = models.TextField(blank=True, help_text="¿Sufre inconsistencia? ¿Cuándo?")
     bowel_conscious = models.TextField(blank=True, help_text="¿Es consciente?")
     bowel_pad = models.TextField(blank=True, help_text="¿Apósito?")
     bowel_activities_stopped = models.TextField(blank=True, help_text="Actividad que dejó por el problema")
+    bowel_function_other = models.TextField(blank=True, help_text="Otros")
     
     # === HISTORIAL SEXUAL ===
-    sexually_active = models.BooleanField(default=False, help_text="Activo sexualmente")
-    sexually_active_when = models.TextField(blank=True, help_text="¿Cuándo?")
+    sexual_status = models.CharField(max_length=10, choices=[('si', 'Sí'), ('no', 'No'), ('virgen', 'Virgen')], blank=True, help_text="Estado sexual")
     urinary_incontinence_sexual = models.BooleanField(default=False, help_text="Incontinencia orina durante sexo")
     urinary_incontinence_sexual_when = models.TextField(blank=True, help_text="¿Cuándo?")
     fecal_incontinence_sexual = models.BooleanField(default=False, help_text="Incontinencia fecal durante sexo")
@@ -134,6 +147,7 @@ class Patient(models.Model):
     urge_to_urinate_during_sex = models.BooleanField(default=False, help_text="Siente deseo de orinar durante")
     vaginal_dryness = models.BooleanField(default=False, help_text="Resequedad")
     impaired_by_incontinence = models.BooleanField(default=False, help_text="Perjudicado por incontinencia")
+    sexual_history_other = models.TextField(blank=True, help_text="Otros")
     
     # === EXAMEN FÍSICO ===
     diastasis = models.TextField(blank=True, help_text="Diastasis")
@@ -142,16 +156,17 @@ class Patient(models.Model):
     skin_coloration = models.TextField(blank=True, help_text="Coloración de la piel")
     push_exam = models.CharField(max_length=20, choices=[('normal', 'Normal'), ('alterado', 'Alterado')], blank=True, help_text="Pujo")
     
-    # NLP - Tono
-    nlp_tone_contraction = models.TextField(blank=True, help_text="NLP Tono - Contracción")
-    nlp_tone_relaxation = models.TextField(blank=True, help_text="NLP Tono - Relajación")
-    nlp_tone_push = models.TextField(blank=True, help_text="NLP Tono - Pujo")
-    nlp_tone_pain = models.TextField(blank=True, help_text="NLP Tono - Dolor")
+    # NCP - Tono
+    ncp_tone_contraction = models.TextField(blank=True, help_text="NCP Tono - Contracción")
+    ncp_tone_relaxation = models.TextField(blank=True, help_text="NCP Tono - Relajación")
+    ncp_tone_push = models.TextField(blank=True, help_text="NCP Tono - Pujo")
+    ncp_tone_pain = models.TextField(blank=True, help_text="NCP Tono - Dolor")
     
-    # NLP - Sensibilidad y reflejo (dermatoma s2 s4)
-    anal_cutaneous_reflex = models.BooleanField(default=False, help_text="Reflejo cutáneo anal")
-    vulvo_cavernous_reflex = models.BooleanField(default=False, help_text="Reflejo vulvo cavernoso")
-    cough_reflex = models.BooleanField(default=False, help_text="Reflejo tusígeno")
+    # NCP - Sensibilidad y reflejo (dermatoma s2 s4)
+    anal_cutaneous_reflex = models.CharField(max_length=10, choices=[('si', 'Sí'), ('no', 'No')], blank=True, help_text="Reflejo cutáneo anal")
+    vulvo_cavernous_reflex = models.CharField(max_length=10, choices=[('si', 'Sí'), ('no', 'No')], blank=True, help_text="Reflejo vulvo cavernoso")
+    cough_reflex = models.CharField(max_length=10, choices=[('si', 'Sí'), ('no', 'No')], blank=True, help_text="Reflejo tusígeno")
+    physical_exam_other = models.TextField(blank=True, help_text="Otros")
     
     # === EXAMEN INTRACAVITARIO ===
     intracavitary_consent = models.BooleanField(default=False, help_text="Consentimiento")
@@ -174,17 +189,18 @@ class Patient(models.Model):
     
     # Otros exámenes intracavitarios
     urethral_movement = models.TextField(blank=True, help_text="Movimiento uretral")
-    transverse_urethral_tone = models.TextField(blank=True, help_text="Tono del transverso uretral")
+    transverse_abdominal_tone = models.TextField(blank=True, help_text="Tono del transverso abdominal")
     oxford_force = models.TextField(blank=True, help_text="Fuerza (Oxford)")
-    superficial_muscle = models.TextField(blank=True, help_text="Muscular superficial")
+    superficial_musculature = models.TextField(blank=True, help_text="Musculatura superficial")
     deep_musculature = models.TextField(blank=True, help_text="Musculatura profunda")
+    intracavitary_exam_other = models.TextField(blank=True, help_text="Otros")
     
     # === EXAMEN COLOPROCTOLÓGICO ===
     coloproctologic_consent = models.BooleanField(default=False, help_text="Consentimiento")
     anal_canal_closure = models.BooleanField(default=False, help_text="Cierre canal anal")
     irritation = models.BooleanField(default=False, help_text="Irritación")
     stool_remains = models.BooleanField(default=False, help_text="Resto de deposiciones")
-    blind_rectum = models.BooleanField(default=False, help_text="Recto ciego")
+    rectocele_exam = models.BooleanField(default=False, help_text="Recto cele")
     coloproctologic_scars = models.TextField(blank=True, help_text="Cicatriz, dónde")
     coloproctologic_hemorrhoids = models.TextField(blank=True, help_text="Hemorroides, dónde")
     
@@ -196,11 +212,13 @@ class Patient(models.Model):
     
     # Oxford
     oxford_anorectal_angle = models.TextField(blank=True, help_text="Ángulo ano rectal")
+    oxford_notes = models.TextField(blank=True, help_text="Oxford - Notas")
     
-    # Empujo
+    # Pujo
     anorectal_opening = models.BooleanField(default=False, help_text="Apertura ano rectal")
-    rectal_torso_synchronization = models.BooleanField(default=False, help_text="Sincronización torso rectal")
+    thoracic_rectal_synchronization = models.BooleanField(default=False, help_text="Sincronización toraco rectal")
     anal_canal_relaxation = models.BooleanField(default=False, help_text="Relajación canal anal")
+    coloproctologic_exam_other = models.TextField(blank=True, help_text="Otros")
     
     # === METADATOS ===
     created_at = models.DateTimeField(auto_now_add=True)
@@ -212,6 +230,77 @@ class Patient(models.Model):
     def get_last_appointment(self):
         """Get the most recent appointment for this patient"""
         return self.appointments.first()
+    
+    def get_pregnancy_start_date(self):
+        """Calculate the pregnancy start date based on weeks and day"""
+        if not self.is_pregnant or not self.pregnancy_weeks_at_registration or not self.pregnancy_week_day or not self.pregnancy_registration_date:
+            return None
+        
+        from datetime import timedelta
+        
+        # Mapeo de días de la semana
+        weekday_map = {
+            'lunes': 0, 'martes': 1, 'miercoles': 2, 'jueves': 3,
+            'viernes': 4, 'sabado': 5, 'domingo': 6
+        }
+        
+        target_weekday = weekday_map.get(self.pregnancy_week_day)
+        if target_weekday is None:
+            return None
+        
+        # Encontrar el día de la semana más cercano a la fecha de registro
+        registration_date = self.pregnancy_registration_date
+        days_since_target = (registration_date.weekday() - target_weekday) % 7
+        last_target_day = registration_date - timedelta(days=days_since_target)
+        
+        # Calcular fecha de inicio del embarazo
+        weeks_in_days = self.pregnancy_weeks_at_registration * 7
+        pregnancy_start = last_target_day - timedelta(days=weeks_in_days)
+        
+        return pregnancy_start
+    
+    def get_current_pregnancy_weeks(self):
+        """Calculate current pregnancy weeks"""
+        if not self.is_pregnant:
+            return None
+        
+        pregnancy_start = self.get_pregnancy_start_date()
+        if not pregnancy_start:
+            return self.pregnancy_weeks_at_registration  # Fallback
+        
+        from django.utils import timezone
+        from datetime import timedelta
+        
+        today = timezone.now().date()
+        
+        # Mapeo de días de la semana
+        weekday_map = {
+            'lunes': 0, 'martes': 1, 'miercoles': 2, 'jueves': 3,
+            'viernes': 4, 'sabado': 5, 'domingo': 6
+        }
+        
+        target_weekday = weekday_map.get(self.pregnancy_week_day, 0)
+        
+        # Encontrar el último día de la semana objetivo
+        days_since_target = (today.weekday() - target_weekday) % 7
+        last_target_day = today - timedelta(days=days_since_target)
+        
+        # Calcular semanas desde el inicio del embarazo
+        days_pregnant = (last_target_day - pregnancy_start).days
+        weeks_pregnant = max(0, days_pregnant // 7)
+        
+        return weeks_pregnant
+    
+    def get_pregnancy_display(self):
+        """Get pregnancy display text"""
+        if not self.is_pregnant:
+            return None
+        
+        weeks = self.get_current_pregnancy_weeks()
+        if weeks is None:
+            return "Embarazada"
+        
+        return f"🌸 {weeks} semanas"
     
     class Meta:
         ordering = ['full_name']
