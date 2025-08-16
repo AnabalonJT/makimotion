@@ -297,11 +297,19 @@ class PatientForm(forms.ModelForm):
 
 
 class AppointmentForm(forms.ModelForm):
-    """Form for creating and editing appointments"""
+    """Form for creating and editing appointments with PERFECT test assessment"""
     
     class Meta:
         model = Appointment
-        fields = ['date_time', 'session_description', 'evaluation', 'additional_notes']
+        fields = [
+            'date_time', 'session_description', 'additional_notes',
+            # PERFECT Test fields
+            'perfect_p_power', 'perfect_e_endurance', 'perfect_r_repetitions', 'perfect_f_fast',
+            'perfect_e_every', 'perfect_c_cocontraction', 'perfect_t_timing',
+            # Test del Balón fields
+            'balloon_rectal_sensation', 'balloon_first_desire_volume', 'balloon_normal_desire_volume',
+            'balloon_max_tolerable_capacity', 'balloon_rectoanal_reflex', 'balloon_expulsion'
+        ]
         widgets = {
             'date_time': forms.DateTimeInput(attrs={
                 'class': 'form-control',
@@ -316,22 +324,93 @@ class AppointmentForm(forms.ModelForm):
                 'minlength': 10,
                 'maxlength': 1000
             }),
-            'evaluation': forms.Select(attrs={
-                'class': 'form-control',
-                'required': True
-            }),
             'additional_notes': forms.Textarea(attrs={
                 'class': 'form-control',
                 'placeholder': 'Notas adicionales (opcional)',
                 'rows': 3,
                 'maxlength': 500
             }),
+            # PERFECT Test widgets
+            'perfect_p_power': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'min': 0,
+                'max': 10,
+                'placeholder': 'Ej: 3'
+            }),
+            'perfect_e_endurance': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'min': 0,
+                'max': 10,
+                'placeholder': 'Ej: 5'
+            }),
+            'perfect_r_repetitions': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'min': 0,
+                'max': 10,
+                'placeholder': 'Ej: 8'
+            }),
+            'perfect_f_fast': forms.NumberInput(attrs={
+                'class': 'form-control',
+                'min': 0,
+                'max': 10,
+                'placeholder': 'Ej: 4'
+            }),
+            'perfect_e_every': forms.Select(attrs={
+                'class': 'form-control'
+            }),
+            'perfect_c_cocontraction': forms.Select(attrs={
+                'class': 'form-control'
+            }),
+            'perfect_t_timing': forms.Select(attrs={
+                'class': 'form-control'
+            }),
+            # Test del Balón widgets
+            'balloon_rectal_sensation': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 2,
+                'placeholder': 'Ej: 15 ml'
+            }),
+            'balloon_first_desire_volume': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 2,
+                'placeholder': 'Ej: 55 ml'
+            }),
+            'balloon_normal_desire_volume': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 2,
+                'placeholder': 'Ej: 100 ml'
+            }),
+            'balloon_max_tolerable_capacity': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 2,
+                'placeholder': 'Ej: 220 ml'
+            }),
+            'balloon_rectoanal_reflex': forms.Select(attrs={
+                'class': 'form-control'
+            }),
+            'balloon_expulsion': forms.Select(attrs={
+                'class': 'form-control'
+            }),
         }
         labels = {
             'date_time': 'Fecha y Hora',
             'session_description': 'Descripción de la Sesión',
-            'evaluation': 'Evaluación del Progreso',
             'additional_notes': 'Notas Adicionales',
+            # PERFECT Test labels
+            'perfect_p_power': 'P - Power (Fuerza)',
+            'perfect_e_endurance': 'E - Endurance (Resistencia)',
+            'perfect_r_repetitions': 'R - Repetitions (Repeticiones)',
+            'perfect_f_fast': 'F - Fast contractions (Contracciones rápidas)',
+            'perfect_e_every': 'E - Every contraction (Cada contracción)',
+            'perfect_c_cocontraction': 'C - Co-contraction (Co-contracción)',
+            'perfect_t_timing': 'T - Timing (Coordinación)',
+            # Test del Balón labels
+            'balloon_rectal_sensation': 'Sensación rectal consciente',
+            'balloon_first_desire_volume': 'Volumen Primer deseo',
+            'balloon_normal_desire_volume': 'Volumen Deseo normal constante',
+            'balloon_max_tolerable_capacity': 'Capacidad máxima tolerable',
+            'balloon_rectoanal_reflex': 'Reflejo rectoanal estriado',
+            'balloon_expulsion': 'Expulsión del balón',
         }
     
     def clean_session_description(self):
@@ -368,3 +447,31 @@ class AppointmentForm(forms.ModelForm):
         if additional_notes and len(additional_notes) > 500:
             raise forms.ValidationError("Las notas adicionales no pueden exceder 500 caracteres.")
         return additional_notes
+    
+    def clean_perfect_p_power(self):
+        """Validate P (Power) field"""
+        value = self.cleaned_data.get('perfect_p_power')
+        if value is not None and (value < 0 or value > 10):
+            raise forms.ValidationError("El valor debe estar entre 0 y 10.")
+        return value
+    
+    def clean_perfect_e_endurance(self):
+        """Validate E (Endurance) field"""
+        value = self.cleaned_data.get('perfect_e_endurance')
+        if value is not None and (value < 0 or value > 10):
+            raise forms.ValidationError("El valor debe estar entre 0 y 10.")
+        return value
+    
+    def clean_perfect_r_repetitions(self):
+        """Validate R (Repetitions) field"""
+        value = self.cleaned_data.get('perfect_r_repetitions')
+        if value is not None and (value < 0 or value > 10):
+            raise forms.ValidationError("El valor debe estar entre 0 y 10.")
+        return value
+    
+    def clean_perfect_f_fast(self):
+        """Validate F (Fast contractions) field"""
+        value = self.cleaned_data.get('perfect_f_fast')
+        if value is not None and (value < 0 or value > 10):
+            raise forms.ValidationError("El valor debe estar entre 0 y 10.")
+        return value

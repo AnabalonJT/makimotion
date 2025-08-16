@@ -6,7 +6,7 @@ class AppointmentInline(admin.TabularInline):
     """Inline appointments for patient admin"""
     model = Appointment
     extra = 0
-    fields = ('date_time', 'evaluation', 'session_description')
+    fields = ('date_time', 'session_description', 'perfect_p_power', 'perfect_e_endurance')
     readonly_fields = ('created_at', 'updated_at')
 
 
@@ -36,12 +36,33 @@ class PatientAdmin(admin.ModelAdmin):
 
 @admin.register(Appointment)
 class AppointmentAdmin(admin.ModelAdmin):
-    """Admin configuration for Appointment"""
-    list_display = ('patient', 'date_time', 'evaluation', 'created_at')
+    """Admin configuration for Appointment with PERFECT test fields"""
+    list_display = ('patient', 'date_time', 'perfect_summary', 'created_at')
     search_fields = ('patient__full_name', 'session_description', 'additional_notes')
-    list_filter = ('evaluation', 'date_time', 'patient__user', 'created_at')
+    list_filter = ('date_time', 'patient__user', 'created_at')
     readonly_fields = ('created_at', 'updated_at')
     date_hierarchy = 'date_time'
+    fieldsets = (
+        ('Información General', {
+            'fields': ('patient', 'date_time', 'session_description', 'additional_notes')
+        }),
+        ('Test PERFECT', {
+            'fields': (
+                ('perfect_p_power', 'perfect_e_endurance', 'perfect_r_repetitions', 'perfect_f_fast'),
+                ('perfect_e_every', 'perfect_c_cocontraction', 'perfect_t_timing')
+            )
+        }),
+        ('Metadatos', {
+            'fields': ('created_at', 'updated_at'),
+            'classes': ('collapse',)
+        })
+    )
+    
+    def perfect_summary(self, obj):
+        """Display PERFECT test summary"""
+        scores = obj.get_perfect_score_display()
+        return f"P:{scores['P']} E:{scores['E']} R:{scores['R']} F:{scores['F']}"
+    perfect_summary.short_description = 'Test PERFECT'
     
     def get_queryset(self, request):
         """Optimize queries with select_related"""

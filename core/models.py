@@ -309,36 +309,51 @@ class Patient(models.Model):
 
 
 class Appointment(models.Model):
-    """Appointment model for patient sessions"""
-    EVALUATION_CHOICES = [
-        ('excellent', 'Excelente Progreso'),
-        ('good', 'Buen Progreso'),
-        ('fair', 'Progreso Regular'),
-        ('poor', 'Necesita Atención'),
-        ('critical', 'Atención Crítica Requerida'),
+    """Appointment model for patient sessions with PERFECT test assessment"""
+    YES_NO_CHOICES = [
+        ('si', 'Sí'),
+        ('no', 'No'),
     ]
     
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name='appointments', help_text="Paciente")
     date_time = models.DateTimeField(help_text="Fecha y hora de la cita")
     session_description = models.TextField(help_text="Descripción de la sesión o actividad realizada")
-    evaluation = models.CharField(max_length=20, choices=EVALUATION_CHOICES, help_text="Evaluación del progreso")
     additional_notes = models.TextField(blank=True, help_text="Notas adicionales")
+    
+    # PERFECT Test Fields
+    perfect_p_power = models.PositiveIntegerField(null=True, blank=True, help_text="P - Power (Fuerza)")
+    perfect_e_endurance = models.PositiveIntegerField(null=True, blank=True, help_text="E - Endurance (Resistencia)")
+    perfect_r_repetitions = models.PositiveIntegerField(null=True, blank=True, help_text="R - Repetitions (Repeticiones)")
+    perfect_f_fast = models.PositiveIntegerField(null=True, blank=True, help_text="F - Fast contractions (Contracciones rápidas)")
+    perfect_e_every = models.CharField(max_length=10, choices=YES_NO_CHOICES, blank=True, help_text="E - Every contraction (Cada contracción)")
+    perfect_c_cocontraction = models.CharField(max_length=10, choices=YES_NO_CHOICES, blank=True, help_text="C - Co-contraction (Co-contracción)")
+    perfect_t_timing = models.CharField(max_length=10, choices=YES_NO_CHOICES, blank=True, help_text="T - Timing (Coordinación)")
+    
+    # Test del Balón Fields
+    balloon_rectal_sensation = models.TextField(blank=True, help_text="Sensación rectal consciente: 10 - 30 ml")
+    balloon_first_desire_volume = models.TextField(blank=True, help_text="Volumen Primer deseo: 50 - 60 ml")
+    balloon_normal_desire_volume = models.TextField(blank=True, help_text="Volumen Deseo normal constante: sin acomodación 90 - 120ml")
+    balloon_max_tolerable_capacity = models.TextField(blank=True, help_text="Capacidad máxima tolerable: máximo tolerable 200-240 ml")
+    balloon_rectoanal_reflex = models.CharField(max_length=10, choices=YES_NO_CHOICES, blank=True, help_text="Reflejo rectoanal estriado")
+    balloon_expulsion = models.CharField(max_length=10, choices=YES_NO_CHOICES, blank=True, help_text="Expulsión del balón")
+    
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
     def __str__(self):
         return f"{self.patient.full_name} - {self.date_time.strftime('%d/%m/%Y %H:%M')}"
     
-    def get_evaluation_display_color(self):
-        """Return CSS class for evaluation display"""
-        color_map = {
-            'excellent': 'success',
-            'good': 'info',
-            'fair': 'warning',
-            'poor': 'danger',
-            'critical': 'critical'
+    def get_perfect_score_display(self):
+        """Return formatted PERFECT test results"""
+        return {
+            'P': self.perfect_p_power,
+            'E': self.perfect_e_endurance,
+            'R': self.perfect_r_repetitions,
+            'F': self.perfect_f_fast,
+            'E2': self.perfect_e_every,
+            'C': self.perfect_c_cocontraction,
+            'T': self.perfect_t_timing,
         }
-        return color_map.get(self.evaluation, 'secondary')
     
     class Meta:
         ordering = ['-date_time']

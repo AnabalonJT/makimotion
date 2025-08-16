@@ -19,7 +19,7 @@
             <a href="{% url 'dashboard' %}" class="btn btn-secondary">Volver al Dashboard</a>
         </div>
     </div>
-    
+
     <div class="clinical-content">
         <!-- SECCIÓN 1: DATOS DEL PACIENTE -->
         <div class="clinical-section">
@@ -43,28 +43,28 @@
                         <span>{{ patient.phone|default:"No especificado" }}</span>
                     </div>
                 </div>
-                
+
                 {% if patient.address %}
                     <div class="detail-item full-width">
                         <strong>Dirección:</strong>
                         <span>{{ patient.address }}</span>
                     </div>
                 {% endif %}
-                
+
                 {% if patient.consultation_reason %}
                     <div class="detail-item full-width">
                         <strong>Motivo de Consulta:</strong>
                         <span>{{ patient.consultation_reason|linebreaks }}</span>
                     </div>
                 {% endif %}
-                
+
                 {% if patient.medications %}
                     <div class="detail-item full-width">
                         <strong>Medicamentos:</strong>
                         <span>{{ patient.medications|linebreaks }}</span>
                     </div>
                 {% endif %}
-                
+
                 {% if patient.musculoskeletal_history %}
                     <div class="detail-item full-width">
                         <strong>Antecedentes Músculo Esquelético:</strong>
@@ -85,28 +85,28 @@
                             <span>{{ patient.get_menopause_display }}{% if patient.menopause_time %} ({{ patient.menopause_time }}){% endif %}</span>
                         </div>
                     {% endif %}
-                    
+
                     {% if patient.regular_menstrual_cycle %}
                         <div class="detail-item">
                             <strong>Ciclo Menstrual Regular:</strong>
                             <span>{{ patient.get_regular_menstrual_cycle_display }}</span>
                         </div>
                     {% endif %}
-                    
+
                     {% if patient.pregnancies_g %}
                         <div class="detail-item">
                             <strong>Gestaciones (G):</strong>
                             <span>{{ patient.pregnancies_g }}</span>
                         </div>
                     {% endif %}
-                    
+
                     {% if patient.abortions_a %}
                         <div class="detail-item">
                             <strong>Abortos (A):</strong>
                             <span>{{ patient.abortions_a }}</span>
                         </div>
                     {% endif %}
-                    
+
                     {% if patient.losses_p %}
                         <div class="detail-item">
                             <strong>Pérdidas (P):</strong>
@@ -128,7 +128,7 @@
                         </div>
                     {% endif %}
                 </div>
-                
+
                 <!-- Indicadores ginecológicos -->
                 {% if patient.io or patient.if_field or patient.ig %}
                     <div class="indicators-section">
@@ -140,7 +140,7 @@
                         </div>
                     </div>
                 {% endif %}
-                
+
                 {% if patient.allergies %}
                     <div class="detail-item full-width">
                         <strong>Alergias:</strong>
@@ -161,14 +161,14 @@
                             <span>{{ patient.get_smoking_display }}</span>
                         </div>
                     {% endif %}
-                    
+
                     {% if patient.alcohol %}
                         <div class="detail-item">
                             <strong>Alcohol:</strong>
                             <span>{{ patient.get_alcohol_display }}</span>
                         </div>
                     {% endif %}
-                    
+
                     {% if patient.daily_liquid_consumption %}
                         <div class="detail-item">
                             <strong>Consumo Líquido Diario:</strong>
@@ -176,14 +176,14 @@
                         </div>
                     {% endif %}
                 </div>
-                
+
                 {% if patient.physical_activity %}
                     <div class="detail-item full-width">
                         <strong>Actividad Física:</strong>
                         <span>{{ patient.physical_activity|linebreaks }}</span>
                     </div>
                 {% endif %}
-                
+
                 {% if patient.diet %}
                     <div class="detail-item full-width">
                         <strong>Dieta:</strong>
@@ -204,7 +204,7 @@
                             <span>{{ patient.daily_frequency }}</span>
                         </div>
                     {% endif %}
-                    
+
                     {% if patient.nocturnal_frequency %}
                         <div class="detail-item">
                             <strong>Frecuencia Nocturna:</strong>
@@ -212,7 +212,7 @@
                         </div>
                     {% endif %}
                 </div>
-                
+
                 <!-- Síntomas urinarios -->
                 {% if patient.pollakiuria or patient.nocturia or patient.urgency or patient.polyuria or patient.dysuria or patient.latency or patient.effort_to_urinate or patient.incomplete_emptying or patient.immediate_need or patient.terminal_dripping or patient.nocturnal_urgency %}
                     <div class="symptoms-section">
@@ -232,14 +232,14 @@
                         </div>
                     </div>
                 {% endif %}
-                
+
                 {% if patient.urination_position %}
                     <div class="detail-item full-width">
                         <strong>Posición para Micción:</strong>
                         <span>{{ patient.urination_position|linebreaks }}</span>
                     </div>
                 {% endif %}
-                
+
                 {% if patient.stream_description %}
                     <div class="detail-item full-width">
                         <strong>Descripción del Chorro:</strong>
@@ -303,7 +303,7 @@
                         </div>
                     </div>
                 {% endif %}
-                
+
                 <div class="detail-grid">
                     {% if patient.bristol_scale %}
                         <div class="detail-item">
@@ -312,14 +312,14 @@
                         </div>
                     {% endif %}
                 </div>
-                
+
                 {% if patient.defecation_position %}
                     <div class="detail-item full-width">
                         <strong>Posición para Defecar:</strong>
                         <span>{{ patient.defecation_position|linebreaks }}</span>
                     </div>
                 {% endif %}
-                
+
                 {% if patient.bowel_activities_stopped %}
                     <div class="detail-item full-width">
                         <strong>Actividades Dejadas por el Problema:</strong>
@@ -654,14 +654,14 @@
                 </div>
             </div>
         {% endif %}
-        
+
         <!-- SECCIÓN: HISTORIAL DE CITAS -->
         <div class="appointments-section">
             <div class="appointments-header">
                 <h3>📅 Historial de Citas</h3>
                 <a href="{% url 'appointment_create' patient.pk %}" class="btn btn-primary">Nueva Cita</a>
             </div>
-            
+
             {% if appointments %}
                 <div class="appointments-list">
                     {% for appointment in appointments %}

@@ -27,9 +27,9 @@
                 <span>{{ appointment.date_time|date:"d/m/Y H:i" }}</span>
             </div>
             <div class="detail-item">
-                <strong>Evaluación:</strong>
-                <span class="evaluation-badge evaluation-{{ appointment.evaluation }}">
-                    {{ appointment.get_evaluation_display }}
+                <strong>Test PERFECT:</strong>
+                <span class="perfect-summary-badge">
+                    P:{{ appointment.perfect_p_power|default:"?" }} E:{{ appointment.perfect_e_endurance|default:"?" }} R:{{ appointment.perfect_r_repetitions|default:"?" }} F:{{ appointment.perfect_f_fast|default:"?" }}
                 </span>
             </div>
             <div class="detail-item">
@@ -44,7 +44,7 @@
         
         <form method="post" class="delete-form">
             {% csrf_token %}
-            <div class="form-actions">
+            <div class="form-actions-normal">
                 <button type="submit" class="btn btn-danger">
                     Sí, Eliminar Cita
                 </button>

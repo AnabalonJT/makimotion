@@ -9,37 +9,37 @@
     <div class="form-header">
         <h2>
             {% if form.instance.pk %}
-                Editar Cita para {{ patient.full_name }}
+            Editar Cita para {{ patient.full_name }}
             {% else %}
-                Nueva Cita para {{ patient.full_name }}
+            Nueva Cita para {{ patient.full_name }}
             {% endif %}
         </h2>
         <p class="form-subtitle">
             {% if form.instance.pk %}
-                Actualiza la información de la cita
+            Actualiza la información de la cita
             {% else %}
-                Completa los datos de la nueva cita
+            Completa los datos de la nueva cita
             {% endif %}
         </p>
     </div>
-    
+
     <div class="form-card">
         {% if form.errors %}
             <div class="alert alert-error">
                 <strong>Por favor corrige los siguientes errores:</strong>
                 <ul>
                     {% for field, errors in form.errors.items %}
-                        {% for error in errors %}
-                            <li>{{ error }}</li>
-                        {% endfor %}
+                    {% for error in errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
                     {% endfor %}
                 </ul>
             </div>
         {% endif %}
-        
+
         <form method="post" class="appointment-form">
             {% csrf_token %}
-            
+
             <div class="form-group">
                 <label for="{{ form.date_time.id_for_label }}">{{ form.date_time.label }} *</label>
                 {{ form.date_time }}
@@ -47,7 +47,7 @@
                     <span class="field-error">{{ form.date_time.errors.0 }}</span>
                 {% endif %}
             </div>
-            
+
             <div class="form-group">
                 <label for="{{ form.session_description.id_for_label }}">{{ form.session_description.label }} *</label>
                 {{ form.session_description }}
@@ -55,30 +55,176 @@
                     <span class="field-error">{{ form.session_description.errors.0 }}</span>
                 {% endif %}
             </div>
-            
-            <div class="form-group">
-                <label for="{{ form.evaluation.id_for_label }}">{{ form.evaluation.label }} *</label>
-                {{ form.evaluation }}
-                {% if form.evaluation.errors %}
-                    <span class="field-error">{{ form.evaluation.errors.0 }}</span>
-                {% endif %}
+
+            <!-- Test PERFECT Section -->
+            <div class="form-section">
+                <h3 class="section-title">🎯 Test PERFECT</h3>
+                <p class="section-description">Evaluación sistemática del suelo pélvico</p>
+
+                <div class="perfect-test-grid">
+                <div class="perfect-row">
+                    <div class="form-group perfect-field">
+                        <label for="{{ form.perfect_p_power.id_for_label }}">{{ form.perfect_p_power.label }}</label>
+                        {{ form.perfect_p_power }}
+                        {% if form.perfect_p_power.errors %}
+                            <span class="field-error">{{ form.perfect_p_power.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group perfect-field">
+                        <label for="{{ form.perfect_e_endurance.id_for_label }}">{{ form.perfect_e_endurance.label}}</label>
+                        {{ form.perfect_e_endurance }}
+                        {% if form.perfect_e_endurance.errors %}
+                            <span class="field-error">{{ form.perfect_e_endurance.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group perfect-field">
+                        <label for="{{ form.perfect_r_repetitions.id_for_label }}">{{ form.perfect_r_repetitions.label}}</label>
+                        {{ form.perfect_r_repetitions }}
+                        {% if form.perfect_r_repetitions.errors %}
+                            <span class="field-error">{{ form.perfect_r_repetitions.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group perfect-field">
+                        <label for="{{ form.perfect_f_fast.id_for_label }}">{{ form.perfect_f_fast.label }}</label>
+                        {{ form.perfect_f_fast }}
+                        {% if form.perfect_f_fast.errors %}
+                            <span class="field-error">{{ form.perfect_f_fast.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group perfect-field">
+                        <label for="{{ form.perfect_e_every.id_for_label }}">E - Elevación</label>
+                        {{ form.perfect_e_every }}
+                        {% if form.perfect_e_every.errors %}
+                            <span class="field-error">{{ form.perfect_e_every.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group perfect-field">
+                        <label for="{{ form.perfect_c_cocontraction.id_for_label }}">{{form.perfect_c_cocontraction.label }}</label>
+                        {{ form.perfect_c_cocontraction }}
+                        {% if form.perfect_c_cocontraction.errors %}
+                            <span class="field-error">{{ form.perfect_c_cocontraction.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-group perfect-field">
+                        <label for="{{ form.perfect_t_timing.id_for_label }}">{{ form.perfect_t_timing.label }}</label>
+                        {{ form.perfect_t_timing }}
+                        {% if form.perfect_t_timing.errors %}
+                            <span class="field-error">{{ form.perfect_t_timing.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+                    </ {% if form.perfect_t_timing.errors %} 
+                        <span class="field-error">{{ form.perfect_t_timing.errors.0 }}</span>
+                    {% endif %}
+                </div>
+
+                <!-- Empty div for grid alignment -->
+                <div class="perfect-field"></div>
             </div>
-            
-            <div class="form-group">
-                <label for="{{ form.additional_notes.id_for_label }}">{{ form.additional_notes.label }}</label>
-                {{ form.additional_notes }}
-                {% if form.additional_notes.errors %}
-                    <span class="field-error">{{ form.additional_notes.errors.0 }}</span>
-                {% endif %}
-            </div>
-            
-            <div class="form-actions">
-                <button type="submit" class="btn btn-primary">
-                    {% if form.instance.pk %}Actualizar Cita{% else %}Crear Cita{% endif %}
-                </button>
-                <a href="{% url 'patient_detail' patient.pk %}" class="btn btn-secondary">Cancelar</a>
-            </div>
-        </form>
     </div>
 </div>
+
+<!-- Test del Balón Section -->
+<div class="form-section">
+    <h3 class="section-title">🎈 Test del Balón</h3>
+    <p class="section-description">Evaluación de la función anorrectal</p>
+
+    <div class="balloon-test-grid">
+        <div class="balloon-row">
+            <!-- Introducción (solo informativa) -->
+            <div class="balloon-intro">
+                <h4>📋 Introducción</h4>
+                <p class="instruction-text">
+                    Introducir la sonda protegida y correctamente lubricada unos 4 cm aprox.
+                    Insuflar 30 ml para posicionar en ampolla rectal, si es necesario retirar
+                    suavemente hasta el correcto posicionamiento. Desinflar y esperar 20 a 30 segundos.
+                </p>
+            </div>
+
+            <div class="form-group balloon-field">
+                <label for="{{ form.balloon_rectal_sensation.id_for_label }}">{{ form.balloon_rectal_sensation.label}}</label>
+                <p class="field-instruction">10 - 30 ml</p>
+                {{ form.balloon_rectal_sensation }}
+                {% if form.balloon_rectal_sensation.errors %}
+                    <span class="field-error">{{ form.balloon_rectal_sensation.errors.0 }}</span>
+                {% endif %}
+            </div>
+
+            <div class="form-group balloon-field">
+                <label for="{{ form.balloon_first_desire_volume.id_for_label }}">{{form.balloon_first_desire_volume.label }}</label>
+                <p class="field-instruction">50 - 60 ml. Detener insuflación 10 - 30 segundos. Evaluar capacidad de
+                    acomodación</p>
+                {{ form.balloon_first_desire_volume }}
+                {% if form.balloon_first_desire_volume.errors %}
+                    <span class="field-error">{{ form.balloon_first_desire_volume.errors.0 }}</span>
+                {% endif %}
+            </div>
+
+            <div class="form-group balloon-field">
+                <label for="{{ form.balloon_normal_desire_volume.id_for_label }}">{{form.balloon_normal_desire_volume.label }}</label>
+                <p class="field-instruction">sin acomodación 90 - 120ml</p>
+                {{ form.balloon_normal_desire_volume }}
+                {% if form.balloon_normal_desire_volume.errors %}
+                    <span class="field-error">{{ form.balloon_normal_desire_volume.errors.0 }}</span>
+                {% endif %}
+            </div>
+
+            <div class="form-group balloon-field">
+                <label for="{{ form.balloon_max_tolerable_capacity.id_for_label }}">{{form.balloon_max_tolerable_capacity.label }}</label>
+                <p class="field-instruction">máximo tolerable 200-240 ml o inferior a 300 ml</p>
+                {{ form.balloon_max_tolerable_capacity }}
+                {% if form.balloon_max_tolerable_capacity.errors %}
+                    <span class="field-error">{{ form.balloon_max_tolerable_capacity.errors.0 }}</span>
+                {% endif %}
+            </div>
+
+            <div class="form-group balloon-field">
+                <label for="{{ form.balloon_rectoanal_reflex.id_for_label }}">{{ form.balloon_rectoanal_reflex.label}}</label>
+                <p class="field-instruction">Insuflar rápido 20-30 ml con balón a una velocidad rápida</p>
+                {{ form.balloon_rectoanal_reflex }}
+                {% if form.balloon_rectoanal_reflex.errors %}
+                    <span class="field-error">{{ form.balloon_rectoanal_reflex.errors.0 }}</span>
+                {% endif %}
+            </div>
+
+            <div class="form-group balloon-field">
+                <label for="{{ form.balloon_expulsion.id_for_label }}">{{ form.balloon_expulsion.label }}</label>
+                <p class="field-instruction">Insuflar el balón en el recto con 50 ml y solicitar la expulsión. Tiempo 1
+                    min.</p>
+                {{ form.balloon_expulsion }}
+                {% if form.balloon_expulsion.errors %}
+                    <span class="field-error">{{ form.balloon_expulsion.errors.0 }}</span>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="form-group">
+<!-- Notas Adicionales Section -->
+<div class="form-section notes-section">
+    <h3 class="section-title">📝 Notas Adicionales</h3>
+    <p class="section-description">Observaciones y comentarios adicionales sobre la sesión</p>
+    
+    <div class="form-group">
+        <label for="{{ form.additional_notes.id_for_label }}">{{ form.additional_notes.label }}</label>
+        {{ form.additional_notes }}
+        {% if form.additional_notes.errors %}
+            <span class="field-error">{{ form.additional_notes.errors.0 }}</span>
+        {% endif %}
+    </div>
+</div>
+<div class="form-actions-normal">
+    <button type="submit" class="btn btn-primary">
+        {% if form.instance.pk %}Actualizar Cita{% else %}Crear Cita{% endif %}
+    </button>
+    <a href="{% url 'patient_detail' patient.pk %}" class="btn btn-secondary">Cancelar</a>
+</div>
+</form>
+
 {% endblock %}

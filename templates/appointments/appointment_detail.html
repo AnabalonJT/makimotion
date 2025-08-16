@@ -9,9 +9,7 @@
             <h2>Cita de {{ patient.full_name }}</h2>
             <div class="appointment-meta">
                 <span class="appointment-date">{{ appointment.date_time|date:"d/m/Y H:i" }}</span>
-                <span class="evaluation-badge evaluation-{{ appointment.evaluation }}">
-                    {{ appointment.get_evaluation_display }}
-                </span>
+                <span class="perfect-summary">Test PERFECT completado</span>
             </div>
         </div>
         <div class="appointment-actions">
@@ -33,12 +31,7 @@
                     <strong>Fecha y Hora:</strong>
                     <span>{{ appointment.date_time|date:"d/m/Y H:i" }}</span>
                 </div>
-                <div class="detail-item">
-                    <strong>Evaluación:</strong>
-                    <span class="evaluation-badge evaluation-{{ appointment.evaluation }}">
-                        {{ appointment.get_evaluation_display }}
-                    </span>
-                </div>
+
                 <div class="detail-item">
                     <strong>Creado:</strong>
                     <span>{{ appointment.created_at|date:"d/m/Y H:i" }}</span>
@@ -57,6 +50,61 @@
                 <h3>Descripción de la Sesión</h3>
                 <div class="session-content">
                     <p>{{ appointment.session_description|linebreaks }}</p>
+                </div>
+            </div>
+            
+            <!-- Test PERFECT Results -->
+            <div class="card">
+                <h3>🎯 Resultados Test PERFECT</h3>
+                <div class="perfect-results">
+                    <div class="perfect-scores-grid">
+                        <div class="perfect-score-item">
+                            <span class="score-label">P - Power (Fuerza)</span>
+                            <span class="score-value">{{ appointment.perfect_p_power|default:"No evaluado" }}</span>
+                        </div>
+                        <div class="perfect-score-item">
+                            <span class="score-label">E - Endurance (Resistencia)</span>
+                            <span class="score-value">{{ appointment.perfect_e_endurance|default:"No evaluado" }}</span>
+                        </div>
+                        <div class="perfect-score-item">
+                            <span class="score-label">R - Repetitions (Repeticiones)</span>
+                            <span class="score-value">{{ appointment.perfect_r_repetitions|default:"No evaluado" }}</span>
+                        </div>
+                        <div class="perfect-score-item">
+                            <span class="score-label">F - Fast contractions (Contracciones rápidas)</span>
+                            <span class="score-value">{{ appointment.perfect_f_fast|default:"No evaluado" }}</span>
+                        </div>
+                        <div class="perfect-score-item">
+                            <span class="score-label">E - Elevación</span>
+                            <span class="score-value">
+                                {% if appointment.perfect_e_every %}
+                                    {{ appointment.get_perfect_e_every_display }}
+                                {% else %}
+                                    No evaluado
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div class="perfect-score-item">
+                            <span class="score-label">C - Co-contraction (Co-contracción)</span>
+                            <span class="score-value">
+                                {% if appointment.perfect_c_cocontraction %}
+                                    {{ appointment.get_perfect_c_cocontraction_display }}
+                                {% else %}
+                                    No evaluado
+                                {% endif %}
+                            </span>
+                        </div>
+                        <div class="perfect-score-item">
+                            <span class="score-label">T - Timing (Coordinación)</span>
+                            <span class="score-value">
+                                {% if appointment.perfect_t_timing %}
+                                    {{ appointment.get_perfect_t_timing_display }}
+                                {% else %}
+                                    No evaluado
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
                 </div>
             </div>
             

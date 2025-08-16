@@ -11,40 +11,36 @@
   - Create directory structure for templates and static files
   - _Requirements: 6.1, 6.2, 6.4, 6.5_
 
-- [x] 2. Implement data models and database schema
-
+- [x] 2. Implement comprehensive clinical data models and database schema
 
   - [x] 2.1 Create UserProfile model with practice information
-
-
     - Write UserProfile model extending Django's User model
     - Add fields for practice_name and license_number
     - Create and run initial migration
-    - _Requirements: 7.1, 7.2, 7.5_
+    - _Requirements: 8.1, 8.2, 8.5_
   
-
-
-  - [x] 2.2 Create Patient model with user relationship
-
-    - Write Patient model with user foreign key and required fields
-    - Add validation for age and required text fields
-    - Configure model ordering and string representation
-    - Create and run migration for Patient model
-
-
-    - _Requirements: 3.1, 3.2, 7.3_
+  - [x] 2.2 Create comprehensive Patient model for pelvic floor clinical records
+    - Write Patient model with 9 major clinical sections
+    - Implement pregnancy tracking with automatic week calculation
+    - Add detailed gynecological history fields (G-A-P system)
+    - Include urinary function assessment with incontinence classification
+    - Add bowel function tracking with Bristol scale
+    - Implement sexual history documentation
+    - Create physical examination fields with NCP tone assessment
+    - Add intracavitary examination with MEA evaluation
+    - Include coloproctologic examination with Oxford test
+    - Add "Others" fields to all sections for additional notes
+    - Create and run migrations for comprehensive Patient model
+    - _Requirements: 3.1, 3.2, 7.1-7.9, 8.3_
   
-
-  - [x] 2.3 Create Appointment model with patient relationship
-
-    - Write Appointment model with patient foreign key and evaluation choices
-
-
-
-    - Add date_time, session_description, evaluation, and notes fields
+  - [x] 2.3 Create Appointment model with patient relationship and PERFECT test
+    - Write Appointment model with patient foreign key
+    - Add date_time, session_description, and additional_notes fields
+    - Remove evaluation field (no longer needed)
+    - Add PERFECT test fields: P, E, R, F as integers and E, C, T as Sí/No dropdowns
     - Configure chronological ordering and proper relationships
-    - Create and run migration for Appointment model
-    - _Requirements: 4.1, 4.2, 4.5_
+    - Create and run migration for updated Appointment model
+    - _Requirements: 4.1, 4.2, 8.1-8.10_
 
 
 
@@ -60,7 +56,7 @@
 
 
   - Create superuser and test admin functionality
-  - _Requirements: 7.4_
+  - _Requirements: 8.4_
 
 
 
@@ -101,7 +97,7 @@
 
     - Set up LOGIN_URL setting in Django configuration
     - Test authentication flow and redirects
-    - _Requirements: 1.2, 7.3_
+    - _Requirements: 1.2, 8.3_
 
 
 
@@ -147,93 +143,100 @@
     - Implement responsive grid layout for patient cards
     - _Requirements: 2.2, 5.1, 5.4_
 
-- [-] 7. Implement patient CRUD operations
+- [x] 7. Implement comprehensive clinical records CRUD operations
 
-
-
-
-
-  - [x] 7.1 Create patient form and validation
-
-
-    - Write Django form for Patient model with all required fields
-    - Add form validation for age, name, and diagnosis fields
-    - Create form template with error message display
-    - _Requirements: 3.1, 3.3_
+  - [x] 7.1 Create comprehensive clinical form with all 9 sections
+    - Write Django form for Patient model with all clinical fields
+    - Organize form fields by medical sections (patient data, gynecological, lifestyle, etc.)
+    - Add form validation for age, name, consultation reason, and medical scales
+    - Create sectioned form template with medical icons and clear organization
+    - Implement checkbox groups for symptoms and examination findings
+    - Add subsection organization for detailed medical categories
+    - _Requirements: 3.1, 3.3, 7.1-7.9_
   
-  - [x] 7.2 Implement patient creation view
-
-
-
-
-
-    - Write patient create view with form handling
+  - [x] 7.2 Implement patient creation with clinical data
+    - Write patient create view with comprehensive form handling
     - Add user association to ensure data isolation
+    - Implement pregnancy tracking logic with automatic date calculation
     - Redirect to patient detail view after successful creation
-    - _Requirements: 3.1, 3.2, 7.3_
+    - _Requirements: 3.1, 3.2, 7.1, 8.3_
   
-  - [x] 7.3 Create patient detail view with appointment history
-
-
-    - Write patient detail view showing all patient information
-    - Display chronological list of patient appointments
+  - [x] 7.3 Create patient detail view with clinical data display
+    - Write patient detail view showing all clinical information organized by sections
+    - Display pregnancy status with automatic week calculation
+    - Show chronological list of patient appointments
     - Add navigation links to edit patient and add appointments
-    - _Requirements: 3.4, 4.2_
-
-
+    - _Requirements: 3.4, 4.2, 7.1_
   
-  - [x] 7.4 Implement patient edit functionality
-
-    - Create patient update view using existing form
-    - Pre-populate form with current patient data
-
-
+  - [x] 7.4 Implement patient edit functionality with floating navigation
+    - Create patient update view using comprehensive clinical form
+    - Pre-populate form with current patient data across all sections
+    - Implement floating action buttons for long form navigation
+    - Add responsive design hiding floating buttons on mobile
     - Add confirmation message after successful update
-    - _Requirements: 3.5_
+    - _Requirements: 3.5, 5.6, 5.7_
   
   - [x] 7.5 Add patient deletion with confirmation
-v 
     - Create patient delete view with confirmation dialog
     - Display warning about cascade deletion of appointments
     - Implement actual deletion and redirect to dashboard
     - _Requirements: 3.6_
-
-- [ ] 8. Implement appointment CRUD operations
-  - [x] 8.1 Create appointment form with validation
-
-
-    - Write Django form for Appointment model with all fields
-    - Add date/time validation and evaluation choice display
-    - Create form template with proper field styling
-    - _Requirements: 4.1, 4.5_
   
-  - [x] 8.2 Implement appointment creation within patient context
+  - [x] 7.6 Implement pregnancy tracking system
+    - Add pregnancy week calculation methods to Patient model
+    - Implement automatic week updates based on registration date and counting day
+    - Add pregnancy display with visual indicators
+    - Create form logic for pregnancy data management
+    - _Requirements: 7.1_
+
+- [ ] 8. Update Appointment model and implement PERFECT test CRUD operations
+  - [x] 8.0 Update Appointment model to include PERFECT test fields
 
 
-    - Write appointment create view linked to specific patient
-    - Ensure appointment is properly associated with patient
+    - Remove evaluation field from Appointment model
+    - Add PERFECT test integer fields: perfect_p_power, perfect_e_endurance, perfect_r_repetitions, perfect_f_fast
+    - Add PERFECT test dropdown fields: perfect_e_every, perfect_c_cocontraction, perfect_t_timing with Sí/No choices
+    - Add get_perfect_score_display method to format PERFECT test results
+    - Create and run migration to update Appointment model
+    - Update admin.py to display PERFECT test fields
+    - _Requirements: 8.1-8.10_
+
+
+
+- [ ] 8.1 Implement appointment CRUD operations with PERFECT test
+  - [ ] 8.1.1 Create updated appointment form with PERFECT test validation
+    - Update Django form for Appointment model removing evaluation field
+    - Add PERFECT test section with integer fields (P, E, R, F) and dropdown fields (E, C, T)
+    - Add date/time validation and PERFECT test field validation
+    - Create form template with PERFECT test section styling
+
+
+    - Add help text and labels for each PERFECT test component
+    - _Requirements: 4.1, 8.1-8.10_
+  
+  - [ ] 8.1.2 Update appointment creation with PERFECT test
+    - Update appointment create view to handle PERFECT test fields
+
+    - Ensure PERFECT test data is properly saved with appointment
+    - Update patient detail view to display PERFECT test results
     - Redirect to patient detail view after creation
-    - _Requirements: 4.1, 4.3_
+    - _Requirements: 4.1, 4.3, 8.6, 8.9_
   
-  - [x] 8.3 Create appointment detail and edit views
+  - [ ] 8.1.3 Update appointment detail and edit views with PERFECT test
+    - Update appointment detail view to display PERFECT test results in organized format
+    - Update appointment edit view to handle PERFECT test field pre-population
 
 
-
-
-    - Write appointment detail view showing all appointment information
-    - Implement appointment update view with form pre-population
+    - Add PERFECT test results display to patient appointment history
     - Add navigation between appointment views and patient detail
-    - _Requirements: 4.3_
+    - _Requirements: 4.3, 8.6, 8.9_
   
 
 
-  - [x] 8.4 Add appointment deletion functionality
-
-
-
-    - Create appointment delete view with confirmation
+  - [ ] 8.1.4 Update appointment deletion functionality
+    - Update appointment delete view to handle PERFECT test data cleanup
     - Implement deletion and redirect to patient detail
-    - Ensure proper cleanup of appointment data
+    - Ensure proper cleanup of all appointment and PERFECT test data
     - _Requirements: 4.4_
 
 - [x] 9. Add comprehensive form validation and error handling
@@ -254,23 +257,36 @@ v
   - _Requirements: 1.2, 2.1, 3.4_
 
 - [x] 11. Implement user data isolation and security
-
-
   - Add user filtering to all patient and appointment queries
   - Ensure users can only access their own data
   - Add permission checks to all views
   - Test data isolation with multiple user accounts
+  - _Requirements: 8.1, 8.3_
 
+- [x] 11.1 Implement floating navigation system for clinical forms
+  - Create floating action buttons with fixed positioning
+  - Add CSS for floating buttons with backdrop blur effect
+  - Implement responsive design hiding floating buttons on mobile/tablet
+  - Add form ID linking for submit functionality from floating buttons
+  - Test floating button behavior during form scrolling
+  - _Requirements: 5.6, 5.7, 5.8_
 
-
-  - _Requirements: 7.1, 7.3_
+- [x] 11.2 Enhance clinical form organization and field corrections
+  - Add "Others" text fields to all clinical sections
+  - Reorganize position frequency field from checkbox to text input
+  - Correct field names (transverse abdominal tone, superficial musculature, etc.)
+  - Fix checkbox field references (recto cele, thoracic rectal synchronization)
+  - Add Oxford test input field with proper labeling
+  - Rename subsections (Empujo to Pujo, etc.)
+  - _Requirements: 7.9, 5.8_
 
 - [ ] 12. Write comprehensive test suite
   - [ ] 12.1 Create model tests for validation and relationships
-    - Write unit tests for Patient and Appointment model validation
+    - Write unit tests for Patient and updated Appointment model validation
+    - Test PERFECT test field validation and get_perfect_score_display method
     - Test model relationships and cascade deletion behavior
     - Test model methods and string representations
-    - _Requirements: 3.2, 3.6, 4.1_
+    - _Requirements: 3.2, 3.6, 4.1, 8.9_
   
   - [ ] 12.2 Create view tests for authentication and CRUD operations
     - Write tests for login/logout functionality
@@ -279,10 +295,11 @@ v
     - _Requirements: 1.2, 1.3, 1.4, 7.3_
   
   - [ ] 12.3 Create form tests for validation scenarios
-    - Test form validation for all required and optional fields
+    - Test form validation for all required and optional fields including PERFECT test
+    - Test PERFECT test field validation (integer ranges, dropdown choices)
     - Test error message display and form rendering
-    - Test form submission and data processing
-    - _Requirements: 3.3, 4.1_
+    - Test form submission and data processing with PERFECT test data
+    - _Requirements: 3.3, 4.1, 8.10_
 
 - [ ] 13. Set up deployment configuration for Render
   - [x] 13.1 Create requirements.txt with all dependencies

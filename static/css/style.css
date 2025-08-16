@@ -1271,9 +1271,376 @@ textarea.form-control {
     }
 }
 
-/* Hide normal form actions on desktop */
+/* Hide normal form actions on desktop only for clinical forms with floating buttons */
 @media (min-width: 1025px) {
-    .form-actions {
+    .clinical-form-container .form-actions {
         display: none !important;
+    }
+}
+/* PE
+RFECT Test Styles */
+.perfect-test-grid {
+    background-color: var(--accent);
+    border: 2px solid var(--primary);
+    border-radius: 8px;
+    padding: 20px;
+    margin: 15px 0;
+}
+
+.perfect-row {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.perfect-row:last-child {
+    margin-bottom: 0;
+}
+
+.perfect-field {
+    display: flex;
+    flex-direction: column;
+}
+
+.perfect-field label {
+    font-weight: 600;
+    color: var(--contrast);
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+}
+
+.perfect-field input,
+.perfect-field select {
+    padding: 8px 12px;
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.9rem;
+    transition: border-color 0.3s ease;
+}
+
+.perfect-field input:focus,
+.perfect-field select:focus {
+    outline: none;
+    border-color: var(--contrast);
+    box-shadow: 0 0 0 3px rgba(168, 110, 244, 0.1);
+}
+
+.perfect-field input[type="number"] {
+    text-align: center;
+    font-weight: 600;
+}
+
+/* Responsive design for PERFECT test */
+@media (max-width: 480px) {
+    .perfect-test-grid {
+        padding: 15px;
+    }
+    
+    .perfect-row {
+        gap: 10px;
+    }
+}
+
+/* Section styling for PERFECT test */
+.form-section {
+    margin: 25px 0;
+}
+
+.section-title {
+    color: var(--contrast);
+    font-size: 1.3rem;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.section-description {
+    color: var(--text-light);
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+    font-style: italic;
+}/* PE
+RFECT Test Results Display */
+.perfect-results {
+    background-color: var(--neutral);
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 15px;
+}
+
+.perfect-scores-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+}
+
+.perfect-score-item {
+    background-color: var(--accent);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.score-label {
+    font-weight: 600;
+    color: var(--text-dark);
+    font-size: 0.9rem;
+}
+
+.score-value {
+    font-weight: 700;
+    color: var(--contrast);
+    font-size: 1rem;
+    background-color: var(--primary);
+    padding: 4px 8px;
+    border-radius: 4px;
+    color: white;
+    min-width: 60px;
+    text-align: center;
+}
+
+.perfect-summary {
+    background-color: var(--primary);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+/* Responsive adjustments for PERFECT results */
+@media (max-width: 768px) {
+    .perfect-scores-grid {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .perfect-score-item {
+        padding: 10px;
+    }
+    
+    .score-label {
+        font-size: 0.8rem;
+    }
+    
+    .score-value {
+        font-size: 0.9rem;
+        min-width: 50px;
+    }
+}/
+* PERFECT Test Summary in Appointment Cards */
+.appointment-perfect {
+    display: flex;
+    align-items: center;
+}
+
+.perfect-summary-badge {
+    background-color: var(--contrast);
+    color: white;
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    font-family: monospace;
+}
+
+/* Update appointment card layout */
+.appointment-card .appointment-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+@media (max-width: 768px) {
+    .perfect-summary-badge {
+        font-size: 0.7rem;
+        padding: 4px 8px;
+    }
+    
+    .appointment-card .appointment-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+}/
+* Form actions for non-floating buttons (appointments, delete forms, etc.) */
+.form-actions-normal {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+    padding: 1.5rem 0;
+    border-top: 1px solid var(--border);
+}
+
+.form-actions-normal .btn {
+    min-width: 120px;
+    padding: 12px 24px;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .form-actions-normal {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+    
+    .form-actions-normal .btn {
+        width: 100%;
+    }
+}/* Test 
+del Balón Styles */
+.balloon-test-grid {
+    background-color: var(--accent);
+    border: 2px solid var(--secondary);
+    border-radius: 8px;
+    padding: 20px;
+    margin: 15px 0;
+}
+
+.balloon-row {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.balloon-field {
+    display: flex;
+    flex-direction: column;
+}
+
+.balloon-field label {
+    font-weight: 600;
+    color: var(--contrast);
+    margin-bottom: 5px;
+    font-size: 1rem;
+}
+
+.field-instruction {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    font-style: italic;
+    margin-bottom: 8px;
+    background-color: var(--neutral);
+    padding: 6px 10px;
+    border-radius: 4px;
+    border-left: 3px solid var(--secondary);
+}
+
+.balloon-intro {
+    background-color: var(--neutral);
+    padding: 15px;
+    border-radius: 6px;
+    border-left: 4px solid var(--secondary);
+    margin-bottom: 10px;
+}
+
+.balloon-intro h4 {
+    color: var(--contrast);
+    margin-bottom: 8px;
+    font-size: 1rem;
+}
+
+.instruction-text {
+    color: var(--text-dark);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* Test Header with Toggle Button */
+.test-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.btn-toggle {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-toggle:hover {
+    background-color: var(--contrast);
+    transform: translateY(-1px);
+}
+
+/* Responsive design for Test del Balón */
+@media (max-width: 480px) {
+    .balloon-test-grid {
+        padding: 15px;
+    }
+    
+    .balloon-row {
+        gap: 15px;
+    }
+    
+    .test-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+    
+    .btn-toggle {
+        align-self: flex-end;
+    }
+}/
+* Notas Adicionales Section */
+.notes-section {
+    background-color: var(--accent);
+    border: 2px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.notes-section h3 {
+    color: var(--contrast);
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+
+.notes-section .section-description {
+    color: var(--text-light);
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+    font-style: italic;
+}
+
+.notes-section textarea {
+    background-color: var(--accent);
+    border: 2px solid var(--border);
+    border-radius: 6px;
+    padding: 12px;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    resize: vertical;
+    min-height: 100px;
+}
+
+.notes-section textarea:focus {
+    outline: none;
+    border-color: var(--contrast);
+    box-shadow: 0 0 0 3px rgba(168, 110, 244, 0.1);
+}
+
+@media (max-width: 480px) {
+    .notes-section {
+        padding: 15px;
+        margin: 15px 0;
     }
 }
