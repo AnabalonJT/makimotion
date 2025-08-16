@@ -1643,4 +1643,131 @@ del Balón Styles */
         padding: 15px;
         margin: 15px 0;
     }
+}/* 
+Patient Hover Card/Popover */
+.patient-card {
+    position: relative;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.patient-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.patient-hover-card {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--accent);
+    border: 2px solid var(--contrast);
+    border-radius: 8px;
+    padding: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    min-width: 200px;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+.patient-card:hover .patient-hover-card {
+    opacity: 1;
+    visibility: visible;
+    top: -15px;
+}
+
+.hover-card-header {
+    text-align: center;
+    margin-bottom: 8px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+}
+
+.hover-card-header strong {
+    color: var(--contrast);
+    font-size: 0.9rem;
+}
+
+.hover-card-content {
+    font-size: 0.8rem;
+}
+
+.perfect-scores,
+.perfect-choices {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 4px;
+}
+
+.perfect-scores span,
+.perfect-choices span {
+    background-color: var(--primary);
+    color: white;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: 600;
+    font-size: 0.75rem;
+}
+
+.perfect-choices span {
+    background-color: var(--secondary);
+    color: var(--text-dark);
+}
+
+.no-appointments {
+    text-align: center;
+    color: var(--text-light);
+    font-style: italic;
+    margin: 0;
+    font-size: 0.8rem;
+}
+
+/* Responsive adjustments for hover card */
+@media (max-width: 768px) {
+    .patient-hover-card {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        min-width: 250px;
+        max-width: 90vw;
+    }
+    
+    .patient-card:hover .patient-hover-card {
+        top: 50%;
+        transform: translate(-50%, -50%);
+    }
+}
+
+/* Hide hover cards on touch devices */
+@media (hover: none) {
+    .patient-hover-card {
+        display: none;
+    }
+}/* PERFECT
+ Summary for Recent Appointments */
+.perfect-summary-small {
+    background-color: var(--contrast);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    font-family: monospace;
+}
+
+.appointment-perfect {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+@media (max-width: 768px) {
+    .perfect-summary-small {
+        font-size: 0.65rem;
+        padding: 3px 6px;
+    }
 }

@@ -333,8 +333,13 @@
     - _Requirements: 6.1, 6.2, 6.4, 6.5_
 
 - [ ] 14. Final integration testing and polish
-  - Test complete user workflows from login to patient/appointment management
-  - Verify responsive design on different screen sizes
-  - Test deployment configuration locally
-  - Perform final code review and cleanup
-  - _Requirements: 5.4, 6.5_
+ - Test complete user workflows from login to patient/appointment management
+ - Verify responsive design on different screen sizes
+ - Test deployment configuration locally
+ - Perform final code review and cleanup
+ - _Requirements: 5.4, 6.5_
+
+- [x] 15. Agregar hover card/popover en dashboard para mostrar resultado PERFECT y fecha de última cita
+  - Implementar tarjeta flotante/popover en la vista de dashboard que muestre los resultados del test PERFECT y la fecha de la última cita al pasar el mouse sobre la tarjeta de paciente.
+  - Mostrar mensaje si el paciente no tiene citas.
+  - Estado: Completado.

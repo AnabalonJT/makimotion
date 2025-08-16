@@ -337,11 +337,15 @@ erDiagram
 ```
 
 ### Clinical Form Design
-- **Sectioned Layout:** 9 major clinical sections with clear visual separation
-- **Subsections:** Nested subsections for detailed medical categories
-- **Checkbox Groups:** Organized symptom and examination checkboxes
-- **Medical Icons:** Section-specific emojis for quick visual identification
-- **Floating Actions:** Fixed-position buttons for long form navigation
+ - **Sectioned Layout:** 9 major clinical sections with clear visual separation
+ - **Subsections:** Nested subsections for detailed medical categories
+ - **Checkbox Groups:** Organized symptom and examination checkboxes
+ - **Medical Icons:** Section-specific emojis for quick visual identification
+ - **Floating Actions:** Fixed-position buttons for long form navigation
+
+### Hover Card/Popover en Dashboard
+ - Al pasar el mouse sobre la tarjeta de un paciente en el dashboard, se muestra una tarjeta flotante (popover) con la fecha de la última cita y los resultados del test PERFECT (P, E, R, F, E, C, T). Esto permite visualizar rápidamente el estado clínico más reciente del paciente sin entrar al detalle.
+ - Estado: Completado.
 
 ### Floating Navigation System
 ```css

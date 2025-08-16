@@ -43,7 +43,7 @@
             {% if patients %}
             <div class="patients-grid">
                 {% for patient in patients %}
-                <div class="patient-card">
+                <div class="patient-card" data-patient-id="{{ patient.pk }}">
                     <div class="patient-header">
                         <h4>{{ patient.full_name }}</h4>
                         <div class="patient-badges">
@@ -72,6 +72,36 @@
                         <a href="{% url 'appointment_create' patient.pk %}" class="btn btn-sm btn-secondary">Nueva
                             Cita</a>
                     </div>
+                    
+                    <!-- Hover Card/Popover -->
+                    {% with last_appointment=patient.get_last_appointment %}
+                    {% if last_appointment %}
+                    <div class="patient-hover-card">
+                        <div class="hover-card-header">
+                            <strong>{{ last_appointment.date_time|date:"d/m/Y" }}</strong>
+                        </div>
+                        <div class="hover-card-content">
+                            <div class="perfect-scores">
+                                <span>P: {{ last_appointment.perfect_p_power|default:"--" }}</span>
+                                <span>E: {{ last_appointment.perfect_e_endurance|default:"--" }}</span>
+                                <span>R: {{ last_appointment.perfect_r_repetitions|default:"--" }}</span>
+                                <span>F: {{ last_appointment.perfect_f_fast|default:"--" }}</span>
+                            </div>
+                            <div class="perfect-choices">
+                                <span>E: {{ last_appointment.perfect_e_every|default:"--" }}</span>
+                                <span>C: {{ last_appointment.perfect_c_cocontraction|default:"--" }}</span>
+                                <span>T: {{ last_appointment.perfect_t_timing|default:"--" }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="patient-hover-card">
+                        <div class="hover-card-content">
+                            <p class="no-appointments">Sin citas registradas</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endwith %}
                 </div>
                 {% endfor %}
             </div>
@@ -95,9 +125,9 @@
                     <div class="appointment-date">
                         {{ appointment.date_time|date:"d/m/Y H:i" }}
                     </div>
-                    <div class="appointment-evaluation">
-                        <span class="evaluation-badge evaluation-{{ appointment.evaluation }}">
-                            {{ appointment.get_evaluation_display }}
+                    <div class="appointment-perfect">
+                        <span class="perfect-summary-small">
+                            🎯 P:{{ appointment.perfect_p_power|default:"?" }} E:{{ appointment.perfect_e_endurance|default:"?" }} R:{{ appointment.perfect_r_repetitions|default:"?" }} F:{{ appointment.perfect_f_fast|default:"?" }}
                         </span>
                     </div>
                 </div>
