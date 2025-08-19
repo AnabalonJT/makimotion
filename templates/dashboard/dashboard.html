@@ -74,33 +74,42 @@
                     </div>
                     
                     <!-- Hover Card/Popover -->
-                    {% with last_appointment=patient.get_last_appointment %}
-                    {% if last_appointment %}
+                    {% with appointments=patient.appointments.all|slice:":7" %}
                     <div class="patient-hover-card">
-                        <div class="hover-card-header">
-                            <strong>{{ last_appointment.date_time|date:"d/m/Y" }}</strong>
-                        </div>
-                        <div class="hover-card-content">
-                            <div class="perfect-scores">
-                                <span>P: {{ last_appointment.perfect_p_power|default:"--" }}</span>
-                                <span>E: {{ last_appointment.perfect_e_endurance|default:"--" }}</span>
-                                <span>R: {{ last_appointment.perfect_r_repetitions|default:"--" }}</span>
-                                <span>F: {{ last_appointment.perfect_f_fast|default:"--" }}</span>
+                        {% if appointments %}
+                            {# Show last task from the most recent appointment (first in appointments since Appointment.Meta orders by -date_time) #}
+                            {% with last_appointment=appointments.0 %}
+                                {% if last_appointment.tasks %}
+                                    <div class="hover-card-task">
+                                        <strong>Última tarea:</strong>
+                                        <p class="task-text">{{ last_appointment.tasks|truncatechars:120 }}</p>
+                                    </div>
+                                {% endif %}
+                            {% endwith %}
+
+                            <div class="hover-card-header">
+                                <strong>Test PERFECT (máx. 7)</strong>
                             </div>
-                            <div class="perfect-choices">
-                                <span>E: {{ last_appointment.perfect_e_every|default:"--" }}</span>
-                                <span>C: {{ last_appointment.perfect_c_cocontraction|default:"--" }}</span>
-                                <span>T: {{ last_appointment.perfect_t_timing|default:"--" }}</span>
+                            <div class="hover-card-content perfect-list">
+                                {% for appt in appointments %}
+                                    <div class="perfect-item">
++                                        <div class="perfect-item-header"><small>{{ appt.date_time|date:"d/m/Y" }}</small></div>
+                                        <div class="perfect-scores-inline">
+                                            <span>P: {{ appt.perfect_p_power|default:"--" }}</span>
+                                            <span>E: {{ appt.perfect_e_endurance|default:"--" }}</span>
+                                            <span>R: {{ appt.perfect_r_repetitions|default:"--" }}</span>
+                                            <span>F: {{ appt.perfect_f_fast|default:"--" }}</span>
+                                            <span class="perfect-choices-small">E:{{ appt.perfect_e_every|default:"--" }} C:{{ appt.perfect_c_cocontraction|default:"--" }} T:{{ appt.perfect_t_timing|default:"--" }}</span>
+                                        </div>
+                                    </div>
+                                {% endfor %}
                             </div>
-                        </div>
+                        {% else %}
+                            <div class="hover-card-content">
+                                <p class="no-appointments">Sin citas registradas</p>
+                            </div>
+                        {% endif %}
                     </div>
-                    {% else %}
-                    <div class="patient-hover-card">
-                        <div class="hover-card-content">
-                            <p class="no-appointments">Sin citas registradas</p>
-                        </div>
-                    </div>
-                    {% endif %}
                     {% endwith %}
                 </div>
                 {% endfor %}
@@ -127,13 +136,14 @@
                     </div>
                     <div class="appointment-perfect">
                         <span class="perfect-summary-small">
-                            🎯 P:{{ appointment.perfect_p_power|default:"?" }} E:{{ appointment.perfect_e_endurance|default:"?" }} R:{{ appointment.perfect_r_repetitions|default:"?" }} F:{{ appointment.perfect_f_fast|default:"?" }}
+                            🎯 P:{{ appointment.perfect_p_power|default:"?" }} E:{{ appointment.perfect_e_endurance|default:"?" }} R:{{ appointment.perfect_r_repetitions|default:"?" }} F:{{ appointment.perfect_f_fast|default:"?" }} E:{{ appointment.perfect_e_every|default:"?" }} C:{{ appointment.perfect_c_cocontraction|default:"?" }} T:{{ appointment.perfect_t_timing|default:"?" }} 
                         </span>
                     </div>
                 </div>
                 {% endfor %}
             </div>
             {% else %}
+            
             <p class="text-muted">No hay citas registradas aún.</p>
             {% endif %}
         </div>

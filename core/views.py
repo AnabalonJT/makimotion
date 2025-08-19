@@ -1,8 +1,24 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.db.models import Max
+from django.db.models import Max, Q
 from .models import Patient, Appointment
+
+@login_required
+def patient_list(request):
+    """Lista de todos los pacientes (dados de alta y no) con barra de búsqueda"""
+    query = request.GET.get('q', '')
+    patients = Patient.objects.filter(user=request.user)
+    if query and len(query) >= 2:
+        patients = patients.filter(full_name__icontains=query)
+    patients = patients.order_by('-alta', '-full_name')
+    total_patients = patients.count()
+    context = {
+        'patients': patients,
+        'total_patients': total_patients,
+        'query': query,
+    }
+    return render(request, 'patients/patient_list.html', context)
 from .forms import PatientForm, AppointmentForm
 
 @login_required
@@ -12,8 +28,8 @@ def dashboard(request):
     sort_by = request.GET.get('sort', 'name')
     sort_order = request.GET.get('order', 'asc')
     
-    # Get user's patients
-    patients = Patient.objects.filter(user=request.user)
+    # Get user's patients que no han sido dados de alta
+    patients = Patient.objects.filter(user=request.user, alta=False)
     
     # Apply sorting
     if sort_by == 'name':
@@ -25,11 +41,7 @@ def dashboard(request):
         # Sort by last appointment date
         patients = patients.annotate(
             last_appointment=Max('appointments__date_time')
-        )
-        if sort_order == 'desc':
-            patients = patients.order_by('-last_appointment')
-        else:
-            patients = patients.order_by('last_appointment')
+        ).order_by('-last_appointment')
     
     # Get some statistics
     total_patients = patients.count()
@@ -85,11 +97,19 @@ def patient_update(request, pk):
     patient = get_object_or_404(Patient, pk=pk, user=request.user)
     
     if request.method == 'POST':
-        form = PatientForm(request.POST, instance=patient)
-        if form.is_valid():
-            form.save()
-            messages.success(request, f'Información de {patient.full_name} actualizada exitosamente.')
+        print(request.POST)  # Debugging line to check POST data
+        # Si solo se envía el campo 'alta' y csrf, actualizar directamente sin usar el formulario
+        if set(request.POST.keys()) == {'csrfmiddlewaretoken', 'alta'} and request.POST.get('alta') == 'true':
+            patient.alta = True
+            patient.save()
+            messages.success(request, f'Paciente {patient.full_name} fue dado de alta.')
             return redirect('patient_detail', pk=patient.pk)
+        else:
+            form = PatientForm(request.POST, instance=patient)
+            if form.is_valid():
+                paciente = form.save()
+                messages.success(request, f'Información de {paciente.full_name} actualizada exitosamente.')
+                return redirect('patient_detail', pk=paciente.pk)
     else:
         form = PatientForm(instance=patient)
     

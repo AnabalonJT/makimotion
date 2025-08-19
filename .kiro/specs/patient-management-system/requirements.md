@@ -5,6 +5,15 @@
 MakiMotion is a web application designed for healthcare professionals (therapists, psychologists, kinesiologists, etc.) to manage patient records, appointments, and evaluations. The system will provide a clean, user-friendly interface for registering, organizing, and tracking patient data and appointments. The application will be built with Django and deployed on Render with a soft color palette (lilac, pink, white) for a calming professional environment.
 
 ## Requirements
+### Requirement 11
+
+**User Story:** Como profesional de la salud, quiero marcar a los pacientes como dados de alta para cerrar su ciclo clínico, y que el dashboard solo muestre pacientes activos (no dados de alta) ordenados por la cita más reciente.
+
+#### Acceptance Criteria
+1. CUANDO un paciente es dado de alta ENTONCES el sistema DEBE permitir marcarlo con el atributo "alta".
+2. CUANDO se accede al dashboard ENTONCES el sistema DEBE mostrar solo pacientes que NO han sido dados de alta, ordenados por la cita más reciente.
+3. CUANDO se accede a la lista completa de pacientes desde el navbar ENTONCES el sistema DEBE mostrar todos los pacientes (dados de alta y no) y permitir buscarlos por nombre.
+4. Estado: Pendiente de implementación.
 
 ### Requirement 1
 

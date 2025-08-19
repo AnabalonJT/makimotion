@@ -16,6 +16,7 @@
             {% if user.is_authenticated %}
                 <nav class="nav">
                     <span class="user-info">Hola, {{ user.username }}</span>
+                    <a href="{% url 'patient_list' %}" class="btn btn-outline-primary ms-2">Pacientes</a>
                     <form method="post" action="{% url 'logout' %}" style="display: inline;">
                         {% csrf_token %}
                         <button type="submit" class="btn btn-secondary">Cerrar Sesión</button>

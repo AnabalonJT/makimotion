@@ -742,6 +742,19 @@
         </div>
 
         <!-- BOTONES DE ACCIÓN NORMALES (para móviles) -->
+        <!-- SECCIÓN: ESTADO (alta) -->
+        <div class="form-section">
+            <h3 class="section-title">Estado</h3>
+            <div class="section-content">
+                <div class="form-group">
+                    <div class="checkbox-item">
+                        {{ form.alta }} <label for="{{ form.alta.id_for_label }}">Paciente dado de alta</label>
+                        {% if form.alta.errors %}<span class="field-error">{{ form.alta.errors.0 }}</span>{% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="form-actions">
             <button type="submit" class="btn btn-primary">
                 {% if form.instance.pk %}Actualizar Ficha Clínica{% else %}Crear Ficha Clínica{% endif %}

@@ -70,7 +70,7 @@ class PatientForm(forms.ModelForm):
         fields = [
             # Datos del paciente (esenciales)
             'full_name', 'age', 'profession', 'address', 'phone', 
-            'medications', 'musculoskeletal_history', 'consultation_reason', 'patient_data_other',
+            'medications', 'musculoskeletal_history', 'consultation_reason', 'patient_data_other', 'alta',
             
             # Embarazo
             'is_pregnant', 'pregnancy_weeks_at_registration', 'pregnancy_week_day',
@@ -135,6 +135,7 @@ class PatientForm(forms.ModelForm):
             'musculoskeletal_history': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'consultation_reason': forms.Textarea(attrs={'class': 'form-control', 'required': True, 'rows': 3}),
             'patient_data_other': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
+            'alta': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             
             # Embarazo
             'pregnancy_weeks_at_registration': forms.NumberInput(attrs={'class': 'form-control', 'min': 1, 'max': 42, 'placeholder': 'Ej: 12'}),
@@ -302,13 +303,25 @@ class AppointmentForm(forms.ModelForm):
     class Meta:
         model = Appointment
         fields = [
-            'date_time', 'session_description', 'additional_notes',
+            'date_time',
+            'session_description',
+            'additional_notes',
+            'tasks',
             # PERFECT Test fields
-            'perfect_p_power', 'perfect_e_endurance', 'perfect_r_repetitions', 'perfect_f_fast',
-            'perfect_e_every', 'perfect_c_cocontraction', 'perfect_t_timing',
+            'perfect_p_power',
+            'perfect_e_endurance',
+            'perfect_r_repetitions',
+            'perfect_f_fast',
+            'perfect_e_every',
+            'perfect_c_cocontraction',
+            'perfect_t_timing',
             # Test del Balón fields
-            'balloon_rectal_sensation', 'balloon_first_desire_volume', 'balloon_normal_desire_volume',
-            'balloon_max_tolerable_capacity', 'balloon_rectoanal_reflex', 'balloon_expulsion'
+            'balloon_rectal_sensation',
+            'balloon_first_desire_volume',
+            'balloon_normal_desire_volume',
+            'balloon_max_tolerable_capacity',
+            'balloon_rectoanal_reflex',
+            'balloon_expulsion',
         ]
         widgets = {
             'date_time': forms.DateTimeInput(attrs={
@@ -321,7 +334,6 @@ class AppointmentForm(forms.ModelForm):
                 'placeholder': 'Descripción de la sesión o actividad realizada',
                 'rows': 4,
                 'required': True,
-                'minlength': 10,
                 'maxlength': 1000
             }),
             'additional_notes': forms.Textarea(attrs={
@@ -391,6 +403,11 @@ class AppointmentForm(forms.ModelForm):
             'balloon_expulsion': forms.Select(attrs={
                 'class': 'form-control'
             }),
+            'tasks': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 3,
+                'placeholder': 'Tareas o indicaciones para el paciente (opcional)'
+            }),
         }
         labels = {
             'date_time': 'Fecha y Hora',
@@ -418,8 +435,6 @@ class AppointmentForm(forms.ModelForm):
         session_description = self.cleaned_data.get('session_description', '').strip()
         if not session_description:
             raise forms.ValidationError("La descripción de la sesión es requerida.")
-        if len(session_description) < 10:
-            raise forms.ValidationError("La descripción debe tener al menos 10 caracteres.")
         if len(session_description) > 1000:
             raise forms.ValidationError("La descripción no puede exceder 1000 caracteres.")
         return session_description
@@ -428,13 +443,10 @@ class AppointmentForm(forms.ModelForm):
         """Validate appointment date and time"""
         from django.utils import timezone
         date_time = self.cleaned_data.get('date_time')
+        # NOTE: allow past dates because clinicians may register past appointments
         if date_time:
-            # Check if appointment is not in the past (allow some tolerance for editing)
+            # Only restrict excessively far future dates (2 years)
             now = timezone.now()
-            if date_time < now - timezone.timedelta(hours=1):
-                raise forms.ValidationError("No se pueden programar citas en el pasado.")
-            
-            # Check if appointment is not too far in the future (2 years)
             max_future = now + timezone.timedelta(days=730)
             if date_time > max_future:
                 raise forms.ValidationError("No se pueden programar citas con más de 2 años de anticipación.")

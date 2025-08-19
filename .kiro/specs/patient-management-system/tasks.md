@@ -340,6 +340,19 @@
  - _Requirements: 5.4, 6.5_
 
 - [x] 15. Agregar hover card/popover en dashboard para mostrar resultado PERFECT y fecha de última cita
+ - [ ] 16. Agregar atributo "alta" a modelo de paciente y formularios
+   - Modificar el modelo Patient para incluir el campo "alta" (booleano).
+   - Actualizar formularios y vistas para permitir marcar/dar de alta a un paciente.
+   - Estado: Pendiente.
+
+ - [ ] 17. Filtrar y ordenar pacientes en dashboard
+   - Modificar la vista del dashboard para mostrar solo pacientes que NO han sido dados de alta, ordenados por la cita más reciente.
+   - Estado: Pendiente.
+
+ - [ ] 18. Agregar acceso en navbar a lista completa de pacientes con barra de búsqueda
+   - Agregar enlace en el navbar a la vista de todos los pacientes (dados de alta y no).
+   - Implementar barra de búsqueda por nombre en esa vista.
+   - Estado: Pendiente.
   - Implementar tarjeta flotante/popover en la vista de dashboard que muestre los resultados del test PERFECT y la fecha de la última cita al pasar el mouse sobre la tarjeta de paciente.
   - Mostrar mensaje si el paciente no tiene citas.
   - Estado: Completado.

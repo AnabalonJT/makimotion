@@ -31,6 +31,7 @@ class Patient(models.Model):
     musculoskeletal_history = models.TextField(blank=True, help_text="Antecedentes músculo esquelético quirúrgico")
     consultation_reason = models.TextField(default="", blank=True, help_text="Motivo de consulta")
     patient_data_other = models.TextField(blank=True, help_text="Otros - Datos del paciente")
+    alta = models.BooleanField(default=False, help_text="Indica si el paciente fue dado de alta y se cerró su ciclo clínico.")
     
     # === EMBARAZO ===
     is_pregnant = models.BooleanField(default=False, help_text="¿Está embarazada?")
@@ -319,6 +320,8 @@ class Appointment(models.Model):
     date_time = models.DateTimeField(help_text="Fecha y hora de la cita")
     session_description = models.TextField(help_text="Descripción de la sesión o actividad realizada")
     additional_notes = models.TextField(blank=True, help_text="Notas adicionales")
+    # Tareas o indicaciones dejadas para el paciente (opcional)
+    tasks = models.TextField(blank=True, help_text="Tareas o indicaciones para seguimiento")
     
     # PERFECT Test Fields
     perfect_p_power = models.PositiveIntegerField(null=True, blank=True, help_text="P - Power (Fuerza)")

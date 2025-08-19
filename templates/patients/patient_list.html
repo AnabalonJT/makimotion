@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block title %}Lista de Pacientes - MakiMotion{% endblock %}
+
+{% block content %}
+<div class="patient-list-page">
+    <h2>Todos los Pacientes</h2>
+    <form method="get" class="search-bar mb-3" id="patient-search-form">
+        <input id="patient-search-input" type="text" name="q" value="{{ query }}" placeholder="Buscar paciente por nombre..." class="form-control" style="max-width: 300px; display: inline-block;">
+        <button type="submit" class="btn btn-primary">Buscar</button>
+    </form>
+    <script>
+        (function(){
+            const input = document.getElementById('patient-search-input');
+            const form = document.getElementById('patient-search-form');
+            let timer = null;
+            const debounce = (fn, wait) => {
+                return function(...args){
+                    clearTimeout(timer);
+                    timer = setTimeout(()=> fn.apply(this, args), wait);
+                }
+            };
+
+            const handleInput = () => {
+                const val = input.value.trim();
+                // Enviar si tiene 2 o más caracteres, o si quedó vacío (reset)
+                if (val.length >= 2 || val.length === 0) {
+                    form.submit();
+                }
+                // si tiene 1 carácter, no hacer nada (evita consultas innecesarias)
+            };
+
+            input.addEventListener('input', debounce(handleInput, 300));
+        })();
+    </script>
+    <div class="patients-list">
+        {% if patients %}
+            <ul class="list-group">
+                {% for patient in patients %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>
+                        <strong>{{ patient.full_name }}</strong> ({{ patient.age }} años)
+                        {% if patient.alta %}
+                            <span class="badge bg-success ms-2">Alta</span>
+                        {% else %}
+                            <span class="badge bg-info ms-2">Activo</span>
+                        {% endif %}
+                    </span>
+                    <span>
+                        <a href="{% url 'patient_detail' patient.pk %}" class="btn btn-sm btn-outline-primary">Ver Detalles</a>
+                        <a href="{% url 'patient_update' patient.pk %}" class="btn btn-sm btn-outline-secondary">Editar</a>
+                    </span>
+                </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="text-muted">No hay pacientes registrados.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

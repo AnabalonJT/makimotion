@@ -109,8 +109,6 @@
                         {% if form.perfect_c_cocontraction.errors %}
                             <span class="field-error">{{ form.perfect_c_cocontraction.errors.0 }}</span>
                         {% endif %}
-                    </div>
-
                     <div class="form-group perfect-field">
                         <label for="{{ form.perfect_t_timing.id_for_label }}">{{ form.perfect_t_timing.label }}</label>
                         {{ form.perfect_t_timing }}
@@ -118,14 +116,24 @@
                             <span class="field-error">{{ form.perfect_t_timing.errors.0 }}</span>
                         {% endif %}
                     </div>
-                    </ {% if form.perfect_t_timing.errors %} 
-                        <span class="field-error">{{ form.perfect_t_timing.errors.0 }}</span>
-                    {% endif %}
                 </div>
 
                 <!-- Empty div for grid alignment -->
                 <div class="perfect-field"></div>
             </div>
+    </div>
+</div>
+
+<!-- Tasks field -->
+<div class="form-section">
+    <h3 class="section-title">🛠️ Tareas / Indicaciones</h3>
+    <p class="section-description">Tareas o indicaciones dejadas para el paciente tras la sesión (opcional)</p>
+    <div class="form-group">
+        <label for="{{ form.tasks.id_for_label }}">{{ form.tasks.label }}</label>
+        {{ form.tasks }}
+        {% if form.tasks.errors %}
+            <span class="field-error">{{ form.tasks.errors.0 }}</span>
+        {% endif %}
     </div>
 </div>
 
