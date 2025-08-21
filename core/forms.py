@@ -68,6 +68,12 @@ class PatientForm(forms.ModelForm):
     class Meta:
         model = Patient
         fields = [
+            # === APRENDIZAJES GENERALES ===
+            'aprendizaje_pujo_caca', 'aprendizaje_banquito', 'aprendizaje_transverso', 'aprendizaje_respiracion_pelvico', 'aprendizaje_contraccion_pelvico', 'aprendizaje_preapretar', 'aprendizaje_otros',
+
+            # === APRENDIZAJES EMBARAZO ===
+            'aprendizaje_emb_oms', 'aprendizaje_emb_anatomia', 'aprendizaje_emb_movimientos', 'aprendizaje_emb_posicion_trabajo', 'aprendizaje_emb_posicion_expulsion', 'aprendizaje_emb_intervencion', 'aprendizaje_emb_masaje_perineal', 'aprendizaje_emb_respiraciones', 'aprendizaje_emb_pujo', 'aprendizaje_emb_tecnicas_dolor', 'aprendizaje_emb_otros',
+
             # Datos del paciente (esenciales)
             'full_name', 'age', 'profession', 'address', 'phone', 
             'medications', 'musculoskeletal_history', 'consultation_reason', 'patient_data_other', 'alta',
@@ -125,6 +131,27 @@ class PatientForm(forms.ModelForm):
         ]
         
         widgets = {
+            # === APRENDIZAJES GENERALES ===
+            'aprendizaje_pujo_caca': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'aprendizaje_banquito': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'aprendizaje_transverso': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'aprendizaje_respiracion_pelvico': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'aprendizaje_contraccion_pelvico': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'aprendizaje_preapretar': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'aprendizaje_otros': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
+
+            # === APRENDIZAJES EMBARAZO ===
+            'aprendizaje_emb_oms': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'aprendizaje_emb_anatomia': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'aprendizaje_emb_movimientos': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'aprendizaje_emb_posicion_trabajo': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'aprendizaje_emb_posicion_expulsion': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'aprendizaje_emb_intervencion': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'aprendizaje_emb_masaje_perineal': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'aprendizaje_emb_respiraciones': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'aprendizaje_emb_pujo': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'aprendizaje_emb_tecnicas_dolor': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'aprendizaje_emb_otros': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
             # Datos del paciente
             'full_name': forms.TextInput(attrs={'class': 'form-control', 'required': True}),
             'age': forms.NumberInput(attrs={'class': 'form-control', 'required': True, 'min': 0, 'max': 120}),

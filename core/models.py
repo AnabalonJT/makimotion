@@ -18,6 +18,27 @@ class UserProfile(models.Model):
 
 
 class Patient(models.Model):
+    # === APRENDIZAJES GENERALES ===
+    aprendizaje_pujo_caca = models.BooleanField(default=False, help_text="Aprendió pujo caca")
+    aprendizaje_banquito = models.BooleanField(default=False, help_text="Aprendió uso de banquito")
+    aprendizaje_transverso = models.BooleanField(default=False, help_text="Aprendió activación transverso abdominal")
+    aprendizaje_respiracion_pelvico = models.BooleanField(default=False, help_text="Aprendió coordinación respiración contracción piso pélvico")
+    aprendizaje_contraccion_pelvico = models.BooleanField(default=False, help_text="Aprendió contracción piso pélvico")
+    aprendizaje_preapretar = models.BooleanField(default=False, help_text="Aprendió preapretar")
+    aprendizaje_otros = models.TextField(blank=True, help_text="Otros aprendizajes generales")
+
+    # === APRENDIZAJES EMBARAZO ===
+    aprendizaje_emb_oms = models.BooleanField(default=False, help_text="Aprendió OMS")
+    aprendizaje_emb_anatomia = models.BooleanField(default=False, help_text="Aprendió anatomía")
+    aprendizaje_emb_movimientos = models.BooleanField(default=False, help_text="Aprendió movimientos cardinales")
+    aprendizaje_emb_posicion_trabajo = models.BooleanField(default=False, help_text="Aprendió posición trabajo parto")
+    aprendizaje_emb_posicion_expulsion = models.BooleanField(default=False, help_text="Aprendió posición expulsión")
+    aprendizaje_emb_intervencion = models.BooleanField(default=False, help_text="Aprendió intervención obstétrica")
+    aprendizaje_emb_masaje_perineal = models.BooleanField(default=False, help_text="Aprendió masaje perineal")
+    aprendizaje_emb_respiraciones = models.BooleanField(default=False, help_text="Aprendió respiraciones")
+    aprendizaje_emb_pujo = models.BooleanField(default=False, help_text="Aprendió pujo embarazo")
+    aprendizaje_emb_tecnicas_dolor = models.BooleanField(default=False, help_text="Aprendió técnicas de dolor")
+    aprendizaje_emb_otros = models.TextField(blank=True, help_text="Otros aprendizajes embarazo")
     """Ficha clínica para pacientes de piso pélvico"""
     user = models.ForeignKey(User, on_delete=models.CASCADE, help_text="Profesional responsable")
     

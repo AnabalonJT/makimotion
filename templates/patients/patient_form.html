@@ -38,6 +38,8 @@
     
     <form method="post" class="clinical-form" id="patient-form">
         {% csrf_token %}
+
+        
         
         <!-- SECCIÓN 1: DATOS DEL PACIENTE -->
         <div class="form-section">
@@ -98,6 +100,25 @@
                     </div>
                     <small class="text-muted">Las semanas se actualizarán automáticamente cada {{ form.pregnancy_week_day.value|default:"día seleccionado" }}</small>
                 </div>
+
+        <script>
+        // Mostrar/ocultar aprendizajes embarazo según el checkbox
+        document.addEventListener('DOMContentLoaded', function() {
+            var embarazoCheckbox = document.getElementById('{{ form.is_pregnant.id_for_label }}');
+            var embarazoSection = document.getElementById('aprendizajes-embarazo-section');
+            function toggleEmbarazoSection() {
+                if (embarazoCheckbox && embarazoCheckbox.checked) {
+                    embarazoSection.style.display = '';
+                } else {
+                    embarazoSection.style.display = 'none';
+                }
+            }
+            if (embarazoCheckbox && embarazoSection) {
+                embarazoCheckbox.addEventListener('change', toggleEmbarazoSection);
+                toggleEmbarazoSection();
+            }
+        });
+        </script>
                 <div class="form-row">
                     <div class="form-group">
                         <label for="{{ form.medications.id_for_label }}">Medicamentos</label>
@@ -114,6 +135,51 @@
                 <div class="form-group">
                     <label for="{{ form.patient_data_other.id_for_label }}">Otros</label>
                     {{ form.patient_data_other }}
+                </div>
+            </div>
+        </div>
+        <!-- SECCIÓN: APRENDIZAJES GENERALES -->
+        <div class="form-section">
+            <h3 class="section-title">🧠 Aprendizajes Generales</h3>
+            <div class="section-content">
+                <div class="checkbox-group">
+                    <div class="checkbox-row">
+                        <div class="checkbox-item">{{ form.aprendizaje_pujo_caca }} <label for="{{ form.aprendizaje_pujo_caca.id_for_label }}">Pujo caca</label></div>
+                        <div class="checkbox-item">{{ form.aprendizaje_banquito }} <label for="{{ form.aprendizaje_banquito.id_for_label }}">Uso de banquito</label></div>
+                        <div class="checkbox-item">{{ form.aprendizaje_transverso }} <label for="{{ form.aprendizaje_transverso.id_for_label }}">Activación transverso abdominal</label></div>
+                        <div class="checkbox-item">{{ form.aprendizaje_respiracion_pelvico }} <label for="{{ form.aprendizaje_respiracion_pelvico.id_for_label }}">Respiración + contracción piso pélvico</label></div>
+                        <div class="checkbox-item">{{ form.aprendizaje_contraccion_pelvico }} <label for="{{ form.aprendizaje_contraccion_pelvico.id_for_label }}">Contracción piso pélvico</label></div>
+                        <div class="checkbox-item">{{ form.aprendizaje_preapretar }} <label for="{{ form.aprendizaje_preapretar.id_for_label }}">Preapretar</label></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.aprendizaje_otros.id_for_label }}">Otros aprendizajes generales</label>
+                    {{ form.aprendizaje_otros }}
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN: APRENDIZAJES EMBARAZO (condicional) -->
+        <div class="form-section" id="aprendizajes-embarazo-section" style="display:none;">
+            <h3 class="section-title">🤰 Aprendizajes Embarazo</h3>
+            <div class="section-content">
+                <div class="checkbox-group">
+                    <div class="checkbox-row">
+                        <div class="checkbox-item">{{ form.aprendizaje_emb_oms }} <label for="{{ form.aprendizaje_emb_oms.id_for_label }}">OMS</label></div>
+                        <div class="checkbox-item">{{ form.aprendizaje_emb_anatomia }} <label for="{{ form.aprendizaje_emb_anatomia.id_for_label }}">Anatomía</label></div>
+                        <div class="checkbox-item">{{ form.aprendizaje_emb_movimientos }} <label for="{{ form.aprendizaje_emb_movimientos.id_for_label }}">Movimientos cardinales</label></div>
+                        <div class="checkbox-item">{{ form.aprendizaje_emb_posicion_trabajo }} <label for="{{ form.aprendizaje_emb_posicion_trabajo.id_for_label }}">Posición trabajo de parto</label></div>
+                        <div class="checkbox-item">{{ form.aprendizaje_emb_posicion_expulsion }} <label for="{{ form.aprendizaje_emb_posicion_expulsion.id_for_label }}">Posición expulsión</label></div>
+                        <div class="checkbox-item">{{ form.aprendizaje_emb_intervencion }} <label for="{{ form.aprendizaje_emb_intervencion.id_for_label }}">Intervención obstétrica</label></div>
+                        <div class="checkbox-item">{{ form.aprendizaje_emb_masaje_perineal }} <label for="{{ form.aprendizaje_emb_masaje_perineal.id_for_label }}">Masaje perineal</label></div>
+                        <div class="checkbox-item">{{ form.aprendizaje_emb_respiraciones }} <label for="{{ form.aprendizaje_emb_respiraciones.id_for_label }}">Respiraciones</label></div>
+                        <div class="checkbox-item">{{ form.aprendizaje_emb_pujo }} <label for="{{ form.aprendizaje_emb_pujo.id_for_label }}">Pujo embarazo</label></div>
+                        <div class="checkbox-item">{{ form.aprendizaje_emb_tecnicas_dolor }} <label for="{{ form.aprendizaje_emb_tecnicas_dolor.id_for_label }}">Técnicas de dolor</label></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="{{ form.aprendizaje_emb_otros.id_for_label }}">Otros aprendizajes embarazo</label>
+                    {{ form.aprendizaje_emb_otros }}
                 </div>
             </div>
         </div>
