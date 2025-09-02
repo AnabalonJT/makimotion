@@ -12,6 +12,11 @@
                 <span class="patient-profession">{{ patient.profession|default:"Sin profesión" }}</span>
                 <span class="patient-created">Registrado: {{ patient.created_at|date:"d/m/Y" }}</span>
             </div>
+            {% if patient.consultation_reason %}
+            <div class="patient-consultation-reason">
+                <strong>Motivo de consulta:</strong> {{ patient.consultation_reason }}
+            </div>
+            {% endif %}
         </div>
         <div class="patient-actions">
             <a href="{% url 'patient_update' patient.pk %}" class="btn btn-primary">Editar Ficha Clínica</a>
@@ -29,107 +34,108 @@
         </div>
     </div>
 
-    <div class="clinical-content">
+    <div class="patient-content-layout">
+        <div class="main-content-column">
+            <!-- SECCIÓN 1: DATOS DEL PACIENTE -->
+            <div class="clinical-section">
+                <h3 class="section-title">📋 Datos del Paciente</h3>
+                <div class="section-content">
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <strong>Nombre Completo:</strong>
+                                <span>{{ patient.full_name }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Edad:</strong>
+                                <span>{{ patient.age }} años</span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Profesión:</strong>
+                                <span>{{ patient.profession|default:"No especificada" }}</span>
+                            </div>
+                            <div class="detail-item">
+                                <strong>Teléfono:</strong>
+                                <span>{{ patient.phone|default:"No especificado" }}</span>
+                            </div>
+                        </div>
 
-        <!-- SECCIÓN: APRENDIZAJES GENERALES -->
-        <div class="clinical-section">
-            <h3 class="section-title">🧠 Aprendizajes Generales</h3>
-            <div class="section-content">
-                <div class="detail-grid">
-                    {% if patient.aprendizaje_pujo_caca %}<div class="detail-item"><span>✔️ Pujo caca</span></div>{% endif %}
-                    {% if patient.aprendizaje_banquito %}<div class="detail-item"><span>✔️ Uso de banquito</span></div>{% endif %}
-                    {% if patient.aprendizaje_transverso %}<div class="detail-item"><span>✔️ Activación transverso abdominal</span></div>{% endif %}
-                    {% if patient.aprendizaje_respiracion_pelvico %}<div class="detail-item"><span>✔️ Respiración + contracción piso pélvico</span></div>{% endif %}
-                    {% if patient.aprendizaje_contraccion_pelvico %}<div class="detail-item"><span>✔️ Contracción piso pélvico</span></div>{% endif %}
-                    {% if patient.aprendizaje_preapretar %}<div class="detail-item"><span>✔️ Preapretar</span></div>{% endif %}
-                </div>
-                {% if patient.aprendizaje_otros %}
-                    <div class="detail-item full-width">
-                        <strong>Otros aprendizajes generales:</strong>
-                        <span>{{ patient.aprendizaje_otros|linebreaks }}</span>
-                    </div>
-                {% endif %}
-            </div>
-        </div>
+                        {% if patient.address %}
+                            <div class="detail-item full-width">
+                                <strong>Dirección:</strong>
+                                <span>{{ patient.address }}</span>
+                            </div>
+                        {% endif %}
 
-        <!-- SECCIÓN: APRENDIZAJES EMBARAZO (solo si está embarazada o tiene aprendizajes) -->
-        {% if patient.is_pregnant or patient.aprendizaje_emb_oms or patient.aprendizaje_emb_anatomia or patient.aprendizaje_emb_movimientos or patient.aprendizaje_emb_posicion_trabajo or patient.aprendizaje_emb_posicion_expulsion or patient.aprendizaje_emb_intervencion or patient.aprendizaje_emb_masaje_perineal or patient.aprendizaje_emb_respiraciones or patient.aprendizaje_emb_pujo or patient.aprendizaje_emb_tecnicas_dolor or patient.aprendizaje_emb_otros %}
-        <div class="clinical-section">
-            <h3 class="section-title">🤰 Aprendizajes Embarazo</h3>
-            <div class="section-content">
-                <div class="detail-grid">
-                    {% if patient.aprendizaje_emb_oms %}<div class="detail-item"><span>✔️ OMS</span></div>{% endif %}
-                    {% if patient.aprendizaje_emb_anatomia %}<div class="detail-item"><span>✔️ Anatomía</span></div>{% endif %}
-                    {% if patient.aprendizaje_emb_movimientos %}<div class="detail-item"><span>✔️ Movimientos cardinales</span></div>{% endif %}
-                    {% if patient.aprendizaje_emb_posicion_trabajo %}<div class="detail-item"><span>✔️ Posición trabajo de parto</span></div>{% endif %}
-                    {% if patient.aprendizaje_emb_posicion_expulsion %}<div class="detail-item"><span>✔️ Posición expulsión</span></div>{% endif %}
-                    {% if patient.aprendizaje_emb_intervencion %}<div class="detail-item"><span>✔️ Intervención obstétrica</span></div>{% endif %}
-                    {% if patient.aprendizaje_emb_masaje_perineal %}<div class="detail-item"><span>✔️ Masaje perineal</span></div>{% endif %}
-                    {% if patient.aprendizaje_emb_respiraciones %}<div class="detail-item"><span>✔️ Respiraciones</span></div>{% endif %}
-                    {% if patient.aprendizaje_emb_pujo %}<div class="detail-item"><span>✔️ Pujo embarazo</span></div>{% endif %}
-                    {% if patient.aprendizaje_emb_tecnicas_dolor %}<div class="detail-item"><span>✔️ Técnicas de dolor</span></div>{% endif %}
-                </div>
-                {% if patient.aprendizaje_emb_otros %}
-                    <div class="detail-item full-width">
-                        <strong>Otros aprendizajes embarazo:</strong>
-                        <span>{{ patient.aprendizaje_emb_otros|linebreaks }}</span>
-                    </div>
-                {% endif %}
-            </div>
-        </div>
-        {% endif %}
-        <!-- SECCIÓN 1: DATOS DEL PACIENTE -->
-        <div class="clinical-section">
-            <h3 class="section-title">📋 Datos del Paciente</h3>
-            <div class="section-content">
-                <div class="detail-grid">
-                    <div class="detail-item">
-                        <strong>Nombre Completo:</strong>
-                        <span>{{ patient.full_name }}</span>
-                    </div>
-                    <div class="detail-item">
-                        <strong>Edad:</strong>
-                        <span>{{ patient.age }} años</span>
-                    </div>
-                    <div class="detail-item">
-                        <strong>Profesión:</strong>
-                        <span>{{ patient.profession|default:"No especificada" }}</span>
-                    </div>
-                    <div class="detail-item">
-                        <strong>Teléfono:</strong>
-                        <span>{{ patient.phone|default:"No especificado" }}</span>
+                        {% if patient.consultation_reason %}
+                            <div class="detail-item full-width">
+                                <strong>Motivo de Consulta:</strong>
+                                <span>{{ patient.consultation_reason|linebreaks }}</span>
+                            </div>
+                        {% endif %}
+
+                        {% if patient.medications %}
+                            <div class="detail-item full-width">
+                                <strong>Medicamentos:</strong>
+                                <span>{{ patient.medications|linebreaks }}</span>
+                            </div>
+                        {% endif %}
+
+                        {% if patient.musculoskeletal_history %}
+                            <div class="detail-item full-width">
+                                <strong>Antecedentes Músculo Esquelético:</strong>
+                                <span>{{ patient.musculoskeletal_history|linebreaks }}</span>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
 
-                {% if patient.address %}
-                    <div class="detail-item full-width">
-                        <strong>Dirección:</strong>
-                        <span>{{ patient.address }}</span>
+                <!-- SECCIÓN: APRENDIZAJES GENERALES -->
+                <div class="clinical-section">
+                    <h3 class="section-title">🧠 Aprendizajes Generales</h3>
+                    <div class="section-content">
+                        <div class="detail-grid">
+                            {% if patient.aprendizaje_pujo_caca %}<div class="detail-item"><span>✔️ Pujo caca</span></div>{% endif %}
+                            {% if patient.aprendizaje_banquito %}<div class="detail-item"><span>✔️ Uso de banquito</span></div>{% endif %}
+                            {% if patient.aprendizaje_transverso %}<div class="detail-item"><span>✔️ Activación transverso abdominal</span></div>{% endif %}
+                            {% if patient.aprendizaje_respiracion_pelvico %}<div class="detail-item"><span>✔️ Respiración + contracción piso pélvico</span></div>{% endif %}
+                            {% if patient.aprendizaje_contraccion_pelvico %}<div class="detail-item"><span>✔️ Contracción piso pélvico</span></div>{% endif %}
+                            {% if patient.aprendizaje_preapretar %}<div class="detail-item"><span>✔️ Preapretar</span></div>{% endif %}
+                        </div>
+                        {% if patient.aprendizaje_otros %}
+                            <div class="detail-item full-width">
+                                <strong>Otros aprendizajes generales:</strong>
+                                <span>{{ patient.aprendizaje_otros|linebreaks }}</span>
+                            </div>
+                        {% endif %}
                     </div>
-                {% endif %}
+                </div>
 
-                {% if patient.consultation_reason %}
-                    <div class="detail-item full-width">
-                        <strong>Motivo de Consulta:</strong>
-                        <span>{{ patient.consultation_reason|linebreaks }}</span>
+                <!-- SECCIÓN: APRENDIZAJES EMBARAZO (solo si está embarazada o tiene aprendizajes) -->
+                {% if patient.is_pregnant or patient.aprendizaje_emb_oms or patient.aprendizaje_emb_anatomia or patient.aprendizaje_emb_movimientos or patient.aprendizaje_emb_posicion_trabajo or patient.aprendizaje_emb_posicion_expulsion or patient.aprendizaje_emb_intervencion or patient.aprendizaje_emb_masaje_perineal or patient.aprendizaje_emb_respiraciones or patient.aprendizaje_emb_pujo or patient.aprendizaje_emb_tecnicas_dolor or patient.aprendizaje_emb_otros %}
+                <div class="clinical-section">
+                    <h3 class="section-title">🤰 Aprendizajes Embarazo</h3>
+                    <div class="section-content">
+                        <div class="detail-grid">
+                            {% if patient.aprendizaje_emb_oms %}<div class="detail-item"><span>✔️ OMS</span></div>{% endif %}
+                            {% if patient.aprendizaje_emb_anatomia %}<div class="detail-item"><span>✔️ Anatomía</span></div>{% endif %}
+                            {% if patient.aprendizaje_emb_movimientos %}<div class="detail-item"><span>✔️ Movimientos cardinales</span></div>{% endif %}
+                            {% if patient.aprendizaje_emb_posicion_trabajo %}<div class="detail-item"><span>✔️ Posición trabajo de parto</span></div>{% endif %}
+                            {% if patient.aprendizaje_emb_posicion_expulsion %}<div class="detail-item"><span>✔️ Posición expulsión</span></div>{% endif %}
+                            {% if patient.aprendizaje_emb_intervencion %}<div class="detail-item"><span>✔️ Intervención obstétrica</span></div>{% endif %}
+                            {% if patient.aprendizaje_emb_masaje_perineal %}<div class="detail-item"><span>✔️ Masaje perineal</span></div>{% endif %}
+                            {% if patient.aprendizaje_emb_respiraciones %}<div class="detail-item"><span>✔️ Respiraciones</span></div>{% endif %}
+                            {% if patient.aprendizaje_emb_pujo %}<div class="detail-item"><span>✔️ Pujo embarazo</span></div>{% endif %}
+                            {% if patient.aprendizaje_emb_tecnicas_dolor %}<div class="detail-item"><span>✔️ Técnicas de dolor</span></div>{% endif %}
+                        </div>
+                        {% if patient.aprendizaje_emb_otros %}
+                            <div class="detail-item full-width">
+                                <strong>Otros aprendizajes embarazo:</strong>
+                                <span>{{ patient.aprendizaje_emb_otros|linebreaks }}</span>
+                            </div>
+                        {% endif %}
                     </div>
+                </div>
                 {% endif %}
-
-                {% if patient.medications %}
-                    <div class="detail-item full-width">
-                        <strong>Medicamentos:</strong>
-                        <span>{{ patient.medications|linebreaks }}</span>
-                    </div>
-                {% endif %}
-
-                {% if patient.musculoskeletal_history %}
-                    <div class="detail-item full-width">
-                        <strong>Antecedentes Músculo Esquelético:</strong>
-                        <span>{{ patient.musculoskeletal_history|linebreaks }}</span>
-                    </div>
-                {% endif %}
-            </div>
-        </div>
 
         <!-- SECCIÓN 2: ANTECEDENTES GINECOLÓGICOS -->
         <div class="clinical-section">
@@ -712,57 +718,96 @@
             </div>
         {% endif %}
 
-        <!-- SECCIÓN: HISTORIAL DE CITAS -->
-        <div class="appointments-section">
-            <div class="appointments-header">
-                <h3>📅 Historial de Citas</h3>
-                <a href="{% url 'appointment_create' patient.pk %}" class="btn btn-primary">Nueva Cita</a>
-            </div>
+        </div>
 
-            {% if appointments %}
-                <div class="appointments-list">
-                    {% for appointment in appointments %}
-                        <div class="appointment-card">
-                            <div class="appointment-header">
-                                <div class="appointment-date">
-                                    <strong>{{ appointment.date_time|date:"d/m/Y" }}</strong>
-                                    <span class="appointment-time">{{ appointment.date_time|date:"H:i" }}</span>
-                                </div>
-                                <div class="appointment-evaluation">
-                                    <span class="evaluation-badge evaluation-{{ appointment.evaluation }}">
-                                        {{ appointment.get_evaluation_display }}
-                                    </span>
-                                </div>
-                            </div>
-                            
-                            <div class="appointment-content">
-                                <div class="appointment-description">
-                                    <strong>Sesión:</strong>
-                                    <p>{{ appointment.session_description }}</p>
+        <!-- SIDEBAR: HISTORIAL DE CITAS -->
+        <div class="sidebar">
+            <div class="appointments-section">
+                <div class="appointments-header">
+                    <h3>📅 Historial de Citas</h3>
+                    <a href="{% url 'appointment_create' patient.pk %}" class="btn btn-primary btn-sm">Nueva Cita</a>
+                </div>
+
+                {% if appointments %}
+                    <div class="appointments-list">
+                        {% for appointment in appointments %}
+                            <div class="appointment-card">
+                                <div class="appointment-header">
+                                    <div class="appointment-date">
+                                        <strong>{{ appointment.date_time|date:"d/m/Y" }}</strong>
+                                    </div>
+                                    {% if appointment.session_description %}
+                                        <div class="appointment-description">
+                                            <strong>Descripción:</strong>
+                                            <p>{{ appointment.session_description }}</p>
+                                        </div>
+                                    {% endif %}
                                 </div>
                                 
-                                {% if appointment.additional_notes %}
-                                    <div class="appointment-notes">
-                                        <strong>Notas Adicionales:</strong>
-                                        <p>{{ appointment.additional_notes|linebreaks }}</p>
+                                <div class="appointment-content">
+                                    <div class="appointment-tasks-and-tests">
+                                        {% if appointment.tasks %}
+                                            <div class="appointment-tasks">
+                                                <strong>Tareas:</strong>
+                                                <p>{{ appointment.tasks|linebreaks }}</p>
+                                            </div>
+                                        {% endif %}
+
+                                        <!-- Test PERFECT -->
+                                        {% if appointment.perfect_p_power or appointment.perfect_e_endurance or appointment.perfect_r_repetitions or appointment.perfect_f_fast or appointment.perfect_e_every or appointment.perfect_c_cocontraction or appointment.perfect_t_timing %}
+                                            <div class="test-perfect">
+                                                <strong>Test PERFECT:</strong>
+                                                <div class="perfect-scores">
+                                                    {% if appointment.perfect_p_power %}<span class="score">P: {{ appointment.perfect_p_power }}</span>{% endif %}
+                                                    {% if appointment.perfect_e_endurance %}<span class="score">E: {{ appointment.perfect_e_endurance }}</span>{% endif %}
+                                                    {% if appointment.perfect_r_repetitions %}<span class="score">R: {{ appointment.perfect_r_repetitions }}</span>{% endif %}
+                                                    {% if appointment.perfect_f_fast %}<span class="score">F: {{ appointment.perfect_f_fast }}</span>{% endif %}
+                                                    {% if appointment.perfect_e_every %}<span class="score">E: {{ appointment.get_perfect_e_every_display }}</span>{% endif %}
+                                                    {% if appointment.perfect_c_cocontraction %}<span class="score">C: {{ appointment.get_perfect_c_cocontraction_display }}</span>{% endif %}
+                                                    {% if appointment.perfect_t_timing %}<span class="score">T: {{ appointment.get_perfect_t_timing_display }}</span>{% endif %}
+                                                </div>
+                                            </div>
+                                        {% endif %}
                                     </div>
-                                {% endif %}
+
+                                    <!-- Test del Balón -->
+                                    {% if appointment.balloon_rectal_sensation or appointment.balloon_first_desire_volume or appointment.balloon_normal_desire_volume or appointment.balloon_max_tolerable_capacity or appointment.balloon_rectoanal_reflex or appointment.balloon_expulsion %}
+                                        <div class="test-balloon">
+                                            <strong>Test del Balón:</strong>
+                                            <div class="balloon-results">
+                                                {% if appointment.balloon_rectal_sensation %}<div class="balloon-item"><small>Sensación rectal:</small> {{ appointment.balloon_rectal_sensation }}</div>{% endif %}
+                                                {% if appointment.balloon_first_desire_volume %}<div class="balloon-item"><small>Primer deseo:</small> {{ appointment.balloon_first_desire_volume }}</div>{% endif %}
+                                                {% if appointment.balloon_normal_desire_volume %}<div class="balloon-item"><small>Deseo normal:</small> {{ appointment.balloon_normal_desire_volume }}</div>{% endif %}
+                                                {% if appointment.balloon_max_tolerable_capacity %}<div class="balloon-item"><small>Capacidad máx:</small> {{ appointment.balloon_max_tolerable_capacity }}</div>{% endif %}
+                                                {% if appointment.balloon_rectoanal_reflex %}<div class="balloon-item"><small>Reflejo rectoanal:</small> {{ appointment.get_balloon_rectoanal_reflex_display }}</div>{% endif %}
+                                                {% if appointment.balloon_expulsion %}<div class="balloon-item"><small>Expulsión:</small> {{ appointment.get_balloon_expulsion_display }}</div>{% endif %}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                    
+                                    {% if appointment.additional_notes %}
+                                        <div class="appointment-notes">
+                                            <strong>Notas Adicionales:</strong>
+                                            <p>{{ appointment.additional_notes|linebreaks }}</p>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="appointment-actions">
+                                    <a href="{% url 'appointment_update' appointment.pk %}" class="btn btn-sm btn-primary">Editar</a>
+                                    <a href="{% url 'appointment_delete' appointment.pk %}" class="btn btn-sm btn-danger">Eliminar</a>
+                                    <small class="text-muted">{{ appointment.created_at|date:"d/m/Y H:i" }}</small>
+                                </div>
                             </div>
-                            
-                            <div class="appointment-actions">
-                                <a href="{% url 'appointment_update' appointment.pk %}" class="btn btn-sm btn-primary">Editar Cita</a>
-                                <a href="{% url 'appointment_delete' appointment.pk %}" class="btn btn-sm btn-danger">Eliminar Cita</a>
-                                <small class="text-muted">Creado: {{ appointment.created_at|date:"d/m/Y H:i" }}</small>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            {% else %}
-                <div class="empty-appointments">
-                    <p>Este paciente no tiene citas registradas aún.</p>
-                    <a href="{% url 'appointment_create' patient.pk %}" class="btn btn-primary">Programar Primera Cita</a>
-                </div>
-            {% endif %}
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-appointments">
+                        <p>No hay citas registradas.</p>
+                        <a href="{% url 'appointment_create' patient.pk %}" class="btn btn-primary btn-sm">Primera Cita</a>
+                    </div>
+                {% endif %}
+            </div>
         </div>
     </div>
 </div>
