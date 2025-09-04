@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+{% block title %}Fichas Clínicas - {{ patient.full_name }} - MakiMotion{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h2>Fichas Clínicas de {{ patient.full_name }}</h2>
+        <div class="header-actions">
+            <a href="{% url 'ficha_clinica_create' patient.pk %}" class="btn btn-success">Nueva Ficha Clínica</a>
+            <a href="{% url 'patient_detail' patient.pk %}" class="btn btn-secondary">Volver al Paciente</a>
+        </div>
+    </div>
+
+    <div class="content-container">
+        {% if fichas %}
+            <div class="fichas-list">
+                {% for ficha in fichas %}
+                    <div class="ficha-card">
+                        <div class="ficha-info">
+                            <div class="ficha-date">
+                                <strong>{{ ficha.created_at|date:"d/m/Y H:i" }}</strong>
+                            </div>
+                            {% if ficha.consultation_reason %}
+                                <div class="ficha-reason">
+                                    <strong>Motivo:</strong> {{ ficha.consultation_reason|truncatewords:15 }}
+                                </div>
+                            {% else %}
+                                <div class="ficha-reason">
+                                    <em>Sin motivo de consulta especificado</em>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="ficha-actions">
+                            <a href="{% url 'ficha_clinica_detail' patient.pk ficha.pk %}" class="btn btn-info btn-sm">Ver</a>
+                            <a href="{% url 'ficha_clinica_update' patient.pk ficha.pk %}" class="btn btn-primary btn-sm">Editar</a>
+                            <a href="{% url 'ficha_clinica_delete' patient.pk ficha.pk %}" class="btn btn-danger btn-sm">Eliminar</a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="no-fichas-message">
+                <h3>No hay fichas clínicas</h3>
+                <p>Este paciente aún no tiene fichas clínicas registradas.</p>
+                <a href="{% url 'ficha_clinica_create' patient.pk %}" class="btn btn-success">Crear Primera Ficha Clínica</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--border);
+}
+
+.header-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.fichas-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.ficha-card {
+    background-color: var(--accent);
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    border-left: 4px solid var(--primary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.ficha-info {
+    flex-grow: 1;
+}
+
+.ficha-date {
+    color: var(--contrast);
+    margin-bottom: 0.5rem;
+}
+
+.ficha-reason {
+    color: var(--text-dark);
+}
+
+.ficha-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.no-fichas-message {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-light);
+}
+
+.no-fichas-message h3 {
+    color: var(--contrast);
+    margin-bottom: 1rem;
+}
+</style>
+{% endblock %}

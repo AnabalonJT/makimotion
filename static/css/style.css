@@ -1070,6 +1070,32 @@ textarea.form-control {
     background-color: var(--neutral);
 }
 
+/* Ficha Clínica Section Styles */
+.ficha-clinica-summary {
+    margin-bottom: 1rem;
+}
+
+.ficha-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.ficha-main-actions {
+    display: flex;
+    justify-content: center;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+}
+
+.no-ficha-message {
+    text-align: center;
+    color: var(--text-light);
+    padding: 1rem;
+    font-style: italic;
+}
+
 .appointments-section {
     background-color: var(--accent);
     border-radius: 12px;

@@ -17,7 +17,13 @@ class UserProfile(models.Model):
         verbose_name_plural = "Perfiles de Usuario"
 
 
-class Patient(models.Model):
+class FichaClinica(models.Model):
+    """Ficha clínica con información detallada del paciente"""
+    patient = models.ForeignKey('Patient', on_delete=models.CASCADE, related_name='fichas_clinicas', help_text="Paciente")
+    
+    # === MOTIVO DE CONSULTA ===
+    consultation_reason = models.TextField(default="", blank=True, help_text="Motivo de consulta")
+    
     # === APRENDIZAJES GENERALES ===
     aprendizaje_pujo_caca = models.BooleanField(default=False, help_text="Aprendió pujo caca")
     aprendizaje_banquito = models.BooleanField(default=False, help_text="Aprendió uso de banquito")
@@ -39,51 +45,6 @@ class Patient(models.Model):
     aprendizaje_emb_pujo = models.BooleanField(default=False, help_text="Aprendió pujo embarazo")
     aprendizaje_emb_tecnicas_dolor = models.BooleanField(default=False, help_text="Aprendió técnicas de dolor")
     aprendizaje_emb_otros = models.TextField(blank=True, help_text="Otros aprendizajes embarazo")
-    """Ficha clínica para pacientes de piso pélvico"""
-    user = models.ForeignKey(User, on_delete=models.CASCADE, help_text="Profesional responsable")
-    
-    # === DATOS DEL PACIENTE (Esenciales) ===
-    full_name = models.CharField(max_length=200, help_text="Nombre completo del paciente")
-    age = models.PositiveIntegerField(help_text="Edad del paciente")
-    profession = models.CharField(max_length=100, default="", blank=True, help_text="Profesión")
-    address = models.TextField(default="", blank=True, help_text="Dirección")
-    phone = models.CharField(max_length=20, default="", blank=True, help_text="Teléfono")
-    medications = models.TextField(blank=True, help_text="Medicamentos actuales")
-    musculoskeletal_history = models.TextField(blank=True, help_text="Antecedentes músculo esquelético quirúrgico")
-    consultation_reason = models.TextField(default="", blank=True, help_text="Motivo de consulta")
-    patient_data_other = models.TextField(blank=True, help_text="Otros - Datos del paciente")
-    alta = models.BooleanField(default=False, help_text="Indica si el paciente fue dado de alta y se cerró su ciclo clínico.")
-    
-    # === EMBARAZO ===
-    is_pregnant = models.BooleanField(default=False, help_text="¿Está embarazada?")
-    pregnancy_weeks_at_registration = models.PositiveIntegerField(null=True, blank=True, help_text="Semanas de embarazo al momento del registro")
-    pregnancy_week_day = models.CharField(max_length=10, choices=[
-        ('lunes', 'Lunes'), ('martes', 'Martes'), ('miercoles', 'Miércoles'), 
-        ('jueves', 'Jueves'), ('viernes', 'Viernes'), ('sabado', 'Sábado'), ('domingo', 'Domingo')
-    ], blank=True, help_text="Día de la semana para contar semanas")
-    pregnancy_registration_date = models.DateField(null=True, blank=True, help_text="Fecha cuando se registraron las semanas")
-    
-    # === ANTECEDENTES GINECOLÓGICOS ===
-    menopause = models.CharField(max_length=10, choices=[('si', 'Sí'), ('no', 'No')], blank=True, help_text="Menopausia")
-    menopause_time = models.CharField(max_length=50, blank=True, help_text="Hace cuánto tiempo")
-    regular_menstrual_cycle = models.CharField(max_length=10, choices=[('si', 'Sí'), ('no', 'No')], blank=True, help_text="Ciclo menstrual regular")
-    previous_surgeries = models.TextField(blank=True, help_text="Cirugías previas")
-    pregnancies_g = models.PositiveIntegerField(null=True, blank=True, help_text="G (Gestaciones)")
-    abortions_a = models.PositiveIntegerField(null=True, blank=True, help_text="A (Abortos)")
-    losses_p = models.PositiveIntegerField(null=True, blank=True, help_text="P (Pérdidas)")
-    child_weight = models.TextField(blank=True, help_text="Peso del hijo")
-    delivery_type = models.CharField(max_length=50, blank=True, help_text="Partos: normal y/o cesárea")
-    episiotomies = models.CharField(max_length=10, choices=[('si', 'Sí'), ('no', 'No')], blank=True, help_text="Episiotomías")
-    postpartum = models.TextField(blank=True, help_text="Post parto")
-    instrumentation = models.TextField(blank=True, help_text="Instrumentalización")
-    muscle_tear = models.TextField(blank=True, help_text="Desgarro muscular")
-    io = models.BooleanField(default=False, help_text="IO")
-    if_field = models.BooleanField(default=False, help_text="IF")
-    ig = models.BooleanField(default=False, help_text="IG")
-    prolapse = models.CharField(max_length=10, choices=[('si', 'Sí'), ('no', 'No')], blank=True, help_text="Prolapso")
-    prolapse_type = models.TextField(blank=True, help_text="¿Cuál prolapso?")
-    allergies = models.TextField(blank=True, help_text="Alergias")
-    gynecological_other = models.TextField(blank=True, help_text="Otros")
     
     # === HÁBITOS DE VIDA ===
     smoking = models.CharField(max_length=10, choices=[('si', 'Sí'), ('no', 'No')], blank=True, help_text="Fuma")
@@ -247,11 +208,84 @@ class Patient(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
     def __str__(self):
+        return f"Ficha Clínica - {self.patient.full_name} - {self.created_at.strftime('%d/%m/%Y')}"
+    
+    class Meta:
+        ordering = ['-created_at']
+        verbose_name = "Ficha Clínica"
+        verbose_name_plural = "Fichas Clínicas"
+
+
+class Patient(models.Model):
+    """Paciente con datos básicos"""
+    user = models.ForeignKey(User, on_delete=models.CASCADE, help_text="Profesional responsable")
+    
+    # === DATOS BÁSICOS DEL PACIENTE ===
+    full_name = models.CharField(max_length=200, help_text="Nombre completo del paciente")
+    age = models.PositiveIntegerField(help_text="Edad del paciente")
+    profession = models.CharField(max_length=100, default="", blank=True, help_text="Profesión")
+    phone = models.CharField(max_length=20, default="", blank=True, help_text="Teléfono")
+    address = models.TextField(default="", blank=True, help_text="Dirección")
+    medications = models.TextField(blank=True, help_text="Medicamentos actuales")
+    musculoskeletal_history = models.TextField(blank=True, help_text="Antecedentes músculo esquelético")
+    patient_data_other = models.TextField(blank=True, help_text="Otros datos del paciente")
+    
+    # === ANTECEDENTES GINECOLÓGICOS ===
+    menopause = models.CharField(max_length=10, choices=[('si', 'Sí'), ('no', 'No')], blank=True, help_text="Menopausia")
+    menopause_time = models.CharField(max_length=50, blank=True, help_text="Hace cuánto tiempo")
+    regular_menstrual_cycle = models.CharField(max_length=10, choices=[('si', 'Sí'), ('no', 'No')], blank=True, help_text="Ciclo menstrual regular")
+    previous_surgeries = models.TextField(blank=True, help_text="Cirugías previas")
+    pregnancies_g = models.PositiveIntegerField(null=True, blank=True, help_text="G (Gestaciones)")
+    abortions_a = models.PositiveIntegerField(null=True, blank=True, help_text="A (Abortos)")
+    losses_p = models.PositiveIntegerField(null=True, blank=True, help_text="P (Pérdidas)")
+    child_weight = models.TextField(blank=True, help_text="Peso del hijo")
+    delivery_type = models.CharField(max_length=50, blank=True, help_text="Partos: normal y/o cesárea")
+    episiotomies = models.CharField(max_length=10, choices=[('si', 'Sí'), ('no', 'No')], blank=True, help_text="Episiotomías")
+    postpartum = models.TextField(blank=True, help_text="Post parto")
+    instrumentation = models.TextField(blank=True, help_text="Instrumentalización")
+    muscle_tear = models.TextField(blank=True, help_text="Desgarro muscular")
+    io = models.BooleanField(default=False, help_text="IO")
+    if_field = models.BooleanField(default=False, help_text="IF")
+    ig = models.BooleanField(default=False, help_text="IG")
+    prolapse = models.CharField(max_length=10, choices=[('si', 'Sí'), ('no', 'No')], blank=True, help_text="Prolapso")
+    prolapse_type = models.TextField(blank=True, help_text="¿Cuál prolapso?")
+    allergies = models.TextField(blank=True, help_text="Alergias")
+    gynecological_other = models.TextField(blank=True, help_text="Otros")
+    
+    # === EMBARAZO ACTUAL (si aplica) ===
+    is_pregnant = models.BooleanField(default=False, help_text="¿Está embarazada?")
+    pregnancy_weeks_at_registration = models.PositiveIntegerField(null=True, blank=True, help_text="Semanas de embarazo al momento del registro (máximo 42)")
+    pregnancy_week_day = models.CharField(max_length=10, choices=[
+        ('lunes', 'Lunes'), ('martes', 'Martes'), ('miercoles', 'Miércoles'), 
+        ('jueves', 'Jueves'), ('viernes', 'Viernes'), ('sabado', 'Sábado'), ('domingo', 'Domingo')
+    ], blank=True, help_text="Día de la semana para contar semanas")
+    pregnancy_registration_date = models.DateField(null=True, blank=True, help_text="Fecha cuando se registraron las semanas")
+    
+    # === POSTPARTO (si aplica) ===
+    is_postpartum = models.BooleanField(default=False, help_text="¿Está en postparto?")
+    postpartum_weeks_at_registration = models.PositiveIntegerField(null=True, blank=True, help_text="Semanas de postparto al momento del registro")
+    postpartum_week_day = models.CharField(max_length=10, choices=[
+        ('lunes', 'Lunes'), ('martes', 'Martes'), ('miercoles', 'Miércoles'), 
+        ('jueves', 'Jueves'), ('viernes', 'Viernes'), ('sabado', 'Sábado'), ('domingo', 'Domingo')
+    ], blank=True, help_text="Día de la semana para contar semanas postparto")
+    postpartum_registration_date = models.DateField(null=True, blank=True, help_text="Fecha cuando se registraron las semanas postparto")
+    postpartum_start_date = models.DateField(null=True, blank=True, help_text="Fecha de inicio del postparto")
+    
+    # === METADATOS ===
+    alta = models.BooleanField(default=False, help_text="Indica si el paciente fue dado de alta y se cerró su ciclo clínico.")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
         return f"{self.full_name} ({self.age} años)"
     
     def get_last_appointment(self):
         """Get the most recent appointment for this patient"""
         return self.appointments.first()
+    
+    def get_last_ficha_clinica(self):
+        """Get the most recent clinical record for this patient"""
+        return self.fichas_clinicas.first()
     
     def get_pregnancy_start_date(self):
         """Calculate the pregnancy start date based on weeks and day"""
@@ -282,7 +316,7 @@ class Patient(models.Model):
         return pregnancy_start
     
     def get_current_pregnancy_weeks(self):
-        """Calculate current pregnancy weeks"""
+        """Calculate current pregnancy weeks (max 42)"""
         if not self.is_pregnant:
             return None
         
@@ -309,9 +343,40 @@ class Patient(models.Model):
         
         # Calcular semanas desde el inicio del embarazo
         days_pregnant = (last_target_day - pregnancy_start).days
-        weeks_pregnant = max(0, days_pregnant // 7)
+        weeks_pregnant = max(0, min(42, days_pregnant // 7))  # Máximo 42 semanas
         
         return weeks_pregnant
+    
+    def get_current_postpartum_weeks(self):
+        """Calculate current postpartum weeks"""
+        if not self.is_postpartum:
+            return None
+        
+        if not self.postpartum_start_date:
+            return self.postpartum_weeks_at_registration  # Fallback
+        
+        from django.utils import timezone
+        from datetime import timedelta
+        
+        today = timezone.now().date()
+        
+        # Mapeo de días de la semana
+        weekday_map = {
+            'lunes': 0, 'martes': 1, 'miercoles': 2, 'jueves': 3,
+            'viernes': 4, 'sabado': 5, 'domingo': 6
+        }
+        
+        target_weekday = weekday_map.get(self.postpartum_week_day, 0)
+        
+        # Encontrar el último día de la semana objetivo
+        days_since_target = (today.weekday() - target_weekday) % 7
+        last_target_day = today - timedelta(days=days_since_target)
+        
+        # Calcular semanas desde el inicio del postparto
+        days_postpartum = (last_target_day - self.postpartum_start_date).days
+        weeks_postpartum = max(0, days_postpartum // 7)
+        
+        return weeks_postpartum
     
     def get_pregnancy_display(self):
         """Get pregnancy display text"""
@@ -324,10 +389,21 @@ class Patient(models.Model):
         
         return f"🌸 {weeks} semanas"
     
+    def get_postpartum_display(self):
+        """Get postpartum display text"""
+        if not self.is_postpartum:
+            return None
+        
+        weeks = self.get_current_postpartum_weeks()
+        if weeks is None:
+            return "Postparto"
+        
+        return f"🍼 {weeks} semanas postparto"
+    
     class Meta:
         ordering = ['full_name']
-        verbose_name = "Ficha Clínica"
-        verbose_name_plural = "Fichas Clínicas"
+        verbose_name = "Paciente"
+        verbose_name_plural = "Pacientes"
 
 
 class Appointment(models.Model):

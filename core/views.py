@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Max, Q
-from .models import Patient, Appointment
+from .models import Patient, Appointment, FichaClinica
 
 @login_required
 def patient_list(request):
@@ -19,7 +19,7 @@ def patient_list(request):
         'query': query,
     }
     return render(request, 'patients/patient_list.html', context)
-from .forms import PatientForm, AppointmentForm
+from .forms import PatientForm, AppointmentForm, FichaClinicaForm
 
 @login_required
 def dashboard(request):
@@ -80,13 +80,17 @@ def patient_create(request):
 
 @login_required
 def patient_detail(request, pk):
-    """View patient details with appointment history"""
+    """View patient details with appointment history and latest clinical record"""
     patient = get_object_or_404(Patient, pk=pk, user=request.user)
     appointments = patient.appointments.all()
+    
+    # Get the latest clinical record
+    latest_ficha = patient.get_last_ficha_clinica()
     
     context = {
         'patient': patient,
         'appointments': appointments,
+        'latest_ficha': latest_ficha,
     }
     return render(request, 'patients/patient_detail.html', context)
 
@@ -208,3 +212,100 @@ def appointment_delete(request, pk):
         'patient': patient,
     }
     return render(request, 'appointments/appointment_confirm_delete.html', context)
+
+
+# ==============================================
+# FICHAS CLÍNICAS VIEWS
+# ==============================================
+
+@login_required
+def ficha_clinica_list(request, patient_pk):
+    """List all clinical records for a patient"""
+    patient = get_object_or_404(Patient, pk=patient_pk, user=request.user)
+    fichas = patient.fichas_clinicas.all()
+    
+    context = {
+        'patient': patient,
+        'fichas': fichas,
+    }
+    return render(request, 'fichas_clinicas/ficha_clinica_list.html', context)
+
+
+@login_required
+def ficha_clinica_detail(request, patient_pk, pk):
+    """View clinical record details"""
+    patient = get_object_or_404(Patient, pk=patient_pk, user=request.user)
+    ficha = get_object_or_404(FichaClinica, pk=pk, patient=patient)
+    
+    context = {
+        'patient': patient,
+        'ficha': ficha,
+    }
+    return render(request, 'fichas_clinicas/ficha_clinica_detail.html', context)
+
+
+@login_required
+def ficha_clinica_create(request, patient_pk):
+    """Create a new clinical record for a patient"""
+    patient = get_object_or_404(Patient, pk=patient_pk, user=request.user)
+    
+    if request.method == 'POST':
+        form = FichaClinicaForm(request.POST)
+        if form.is_valid():
+            ficha = form.save(commit=False)
+            ficha.patient = patient
+            ficha.save()
+            messages.success(request, f'Nueva ficha clínica creada para {patient.full_name}.')
+            return redirect('patient_detail', pk=patient.pk)
+    else:
+        form = FichaClinicaForm()
+    
+    context = {
+        'form': form,
+        'patient': patient,
+        'title': 'Nueva Ficha Clínica',
+    }
+    return render(request, 'fichas_clinicas/ficha_clinica_form.html', context)
+
+
+@login_required
+def ficha_clinica_update(request, patient_pk, pk):
+    """Update an existing clinical record"""
+    patient = get_object_or_404(Patient, pk=patient_pk, user=request.user)
+    ficha = get_object_or_404(FichaClinica, pk=pk, patient=patient)
+    
+    if request.method == 'POST':
+        form = FichaClinicaForm(request.POST, instance=ficha)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f'Ficha clínica de {patient.full_name} actualizada exitosamente.')
+            return redirect('patient_detail', pk=patient.pk)
+    else:
+        form = FichaClinicaForm(instance=ficha)
+    
+    context = {
+        'form': form,
+        'patient': patient,
+        'ficha': ficha,
+        'title': 'Editar Ficha Clínica',
+    }
+    return render(request, 'fichas_clinicas/ficha_clinica_form.html', context)
+
+
+@login_required
+def ficha_clinica_delete(request, patient_pk, pk):
+    """Delete a clinical record"""
+    patient = get_object_or_404(Patient, pk=patient_pk, user=request.user)
+    ficha = get_object_or_404(FichaClinica, pk=pk, patient=patient)
+    
+    if request.method == 'POST':
+        ficha_date = ficha.created_at.strftime('%d/%m/%Y')
+        ficha.delete()
+        messages.success(request, f'Ficha clínica del {ficha_date} para {patient.full_name} ha sido eliminada.')
+        return redirect('patient_detail', pk=patient.pk)
+    
+    context = {
+        'ficha': ficha,
+        'patient': patient,
+    }
+    return render(request, 'fichas_clinicas/ficha_clinica_confirm_delete.html', context)

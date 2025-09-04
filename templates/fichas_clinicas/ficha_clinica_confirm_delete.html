@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}Eliminar Ficha Clínica - {{ patient.full_name }} - MakiMotion{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="delete-confirmation">
+        <div class="confirmation-header">
+            <h2>⚠️ Confirmar Eliminación</h2>
+            <p class="warning-text">¿Estás seguro de que deseas eliminar esta ficha clínica?</p>
+        </div>
+
+        <div class="ficha-summary">
+            <h3>Ficha Clínica de: {{ patient.full_name }}</h3>
+            <div class="summary-details">
+                <p><strong>Fecha de creación:</strong> {{ ficha.created_at|date:"d/m/Y H:i" }}</p>
+                {% if ficha.consultation_reason %}
+                    <p><strong>Motivo de consulta:</strong> {{ ficha.consultation_reason|truncatewords:20 }}</p>
+                {% endif %}
+                {% if ficha.updated_at != ficha.created_at %}
+                    <p><strong>Última actualización:</strong> {{ ficha.updated_at|date:"d/m/Y H:i" }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="warning-message">
+            <p><strong>Esta acción no se puede deshacer.</strong></p>
+            <p>Todos los datos de esta ficha clínica se perderán permanentemente.</p>
+        </div>
+
+        <div class="confirmation-actions">
+            <form method="post" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-lg">Sí, Eliminar Ficha Clínica</button>
+            </form>
+            <a href="{% url 'patient_detail' patient.pk %}" class="btn btn-secondary btn-lg">Cancelar</a>
+        </div>
+    </div>
+</div>
+
+<style>
+.delete-confirmation {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.confirmation-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.confirmation-header h2 {
+    color: var(--error);
+    margin-bottom: 1rem;
+}
+
+.warning-text {
+    font-size: 1.1rem;
+    color: var(--text-dark);
+}
+
+.ficha-summary {
+    background-color: var(--accent);
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-left: 4px solid var(--primary);
+}
+
+.ficha-summary h3 {
+    color: var(--contrast);
+    margin-bottom: 1rem;
+}
+
+.summary-details p {
+    margin-bottom: 0.5rem;
+}
+
+.warning-message {
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.warning-message p {
+    margin-bottom: 0.5rem;
+    color: #856404;
+}
+
+.confirmation-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+</style>
+{% endblock %}

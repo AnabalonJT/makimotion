@@ -12,11 +12,6 @@
                 <span class="patient-profession">{{ patient.profession|default:"Sin profesión" }}</span>
                 <span class="patient-created">Registrado: {{ patient.created_at|date:"d/m/Y" }}</span>
             </div>
-            {% if patient.consultation_reason %}
-            <div class="patient-consultation-reason">
-                <strong>Motivo de consulta:</strong> {{ patient.consultation_reason }}
-            </div>
-            {% endif %}
         </div>
         <div class="patient-actions">
             <a href="{% url 'patient_update' patient.pk %}" class="btn btn-primary">Editar Paciente</a>
@@ -89,57 +84,44 @@
                     </div>
                 </div>
 
-                <!-- SECCIÓN: APRENDIZAJES GENERALES -->
+                <!-- SECCIÓN: FICHA CLÍNICA -->
                 <div class="clinical-section">
-                    <h3 class="section-title">🧠 Aprendizajes Generales</h3>
+                    <h3 class="section-title">🏥 Ficha Clínica</h3>
                     <div class="section-content">
-                        <div class="detail-grid">
-                            {% if patient.aprendizaje_pujo_caca %}<div class="detail-item"><span>✔️ Pujo caca</span></div>{% endif %}
-                            {% if patient.aprendizaje_banquito %}<div class="detail-item"><span>✔️ Uso de banquito</span></div>{% endif %}
-                            {% if patient.aprendizaje_transverso %}<div class="detail-item"><span>✔️ Activación transverso abdominal</span></div>{% endif %}
-                            {% if patient.aprendizaje_respiracion_pelvico %}<div class="detail-item"><span>✔️ Respiración + contracción piso pélvico</span></div>{% endif %}
-                            {% if patient.aprendizaje_contraccion_pelvico %}<div class="detail-item"><span>✔️ Contracción piso pélvico</span></div>{% endif %}
-                            {% if patient.aprendizaje_preapretar %}<div class="detail-item"><span>✔️ Preapretar</span></div>{% endif %}
-                        </div>
-                        {% if patient.aprendizaje_otros %}
-                            <div class="detail-item full-width">
-                                <strong>Otros aprendizajes generales:</strong>
-                                <span>{{ patient.aprendizaje_otros|linebreaks }}</span>
+                        {% if latest_ficha %}
+                            <div class="ficha-clinica-summary">
+                                <div class="detail-item full-width">
+                                    <strong>Última Ficha Clínica:</strong>
+                                    <span>{{ latest_ficha.created_at|date:"d/m/Y H:i" }}</span>
+                                </div>
+                                {% if latest_ficha.consultation_reason %}
+                                    <div class="detail-item full-width">
+                                        <strong>Motivo de Consulta:</strong>
+                                        <span>{{ latest_ficha.consultation_reason|truncatewords:20 }}</span>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="ficha-actions">
+                                <a href="{% url 'ficha_clinica_detail' patient.pk latest_ficha.pk %}" class="btn btn-info btn-sm">Ver Detalle</a>
+                                <a href="{% url 'ficha_clinica_update' patient.pk latest_ficha.pk %}" class="btn btn-primary btn-sm">Editar</a>
+                                <a href="{% url 'ficha_clinica_list' patient.pk %}" class="btn btn-secondary btn-sm">Ver Todas</a>
+                            </div>
+                        {% else %}
+                            <div class="no-ficha-message">
+                                <p>Este paciente aún no tiene fichas clínicas.</p>
                             </div>
                         {% endif %}
+                        <div class="ficha-main-actions">
+                            <a href="{% url 'ficha_clinica_create' patient.pk %}" class="btn btn-success">
+                                {% if latest_ficha %}Nueva Ficha Clínica{% else %}Crear Primera Ficha Clínica{% endif %}
+                            </a>
+                        </div>
                     </div>
                 </div>
 
-                <!-- SECCIÓN: APRENDIZAJES EMBARAZO (solo si está embarazada o tiene aprendizajes) -->
-                {% if patient.is_pregnant or patient.aprendizaje_emb_oms or patient.aprendizaje_emb_anatomia or patient.aprendizaje_emb_movimientos or patient.aprendizaje_emb_posicion_trabajo or patient.aprendizaje_emb_posicion_expulsion or patient.aprendizaje_emb_intervencion or patient.aprendizaje_emb_masaje_perineal or patient.aprendizaje_emb_respiraciones or patient.aprendizaje_emb_pujo or patient.aprendizaje_emb_tecnicas_dolor or patient.aprendizaje_emb_otros %}
+                <!-- SECCIÓN: ANTECEDENTES GINECOLÓGICOS -->
                 <div class="clinical-section">
-                    <h3 class="section-title">🤰 Aprendizajes Embarazo</h3>
-                    <div class="section-content">
-                        <div class="detail-grid">
-                            {% if patient.aprendizaje_emb_oms %}<div class="detail-item"><span>✔️ OMS</span></div>{% endif %}
-                            {% if patient.aprendizaje_emb_anatomia %}<div class="detail-item"><span>✔️ Anatomía</span></div>{% endif %}
-                            {% if patient.aprendizaje_emb_movimientos %}<div class="detail-item"><span>✔️ Movimientos cardinales</span></div>{% endif %}
-                            {% if patient.aprendizaje_emb_posicion_trabajo %}<div class="detail-item"><span>✔️ Posición trabajo de parto</span></div>{% endif %}
-                            {% if patient.aprendizaje_emb_posicion_expulsion %}<div class="detail-item"><span>✔️ Posición expulsión</span></div>{% endif %}
-                            {% if patient.aprendizaje_emb_intervencion %}<div class="detail-item"><span>✔️ Intervención obstétrica</span></div>{% endif %}
-                            {% if patient.aprendizaje_emb_masaje_perineal %}<div class="detail-item"><span>✔️ Masaje perineal</span></div>{% endif %}
-                            {% if patient.aprendizaje_emb_respiraciones %}<div class="detail-item"><span>✔️ Respiraciones</span></div>{% endif %}
-                            {% if patient.aprendizaje_emb_pujo %}<div class="detail-item"><span>✔️ Pujo embarazo</span></div>{% endif %}
-                            {% if patient.aprendizaje_emb_tecnicas_dolor %}<div class="detail-item"><span>✔️ Técnicas de dolor</span></div>{% endif %}
-                        </div>
-                        {% if patient.aprendizaje_emb_otros %}
-                            <div class="detail-item full-width">
-                                <strong>Otros aprendizajes embarazo:</strong>
-                                <span>{{ patient.aprendizaje_emb_otros|linebreaks }}</span>
-                            </div>
-                        {% endif %}
-                    </div>
-                </div>
-                {% endif %}
-
-        <!-- SECCIÓN 2: ANTECEDENTES GINECOLÓGICOS -->
-        <div class="clinical-section">
-            <h3 class="section-title">🩺 Antecedentes Ginecológicos</h3>
+                    <h3 class="section-title">🩺 Antecedentes Ginecológicos</h3>
             <div class="section-content">
                 <div class="detail-grid">
                     {% if patient.menopause %}
