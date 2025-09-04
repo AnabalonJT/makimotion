@@ -347,7 +347,7 @@ body {
 }
 
 .patient-age {
-    background-color: var(--secondary);
+    background-color: #ffc9d1;
     color: var(--text-dark);
     padding: 0.25rem 0.75rem;
     border-radius: 12px;
@@ -355,7 +355,7 @@ body {
 }
 
 .pregnancy-badge {
-    background-color: #c7a1b3;
+    background-color: #f3bcd4;
     color: white;
     padding: 0.25rem 0.75rem;
     border-radius: 12px;
@@ -608,7 +608,7 @@ textarea.form-control {
 }
 
 .patient-age {
-    background-color: var(--secondary);
+    background-color: #ffccd3;
     color: var(--text-dark);
     padding: 0.25rem 0.75rem;
     border-radius: 12px;
@@ -2048,7 +2048,7 @@ RFECT Test Results Display */
 
 /* PERFECT Summary for Recent Appointments */
 .perfect-summary-small {
-    background-color: var(--contrast);
+    background-color: #ca87f1;
     color: white;
     padding: 4px 8px;
     border-radius: 12px;

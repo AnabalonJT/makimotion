@@ -19,7 +19,7 @@
             {% endif %}
         </div>
         <div class="patient-actions">
-            <a href="{% url 'patient_update' patient.pk %}" class="btn btn-primary">Editar Ficha Clínica</a>
+            <a href="{% url 'patient_update' patient.pk %}" class="btn btn-primary">Editar Paciente</a>
             <a href="{% url 'patient_delete' patient.pk %}" class="btn btn-danger">Eliminar</a>
             <a href="{% url 'dashboard' %}" class="btn btn-secondary">Volver al Dashboard</a>
             {% if not patient.alta %}

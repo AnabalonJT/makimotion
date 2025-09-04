@@ -75,12 +75,27 @@ WSGI_APPLICATION = 'makimotion.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql' if os.getenv('DATABASE_URL') else 'django.db.backends.sqlite3',
-        'NAME': os.getenv('DATABASE_URL', BASE_DIR / 'db.sqlite3'),
+if os.getenv('DATABASE_URL'):
+    try:
+        import dj_database_url
+        DATABASES = {
+            'default': dj_database_url.parse(os.getenv('DATABASE_URL'))
+        }
+    except ImportError:
+        # Fallback si dj_database_url no está instalado localmente
+        DATABASES = {
+            'default': {
+                'ENGINE': 'django.db.backends.sqlite3',
+                'NAME': BASE_DIR / 'db.sqlite3',
+            }
+        }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
 
 
 # Password validation
