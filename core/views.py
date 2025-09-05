@@ -87,10 +87,14 @@ def patient_detail(request, pk):
     # Get the latest clinical record
     latest_ficha = patient.get_last_ficha_clinica()
     
+    # Get the latest 3 clinical records for the header
+    recent_fichas = patient.fichas_clinicas.order_by('-created_at')[:3]
+    
     context = {
         'patient': patient,
         'appointments': appointments,
         'latest_ficha': latest_ficha,
+        'recent_fichas': recent_fichas,
     }
     return render(request, 'patients/patient_detail.html', context)
 

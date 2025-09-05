@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import date
 
 
 class UserProfile(models.Model):
@@ -55,8 +56,10 @@ class FichaClinica(models.Model):
     lifestyle_other = models.TextField(blank=True, help_text="Otros")
     
     # === FUNCIÓN URINARIA ===
-    daily_frequency = models.CharField(max_length=50, blank=True, help_text="Frecuencia diaria")
-    nocturnal_frequency = models.CharField(max_length=50, blank=True, help_text="Frecuencia nocturna")
+    daily_frequency_initial = models.CharField(max_length=50, blank=True, help_text="Frecuencia diaria inicial")
+    daily_frequency_final = models.CharField(max_length=50, blank=True, help_text="Frecuencia diaria final")
+    nocturnal_frequency_initial = models.CharField(max_length=50, blank=True, help_text="Frecuencia nocturna inicial")
+    nocturnal_frequency_final = models.CharField(max_length=50, blank=True, help_text="Frecuencia nocturna final")
     # Checkboxes para síntomas urinarios
     pollakiuria = models.BooleanField(default=False, help_text="Polaquiuria")
     nocturia = models.BooleanField(default=False, help_text="Nocturia")
@@ -222,7 +225,7 @@ class Patient(models.Model):
     
     # === DATOS BÁSICOS DEL PACIENTE ===
     full_name = models.CharField(max_length=200, help_text="Nombre completo del paciente")
-    age = models.PositiveIntegerField(help_text="Edad del paciente")
+    birth_date = models.DateField(help_text="Fecha de nacimiento del paciente")
     profession = models.CharField(max_length=100, default="", blank=True, help_text="Profesión")
     phone = models.CharField(max_length=20, default="", blank=True, help_text="Teléfono")
     address = models.TextField(default="", blank=True, help_text="Dirección")
@@ -278,6 +281,17 @@ class Patient(models.Model):
     
     def __str__(self):
         return f"{self.full_name} ({self.age} años)"
+    
+    @property
+    def age(self):
+        """Calculate age from birth_date"""
+        if not self.birth_date:
+            return 0
+        today = date.today()
+        age = today.year - self.birth_date.year
+        if today.month < self.birth_date.month or (today.month == self.birth_date.month and today.day < self.birth_date.day):
+            age -= 1
+        return age
     
     def get_last_appointment(self):
         """Get the most recent appointment for this patient"""

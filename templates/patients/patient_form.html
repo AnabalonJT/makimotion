@@ -52,9 +52,9 @@
                         {% if form.full_name.errors %}<span class="field-error">{{ form.full_name.errors.0 }}</span>{% endif %}
                     </div>
                     <div class="form-group">
-                        <label for="{{ form.age.id_for_label }}">Edad *</label>
-                        {{ form.age }}
-                        {% if form.age.errors %}<span class="field-error">{{ form.age.errors.0 }}</span>{% endif %}
+                        <label for="{{ form.birth_date.id_for_label }}">Fecha de Nacimiento *</label>
+                        {{ form.birth_date }}
+                        {% if form.birth_date.errors %}<span class="field-error">{{ form.birth_date.errors.0 }}</span>{% endif %}
                     </div>
                 </div>
                 <div class="form-row">
@@ -107,6 +107,27 @@
                     <small class="text-muted">Las semanas se actualizarán automáticamente cada {{ form.pregnancy_week_day.value|default:"día seleccionado" }}</small>
                 </div>
 
+                <!-- Postparto -->
+                <div class="subsection-group">
+                    <h4>Postparto</h4>
+                    <div class="checkbox-item">
+                        {{ form.is_postpartum }} <label for="{{ form.is_postpartum.id_for_label }}">¿Está en postparto?</label>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="{{ form.postpartum_weeks_at_registration.id_for_label }}">Semanas de Postparto Actuales</label>
+                            {{ form.postpartum_weeks_at_registration }}
+                            {% if form.postpartum_weeks_at_registration.errors %}<span class="field-error">{{ form.postpartum_weeks_at_registration.errors.0 }}</span>{% endif %}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.postpartum_week_day.id_for_label }}">Día de la Semana para Contar</label>
+                            {{ form.postpartum_week_day }}
+                            {% if form.postpartum_week_day.errors %}<span class="field-error">{{ form.postpartum_week_day.errors.0 }}</span>{% endif %}
+                        </div>
+                    </div>
+                    <small class="text-muted">Las semanas se actualizarán automáticamente cada {{ form.postpartum_week_day.value|default:"día seleccionado" }}</small>
+                </div>
+
         <script>
         // Mostrar/ocultar aprendizajes embarazo según el checkbox
         document.addEventListener('DOMContentLoaded', function() {
@@ -122,6 +143,27 @@
             if (embarazoCheckbox && embarazoSection) {
                 embarazoCheckbox.addEventListener('change', toggleEmbarazoSection);
                 toggleEmbarazoSection();
+            }
+            
+            // Funcionalidad para postparto (mostrar/ocultar campos)
+            var postpartoCheckbox = document.getElementById('{{ form.is_postpartum.id_for_label }}');
+            var postpartoFields = postpartoCheckbox ? postpartoCheckbox.closest('.subsection-group').querySelectorAll('.form-row, small') : null;
+            
+            function togglePostpartoFields() {
+                if (postpartoFields) {
+                    postpartoFields.forEach(function(field) {
+                        if (postpartoCheckbox.checked) {
+                            field.style.display = '';
+                        } else {
+                            field.style.display = 'none';
+                        }
+                    });
+                }
+            }
+            
+            if (postpartoCheckbox) {
+                postpartoCheckbox.addEventListener('change', togglePostpartoFields);
+                togglePostpartoFields(); // Ejecutar al cargar la página
             }
         });
         </script>

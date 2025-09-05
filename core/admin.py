@@ -23,8 +23,8 @@ class UserProfileAdmin(admin.ModelAdmin):
 class PatientAdmin(admin.ModelAdmin):
     """Admin configuration for Patient"""
     list_display = ('full_name', 'age', 'user', 'created_at', 'appointment_count')
-    search_fields = ('full_name', 'diagnosis', 'user__username')
-    list_filter = ('user', 'age', 'created_at')
+    search_fields = ('full_name', 'profession', 'user__username')
+    list_filter = ('user', 'birth_date', 'created_at')
     readonly_fields = ('created_at', 'updated_at')
     inlines = [AppointmentInline]
     

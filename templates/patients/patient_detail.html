@@ -12,11 +12,29 @@
                 <span class="patient-profession">{{ patient.profession|default:"Sin profesión" }}</span>
                 <span class="patient-created">Registrado: {{ patient.created_at|date:"d/m/Y" }}</span>
             </div>
+            
+            <!-- Fichas Clínicas Recientes -->
+            {% if recent_fichas %}
+            <div class="recent-fichas-header">
+                <h4>Fichas Clínicas Recientes</h4>
+                <div class="fichas-timeline">
+                    {% for ficha in recent_fichas %}
+                    <div class="ficha-item">
+                        <div class="ficha-date">{{ ficha.created_at|date:"d/m/Y" }}</div>
+                        <div class="ficha-motivo">
+                            <strong>Motivo de consulta:</strong>
+                            {{ ficha.consultation_reason|truncatechars:50|default:"Sin motivo especificado" }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
         </div>
         <div class="patient-actions">
-            <a href="{% url 'patient_update' patient.pk %}" class="btn btn-primary">Editar Paciente</a>
-            <a href="{% url 'patient_delete' patient.pk %}" class="btn btn-danger">Eliminar</a>
-            <a href="{% url 'dashboard' %}" class="btn btn-secondary">Volver al Dashboard</a>
+            <button type="button" onclick="window.location.href='{% url 'patient_update' patient.pk %}'" class="btn btn-primary">Editar Paciente</button>
+            <button type="button" onclick="window.location.href='{% url 'patient_delete' patient.pk %}'" class="btn btn-danger">Eliminar</button>
+            <button type="button" onclick="window.location.href='{% url 'dashboard' %}'" class="btn btn-secondary">Volver al Dashboard</button>
             {% if not patient.alta %}
                 <form method="post" action="{% url 'patient_update' patient.pk %}" style="display:inline;">
                     {% csrf_token %}
@@ -90,25 +108,619 @@
                     </div>
                 </div>
 
-                <!-- SECCIÓN: FICHA CLÍNICA -->
+               <!-- SECCIÓN: FICHA CLÍNICA -->
                 <div class="clinical-section">
-                    <h3 class="section-title">🏥 Ficha Clínica</h3>
+                    <div class="section-header-with-date">
+                        <h3 class="section-title">🏥 Ficha Clínica</h3>
+                        {% if latest_ficha %}
+                            <span class="ficha-date">{{ latest_ficha.created_at|date:"d/m/Y" }}</span>
+                        {% endif %}
+                    </div>
                     <div class="section-content">
                         {% if latest_ficha %}
-                            <div class="ficha-clinica-summary">
-                                <div class="detail-item full-width">
-                                    <strong>Última Ficha Clínica:</strong>
-                                    <span>{{ latest_ficha.created_at|date:"d/m/Y H:i" }}</span>
-                                </div>
-                                {% if latest_ficha.consultation_reason %}
+                            <!-- MOTIVO DE CONSULTA -->
+                            {% if latest_ficha.consultation_reason %}
+                                <div class="ficha-subsection">
                                     <div class="detail-item full-width">
                                         <strong>Motivo de Consulta:</strong>
-                                        <span>{{ latest_ficha.consultation_reason|truncatewords:20 }}</span>
+                                        <span>{{ latest_ficha.consultation_reason|linebreaks }}</span>
                                     </div>
-                                {% endif %}
+                                </div>
+                            {% endif %}
+
+                            <!-- APRENDIZAJES GENERALES -->
+                            <div class="ficha-subsection">
+                                <h4 class="subsection-title">🧠 Aprendizajes Generales</h4>
+                                <div class="subsection-content">
+                                    <div class="symptoms-section">
+                                        <strong>Aprendizajes:</strong>
+                                        <div class="symptom-badges">
+                                            <span class="symptom-badge {% if latest_ficha.aprendizaje_pujo_caca %}learned{% else %}not-learned{% endif %}">Pujo Caca</span>
+                                            <span class="symptom-badge {% if latest_ficha.aprendizaje_banquito %}learned{% else %}not-learned{% endif %}">Uso de Banquito</span>
+                                            <span class="symptom-badge {% if latest_ficha.aprendizaje_transverso %}learned{% else %}not-learned{% endif %}">Activación Transverso</span>
+                                            <span class="symptom-badge {% if latest_ficha.aprendizaje_respiracion_pelvico %}learned{% else %}not-learned{% endif %}">Respiración + Piso Pélvico</span>
+                                            <span class="symptom-badge {% if latest_ficha.aprendizaje_contraccion_pelvico %}learned{% else %}not-learned{% endif %}">Contracción Piso Pélvico</span>
+                                            <span class="symptom-badge {% if latest_ficha.aprendizaje_preapretar %}learned{% else %}not-learned{% endif %}">Preapretar</span>
+                                        </div>
+                                    </div>
+                                    {% if latest_ficha.aprendizaje_otros %}
+                                        <div class="detail-item full-width">
+                                            <strong>Otros Aprendizajes:</strong>
+                                            <span>{{ latest_ficha.aprendizaje_otros|linebreaks }}</span>
+                                        </div>
+                                    {% endif %}
+                                </div>
                             </div>
+
+                            <!-- APRENDIZAJES EMBARAZO -->
+                            <div class="ficha-subsection">
+                                <h4 class="subsection-title">🤰 Aprendizajes Embarazo</h4>
+                                <div class="subsection-content">
+                                    <div class="symptoms-section">
+                                        <strong>Aprendizajes:</strong>
+                                        <div class="symptom-badges">
+                                            <span class="symptom-badge {% if latest_ficha.aprendizaje_emb_oms %}learned{% else %}not-learned{% endif %}">OMS</span>
+                                            <span class="symptom-badge {% if latest_ficha.aprendizaje_emb_anatomia %}learned{% else %}not-learned{% endif %}">Anatomía</span>
+                                            <span class="symptom-badge {% if latest_ficha.aprendizaje_emb_movimientos %}learned{% else %}not-learned{% endif %}">Movimientos Cardinales</span>
+                                            <span class="symptom-badge {% if latest_ficha.aprendizaje_emb_posicion_trabajo %}learned{% else %}not-learned{% endif %}">Posición Trabajo Parto</span>
+                                            <span class="symptom-badge {% if latest_ficha.aprendizaje_emb_posicion_expulsion %}learned{% else %}not-learned{% endif %}">Posición Expulsión</span>
+                                            <span class="symptom-badge {% if latest_ficha.aprendizaje_emb_intervencion %}learned{% else %}not-learned{% endif %}">Intervención Obstétrica</span>
+                                            <span class="symptom-badge {% if latest_ficha.aprendizaje_emb_masaje_perineal %}learned{% else %}not-learned{% endif %}">Masaje Perineal</span>
+                                            <span class="symptom-badge {% if latest_ficha.aprendizaje_emb_respiraciones %}learned{% else %}not-learned{% endif %}">Respiraciones</span>
+                                            <span class="symptom-badge {% if latest_ficha.aprendizaje_emb_pujo %}learned{% else %}not-learned{% endif %}">Pujo Embarazo</span>
+                                            <span class="symptom-badge {% if latest_ficha.aprendizaje_emb_tecnicas_dolor %}learned{% else %}not-learned{% endif %}">Técnicas de Dolor</span>
+                                        </div>
+                                    </div>
+                                    {% if latest_ficha.aprendizaje_emb_otros %}
+                                        <div class="detail-item full-width">
+                                            <strong>Otros Aprendizajes Embarazo:</strong>
+                                            <span>{{ latest_ficha.aprendizaje_emb_otros|linebreaks }}</span>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <!-- HÁBITOS DE VIDA -->
+                            {% if latest_ficha.smoking or latest_ficha.alcohol or latest_ficha.physical_activity or latest_ficha.diet or latest_ficha.daily_liquid_consumption or latest_ficha.lifestyle_other %}
+                                <div class="ficha-subsection">
+                                    <h4 class="subsection-title">🏃 Hábitos de Vida</h4>
+                                    <div class="subsection-content">
+                                        <div class="detail-grid">
+                                            {% if latest_ficha.smoking %}
+                                                <div class="detail-item">
+                                                    <strong>Fuma:</strong>
+                                                    <span>{{ latest_ficha.get_smoking_display }}</span>
+                                                </div>
+                                            {% endif %}
+                                            {% if latest_ficha.alcohol %}
+                                                <div class="detail-item">
+                                                    <strong>Alcohol:</strong>
+                                                    <span>{{ latest_ficha.get_alcohol_display }}</span>
+                                                </div>
+                                            {% endif %}
+                                            {% if latest_ficha.daily_liquid_consumption %}
+                                                <div class="detail-item">
+                                                    <strong>Consumo Líquido Diario:</strong>
+                                                    <span>{{ latest_ficha.daily_liquid_consumption }}</span>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        {% if latest_ficha.physical_activity %}
+                                            <div class="detail-item full-width">
+                                                <strong>Actividad Física:</strong>
+                                                <span>{{ latest_ficha.physical_activity|linebreaks }}</span>
+                                            </div>
+                                        {% endif %}
+                                        {% if latest_ficha.diet %}
+                                            <div class="detail-item full-width">
+                                                <strong>Dieta:</strong>
+                                                <span>{{ latest_ficha.diet|linebreaks }}</span>
+                                            </div>
+                                        {% endif %}
+                                        {% if latest_ficha.lifestyle_other %}
+                                            <div class="detail-item full-width">
+                                                <strong>Otros:</strong>
+                                                <span>{{ latest_ficha.lifestyle_other|linebreaks }}</span>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            <!-- FUNCIÓN URINARIA -->
+                            {% if latest_ficha.daily_frequency_initial or latest_ficha.daily_frequency_final or latest_ficha.nocturnal_frequency_initial or latest_ficha.nocturnal_frequency_final or latest_ficha.pollakiuria or latest_ficha.nocturia or latest_ficha.urgency or latest_ficha.polyuria or latest_ficha.dysuria or latest_ficha.latency or latest_ficha.effort_to_urinate or latest_ficha.incomplete_emptying or latest_ficha.immediate_need or latest_ficha.terminal_dripping or latest_ficha.nocturnal_urgency or latest_ficha.urination_position or latest_ficha.stream_description or latest_ficha.urinary_function_other %}
+                                <div class="ficha-subsection">
+                                    <h4 class="subsection-title">💧 Función Urinaria</h4>
+                                    <div class="subsection-content">
+                                        <div class="detail-grid">
+                                            {% if latest_ficha.daily_frequency_initial %}
+                                                <div class="detail-item">
+                                                    <strong>Frecuencia Diaria Inicial:</strong>
+                                                    <span>{{ latest_ficha.daily_frequency_initial }}</span>
+                                                </div>
+                                            {% endif %}
+                                            {% if latest_ficha.daily_frequency_final %}
+                                                <div class="detail-item">
+                                                    <strong>Frecuencia Diaria Final:</strong>
+                                                    <span>{{ latest_ficha.daily_frequency_final }}</span>
+                                                </div>
+                                            {% endif %}
+                                            {% if latest_ficha.nocturnal_frequency_initial %}
+                                                <div class="detail-item">
+                                                    <strong>Frecuencia Nocturna Inicial:</strong>
+                                                    <span>{{ latest_ficha.nocturnal_frequency_initial }}</span>
+                                                </div>
+                                            {% endif %}
+                                            {% if latest_ficha.nocturnal_frequency_final %}
+                                                <div class="detail-item">
+                                                    <strong>Frecuencia Nocturna Final:</strong>
+                                                    <span>{{ latest_ficha.nocturnal_frequency_final }}</span>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        {% if latest_ficha.pollakiuria or latest_ficha.nocturia or latest_ficha.urgency or latest_ficha.polyuria or latest_ficha.dysuria or latest_ficha.latency or latest_ficha.effort_to_urinate or latest_ficha.incomplete_emptying or latest_ficha.immediate_need or latest_ficha.terminal_dripping or latest_ficha.nocturnal_urgency %}
+                                            <div class="symptoms-section">
+                                                <strong>Síntomas Urinarios:</strong>
+                                                <div class="symptom-badges">
+                                                    {% if latest_ficha.pollakiuria %}<span class="symptom-badge">Polaquiuria</span>{% endif %}
+                                                    {% if latest_ficha.nocturia %}<span class="symptom-badge">Nocturia</span>{% endif %}
+                                                    {% if latest_ficha.urgency %}<span class="symptom-badge">Urgencia</span>{% endif %}
+                                                    {% if latest_ficha.polyuria %}<span class="symptom-badge">Poliuria</span>{% endif %}
+                                                    {% if latest_ficha.dysuria %}<span class="symptom-badge">Disuria</span>{% endif %}
+                                                    {% if latest_ficha.latency %}<span class="symptom-badge">Latencia</span>{% endif %}
+                                                    {% if latest_ficha.effort_to_urinate %}<span class="symptom-badge">Esfuerzo para Orinar</span>{% endif %}
+                                                    {% if latest_ficha.incomplete_emptying %}<span class="symptom-badge">Vaciamiento Incompleto</span>{% endif %}
+                                                    {% if latest_ficha.immediate_need %}<span class="symptom-badge">Necesidad Inmediata</span>{% endif %}
+                                                    {% if latest_ficha.terminal_dripping %}<span class="symptom-badge">Goteo Terminal</span>{% endif %}
+                                                    {% if latest_ficha.nocturnal_urgency %}<span class="symptom-badge">Urgencia Nocturna</span>{% endif %}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        {% if latest_ficha.urination_position %}
+                                            <div class="detail-item full-width">
+                                                <strong>Posición para Micción:</strong>
+                                                <span>{{ latest_ficha.urination_position|linebreaks }}</span>
+                                            </div>
+                                        {% endif %}
+                                        {% if latest_ficha.stream_description %}
+                                            <div class="detail-item full-width">
+                                                <strong>Descripción del Chorro:</strong>
+                                                <span>{{ latest_ficha.stream_description|linebreaks }}</span>
+                                            </div>
+                                        {% endif %}
+                                        {% if latest_ficha.urinary_function_other %}
+                                            <div class="detail-item full-width">
+                                                <strong>Otros:</strong>
+                                                <span>{{ latest_ficha.urinary_function_other|linebreaks }}</span>
+                                            </div>
+                                        {% endif %}
+
+                                        <!-- SUBSECCIÓN: INCONTINENCIA ORINA -->
+                                        {% if latest_ficha.iue or latest_ficha.iuu or latest_ficha.ium or latest_ficha.iu_posture or latest_ficha.iu_sensitivity or latest_ficha.iu_coital or latest_ficha.incontinence_other or latest_ficha.activities_stopped %}
+                                            <div class="subsubsection">
+                                                <h5>💦 Incontinencia Orina</h5>
+                                                {% if latest_ficha.iue or latest_ficha.iuu or latest_ficha.ium or latest_ficha.iu_posture or latest_ficha.iu_sensitivity or latest_ficha.iu_coital %}
+                                                    <div class="symptoms-section">
+                                                        <strong>Tipos de Incontinencia:</strong>
+                                                        <div class="symptom-badges">
+                                                            {% if latest_ficha.iue %}<span class="symptom-badge">IUE</span>{% endif %}
+                                                            {% if latest_ficha.iuu %}<span class="symptom-badge">IUU</span>{% endif %}
+                                                            {% if latest_ficha.ium %}<span class="symptom-badge">IUM</span>{% endif %}
+                                                            {% if latest_ficha.iu_posture %}<span class="symptom-badge">IU Postura</span>{% endif %}
+                                                            {% if latest_ficha.iu_sensitivity %}<span class="symptom-badge">IU Sensibilidad</span>{% endif %}
+                                                            {% if latest_ficha.iu_coital %}<span class="symptom-badge">IU Coital</span>{% endif %}
+                                                        </div>
+                                                    </div>
+                                                {% endif %}
+                                                {% if latest_ficha.activities_stopped %}
+                                                    <div class="detail-item full-width">
+                                                        <strong>Actividades Dejadas por el Problema:</strong>
+                                                        <span>{{ latest_ficha.activities_stopped|linebreaks }}</span>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            <!-- FUNCIONAMIENTO INTESTINAL -->
+                            {% if latest_ficha.constipation or latest_ficha.fecal_incontinence or latest_ficha.gas_incontinence or latest_ficha.hemorrhoids or latest_ficha.rectocele or latest_ficha.gas_stool_discrimination or latest_ficha.painful_evacuation or latest_ficha.straining_defecation or latest_ficha.complete_evacuation or latest_ficha.laxatives or latest_ficha.plugging_sensation or latest_ficha.defecation_position or latest_ficha.bristol_scale or latest_ficha.position_frequency or latest_ficha.bowel_inconsistency or latest_ficha.bowel_conscious or latest_ficha.bowel_pad or latest_ficha.bowel_activities_stopped or latest_ficha.bowel_function_other %}
+                                <div class="ficha-subsection">
+                                    <h4 class="subsection-title">🦴 Funcionamiento Intestinal</h4>
+                                    <div class="subsection-content">
+                                        {% if latest_ficha.constipation or latest_ficha.fecal_incontinence or latest_ficha.gas_incontinence or latest_ficha.hemorrhoids or latest_ficha.rectocele or latest_ficha.gas_stool_discrimination or latest_ficha.painful_evacuation or latest_ficha.straining_defecation or latest_ficha.complete_evacuation or latest_ficha.laxatives or latest_ficha.plugging_sensation %}
+                                            <div class="symptoms-section">
+                                                <strong>Síntomas Intestinales:</strong>
+                                                <div class="symptom-badges">
+                                                    {% if latest_ficha.constipation %}<span class="symptom-badge">Estreñimiento</span>{% endif %}
+                                                    {% if latest_ficha.fecal_incontinence %}<span class="symptom-badge">Incontinencia</span>{% endif %}
+                                                    {% if latest_ficha.gas_incontinence %}<span class="symptom-badge">Incontinencia Gases</span>{% endif %}
+                                                    {% if latest_ficha.hemorrhoids %}<span class="symptom-badge">Hemorroides</span>{% endif %}
+                                                    {% if latest_ficha.rectocele %}<span class="symptom-badge">Rectocele</span>{% endif %}
+                                                    {% if latest_ficha.gas_stool_discrimination %}<span class="symptom-badge">Discriminación Gas/Caca</span>{% endif %}
+                                                    {% if latest_ficha.painful_evacuation %}<span class="symptom-badge">Evacuación Dolorosa</span>{% endif %}
+                                                    {% if latest_ficha.straining_defecation %}<span class="symptom-badge">Puja para Defecar</span>{% endif %}
+                                                    {% if latest_ficha.complete_evacuation %}<span class="symptom-badge">Evacuación Completa</span>{% endif %}
+                                                    {% if latest_ficha.laxatives %}<span class="symptom-badge">Laxantes</span>{% endif %}
+                                                    {% if latest_ficha.plugging_sensation %}<span class="symptom-badge">Sensación de Tapón</span>{% endif %}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        <div class="detail-grid">
+                                            {% if latest_ficha.bristol_scale %}
+                                                <div class="detail-item">
+                                                    <strong>Escala Bristol:</strong>
+                                                    <span>{{ latest_ficha.bristol_scale }}/7</span>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        {% if latest_ficha.defecation_position %}
+                                            <div class="detail-item full-width">
+                                                <strong>Posición para Defecar:</strong>
+                                                <span>{{ latest_ficha.defecation_position|linebreaks }}</span>
+                                            </div>
+                                        {% endif %}
+                                        {% if latest_ficha.bowel_activities_stopped %}
+                                            <div class="detail-item full-width">
+                                                <strong>Actividades Dejadas por el Problema:</strong>
+                                                <span>{{ latest_ficha.bowel_activities_stopped|linebreaks }}</span>
+                                            </div>
+                                        {% endif %}
+                                        {% if latest_ficha.bowel_function_other %}
+                                            <div class="detail-item full-width">
+                                                <strong>Otros:</strong>
+                                                <span>{{ latest_ficha.bowel_function_other|linebreaks }}</span>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            <!-- HISTORIAL SEXUAL -->
+                            {% if latest_ficha.sexual_status or latest_ficha.urinary_incontinence_sexual or latest_ficha.fecal_incontinence_sexual or latest_ficha.sexual_desire or latest_ficha.sexual_excitement or latest_ficha.orgasm or latest_ficha.dyspareunia or latest_ficha.urge_to_urinate_during_sex or latest_ficha.vaginal_dryness or latest_ficha.impaired_by_incontinence or latest_ficha.sexual_history_other %}
+                                <div class="ficha-subsection">
+                                    <h4 class="subsection-title">💕 Historial Sexual</h4>
+                                    <div class="subsection-content">
+                                        {% if latest_ficha.sexual_status %}
+                                            <div class="detail-item">
+                                                <strong>Estado Sexual:</strong>
+                                                <span>{{ latest_ficha.get_sexual_status_display }}</span>
+                                            </div>
+                                        {% endif %}
+                                        {% if latest_ficha.urinary_incontinence_sexual or latest_ficha.fecal_incontinence_sexual %}
+                                            <div class="symptoms-section">
+                                                <strong>Incontinencia Durante Actividad Sexual:</strong>
+                                                <div class="symptom-badges">
+                                                    {% if latest_ficha.urinary_incontinence_sexual %}<span class="symptom-badge">Incontinencia Orina</span>{% endif %}
+                                                    {% if latest_ficha.fecal_incontinence_sexual %}<span class="symptom-badge">Incontinencia Fecal</span>{% endif %}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        {% if latest_ficha.sexual_desire or latest_ficha.sexual_excitement or latest_ficha.orgasm or latest_ficha.dyspareunia or latest_ficha.urge_to_urinate_during_sex or latest_ficha.vaginal_dryness or latest_ficha.impaired_by_incontinence %}
+                                            <div class="symptoms-section">
+                                                <strong>Síntomas Sexuales:</strong>
+                                                <div class="symptom-badges">
+                                                    {% if latest_ficha.sexual_desire %}<span class="symptom-badge">Deseo Sexual</span>{% endif %}
+                                                    {% if latest_ficha.sexual_excitement %}<span class="symptom-badge">Excitación</span>{% endif %}
+                                                    {% if latest_ficha.orgasm %}<span class="symptom-badge">Orgasmo</span>{% endif %}
+                                                    {% if latest_ficha.dyspareunia %}<span class="symptom-badge">Dispareunia</span>{% endif %}
+                                                    {% if latest_ficha.urge_to_urinate_during_sex %}<span class="symptom-badge">Deseo de Orinar Durante</span>{% endif %}
+                                                    {% if latest_ficha.vaginal_dryness %}<span class="symptom-badge">Resequedad</span>{% endif %}
+                                                    {% if latest_ficha.impaired_by_incontinence %}<span class="symptom-badge">Perjudicado por Incontinencia</span>{% endif %}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+                                        {% if latest_ficha.sexual_history_other %}
+                                            <div class="detail-item full-width">
+                                                <strong>Otros:</strong>
+                                                <span>{{ latest_ficha.sexual_history_other|linebreaks }}</span>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            <!-- EXAMEN FÍSICO -->
+                            {% if latest_ficha.diastasis or latest_ficha.scars or latest_ficha.adherences or latest_ficha.skin_coloration or latest_ficha.push_exam or latest_ficha.ncp_tone_contraction or latest_ficha.ncp_tone_relaxation or latest_ficha.ncp_tone_push or latest_ficha.ncp_tone_pain or latest_ficha.anal_cutaneous_reflex or latest_ficha.vulvo_cavernous_reflex or latest_ficha.cough_reflex or latest_ficha.physical_exam_other %}
+                                <div class="ficha-subsection">
+                                    <h4 class="subsection-title">🔍 Examen Físico</h4>
+                                    <div class="subsection-content">
+                                        <div class="detail-grid">
+                                            {% if latest_ficha.push_exam %}
+                                                <div class="detail-item">
+                                                    <strong>Pujo:</strong>
+                                                    <span>{{ latest_ficha.get_push_exam_display }}</span>
+                                                </div>
+                                            {% endif %}
+                                        </div>
+                                        {% if latest_ficha.diastasis %}
+                                            <div class="detail-item full-width">
+                                                <strong>Diastasis:</strong>
+                                                <span>{{ latest_ficha.diastasis|linebreaks }}</span>
+                                            </div>
+                                        {% endif %}
+                                        {% if latest_ficha.scars %}
+                                            <div class="detail-item full-width">
+                                                <strong>Cicatrices:</strong>
+                                                <span>{{ latest_ficha.scars|linebreaks }}</span>
+                                            </div>
+                                        {% endif %}
+                                        {% if latest_ficha.adherences %}
+                                            <div class="detail-item full-width">
+                                                <strong>Adherencias:</strong>
+                                                <span>{{ latest_ficha.adherences|linebreaks }}</span>
+                                            </div>
+                                        {% endif %}
+                                        {% if latest_ficha.skin_coloration %}
+                                            <div class="detail-item full-width">
+                                                <strong>Coloración de la Piel:</strong>
+                                                <span>{{ latest_ficha.skin_coloration|linebreaks }}</span>
+                                            </div>
+                                        {% endif %}
+
+                                        <!-- NCP Tono -->
+                                        {% if latest_ficha.ncp_tone_contraction or latest_ficha.ncp_tone_relaxation or latest_ficha.ncp_tone_push or latest_ficha.ncp_tone_pain %}
+                                            <div class="subsubsection">
+                                                <h5>NCP - Tono</h5>
+                                                {% if latest_ficha.ncp_tone_contraction %}
+                                                    <div class="detail-item">
+                                                        <strong>Contracción:</strong>
+                                                        <span>{{ latest_ficha.ncp_tone_contraction|linebreaks }}</span>
+                                                    </div>
+                                                {% endif %}
+                                                {% if latest_ficha.ncp_tone_relaxation %}
+                                                    <div class="detail-item">
+                                                        <strong>Relajación:</strong>
+                                                        <span>{{ latest_ficha.ncp_tone_relaxation|linebreaks }}</span>
+                                                    </div>
+                                                {% endif %}
+                                                {% if latest_ficha.ncp_tone_push %}
+                                                    <div class="detail-item">
+                                                        <strong>Pujo:</strong>
+                                                        <span>{{ latest_ficha.ncp_tone_push|linebreaks }}</span>
+                                                    </div>
+                                                {% endif %}
+                                                {% if latest_ficha.ncp_tone_pain %}
+                                                    <div class="detail-item">
+                                                        <strong>Dolor:</strong>
+                                                        <span>{{ latest_ficha.ncp_tone_pain|linebreaks }}</span>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        {% endif %}
+
+                                        <!-- Reflejos -->
+                                        {% if latest_ficha.anal_cutaneous_reflex or latest_ficha.vulvo_cavernous_reflex or latest_ficha.cough_reflex %}
+                                            <div class="symptoms-section">
+                                                <strong>Sensibilidad y Reflejo (S2-S4):</strong>
+                                                <div class="symptom-badges">
+                                                    {% if latest_ficha.anal_cutaneous_reflex == 'si' %}<span class="symptom-badge">Reflejo Cutáneo Anal</span>{% endif %}
+                                                    {% if latest_ficha.vulvo_cavernous_reflex == 'si' %}<span class="symptom-badge">Reflejo Vulvo Cavernoso</span>{% endif %}
+                                                    {% if latest_ficha.cough_reflex == 'si' %}<span class="symptom-badge">Reflejo Tusígeno</span>{% endif %}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+
+                                        {% if latest_ficha.physical_exam_other %}
+                                            <div class="detail-item full-width">
+                                                <strong>Otros:</strong>
+                                                <span>{{ latest_ficha.physical_exam_other|linebreaks }}</span>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            <!-- EXAMEN INTRACAVITARIO -->
+                            {% if latest_ficha.intracavitary_consent or latest_ficha.intracavitary_scars or latest_ficha.intracavitary_mucosa or latest_ficha.mea_tonicity_rest or latest_ficha.mea_perception or latest_ficha.mea_contraction or latest_ficha.mea_pain_eva or latest_ficha.urethral_movement or latest_ficha.oxford_force or latest_ficha.intracavitary_exam_other %}
+                                <div class="ficha-subsection">
+                                    <h4 class="subsection-title">🔬 Examen Intracavitario</h4>
+                                    <div class="subsection-content">
+                                        {% if latest_ficha.intracavitary_consent %}
+                                            <div class="detail-item">
+                                                <strong>Consentimiento:</strong>
+                                                <span>Sí</span>
+                                            </div>
+                                        {% endif %}
+                                        {% if latest_ficha.intracavitary_scars %}
+                                            <div class="detail-item full-width">
+                                                <strong>Cicatrices:</strong>
+                                                <span>{{ latest_ficha.intracavitary_scars|linebreaks }}</span>
+                                            </div>
+                                        {% endif %}
+                                        {% if latest_ficha.intracavitary_mucosa %}
+                                            <div class="detail-item full-width">
+                                                <strong>Mucosa:</strong>
+                                                <span>{{ latest_ficha.intracavitary_mucosa|linebreaks }}</span>
+                                            </div>
+                                        {% endif %}
+
+                                        <!-- MEA -->
+                                        {% if latest_ficha.mea_tonicity_rest or latest_ficha.mea_perception or latest_ficha.mea_contraction or latest_ficha.mea_symmetry_rest or latest_ficha.mea_symmetry_contraction or latest_ficha.mea_voluntary_relaxation %}
+                                            <div class="subsubsection">
+                                                <h5>MEA (Músculos del Elevador del Ano)</h5>
+                                                <div class="detail-grid">
+                                                    {% if latest_ficha.mea_tonicity_rest %}
+                                                        <div class="detail-item">
+                                                            <strong>Tonicidad Reposo:</strong>
+                                                            <span>{{ latest_ficha.mea_tonicity_rest }}</span>
+                                                        </div>
+                                                    {% endif %}
+                                                    {% if latest_ficha.mea_perception %}
+                                                        <div class="detail-item">
+                                                            <strong>Percepción:</strong>
+                                                            <span>{{ latest_ficha.mea_perception }}</span>
+                                                        </div>
+                                                    {% endif %}
+                                                    {% if latest_ficha.mea_contraction %}
+                                                        <div class="detail-item">
+                                                            <strong>Contracción:</strong>
+                                                            <span>{{ latest_ficha.mea_contraction }}</span>
+                                                        </div>
+                                                    {% endif %}
+                                                    {% if latest_ficha.mea_voluntary_relaxation %}
+                                                        <div class="detail-item">
+                                                            <strong>Relajación Voluntaria:</strong>
+                                                            <span>{{ latest_ficha.mea_voluntary_relaxation }}</span>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+
+                                        <!-- Dolor MEA -->
+                                        {% if latest_ficha.mea_pain_eva or latest_ficha.mea_pain_location or latest_ficha.mea_pain_when or latest_ficha.mea_pain_description %}
+                                            <div class="subsubsection">
+                                                <h5>Dolor MEA</h5>
+                                                <div class="detail-grid">
+                                                    {% if latest_ficha.mea_pain_eva %}
+                                                        <div class="detail-item">
+                                                            <strong>EVA:</strong>
+                                                            <span>{{ latest_ficha.mea_pain_eva }}/10</span>
+                                                        </div>
+                                                    {% endif %}
+                                                    {% if latest_ficha.mea_pain_location %}
+                                                        <div class="detail-item">
+                                                            <strong>Dónde:</strong>
+                                                            <span>{{ latest_ficha.mea_pain_location }}</span>
+                                                        </div>
+                                                    {% endif %}
+                                                    {% if latest_ficha.mea_pain_when %}
+                                                        <div class="detail-item">
+                                                            <strong>Cuándo:</strong>
+                                                            <span>{{ latest_ficha.mea_pain_when }}</span>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                                {% if latest_ficha.mea_pain_description %}
+                                                    <div class="detail-item full-width">
+                                                        <strong>Descripción:</strong>
+                                                        <span>{{ latest_ficha.mea_pain_description|linebreaks }}</span>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        {% endif %}
+
+                                        {% if latest_ficha.oxford_force %}
+                                            <div class="detail-item full-width">
+                                                <strong>Fuerza (Oxford):</strong>
+                                                <span>{{ latest_ficha.oxford_force|linebreaks }}</span>
+                                            </div>
+                                        {% endif %}
+                                        {% if latest_ficha.intracavitary_exam_other %}
+                                            <div class="detail-item full-width">
+                                                <strong>Otros:</strong>
+                                                <span>{{ latest_ficha.intracavitary_exam_other|linebreaks }}</span>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            <!-- EXAMEN COLOPROCTOLÓGICO -->
+                            {% if latest_ficha.coloproctologic_consent or latest_ficha.anal_canal_closure or latest_ficha.irritation or latest_ficha.stool_remains or latest_ficha.rectocele_exam or latest_ficha.coloproctologic_scars or latest_ficha.coloproctologic_hemorrhoids or latest_ficha.rest_tone or latest_ficha.resistance or latest_ficha.oxford_anorectal_angle or latest_ficha.anorectal_opening or latest_ficha.thoracic_rectal_synchronization or latest_ficha.anal_canal_relaxation or latest_ficha.coloproctologic_exam_other %}
+                                <div class="ficha-subsection">
+                                    <h4 class="subsection-title">🩻 Examen Coloproctológico</h4>
+                                    <div class="subsection-content">
+                                        {% if latest_ficha.coloproctologic_consent %}
+                                            <div class="detail-item">
+                                                <strong>Consentimiento:</strong>
+                                                <span>Sí</span>
+                                            </div>
+                                        {% endif %}
+
+                                        <!-- Observaciones -->
+                                        {% if latest_ficha.anal_canal_closure or latest_ficha.irritation or latest_ficha.stool_remains or latest_ficha.rectocele_exam %}
+                                            <div class="symptoms-section">
+                                                <strong>Observaciones:</strong>
+                                                <div class="symptom-badges">
+                                                    {% if latest_ficha.anal_canal_closure %}<span class="symptom-badge">Cierre Canal Anal</span>{% endif %}
+                                                    {% if latest_ficha.irritation %}<span class="symptom-badge">Irritación</span>{% endif %}
+                                                    {% if latest_ficha.stool_remains %}<span class="symptom-badge">Resto de Deposiciones</span>{% endif %}
+                                                    {% if latest_ficha.rectocele_exam %}<span class="symptom-badge">Recto Cele</span>{% endif %}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+
+                                        {% if latest_ficha.coloproctologic_scars %}
+                                            <div class="detail-item full-width">
+                                                <strong>Cicatrices:</strong>
+                                                <span>{{ latest_ficha.coloproctologic_scars|linebreaks }}</span>
+                                            </div>
+                                        {% endif %}
+                                        {% if latest_ficha.coloproctologic_hemorrhoids %}
+                                            <div class="detail-item full-width">
+                                                <strong>Hemorroides:</strong>
+                                                <span>{{ latest_ficha.coloproctologic_hemorrhoids|linebreaks }}</span>
+                                            </div>
+                                        {% endif %}
+
+                                        <!-- Tono y resistencia -->
+                                        {% if latest_ficha.rest_tone or latest_ficha.resistance or latest_ficha.eae_tonicity_rest or latest_ficha.eae_contraction %}
+                                            <div class="subsubsection">
+                                                <h5>Tono y Resistencia</h5>
+                                                <div class="detail-grid">
+                                                    {% if latest_ficha.rest_tone %}
+                                                        <div class="detail-item">
+                                                            <strong>Tono en Reposo:</strong>
+                                                            <span>{{ latest_ficha.rest_tone }}</span>
+                                                        </div>
+                                                    {% endif %}
+                                                    {% if latest_ficha.resistance %}
+                                                        <div class="detail-item">
+                                                            <strong>Resistencia:</strong>
+                                                            <span>{{ latest_ficha.resistance }}</span>
+                                                        </div>
+                                                    {% endif %}
+                                                    {% if latest_ficha.eae_tonicity_rest %}
+                                                        <div class="detail-item">
+                                                            <strong>Tonicidad EAE Reposo:</strong>
+                                                            <span>{{ latest_ficha.eae_tonicity_rest }}</span>
+                                                        </div>
+                                                    {% endif %}
+                                                    {% if latest_ficha.eae_contraction %}
+                                                        <div class="detail-item">
+                                                            <strong>Contracción EAE:</strong>
+                                                            <span>{{ latest_ficha.eae_contraction }}</span>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+
+                                        {% if latest_ficha.oxford_anorectal_angle %}
+                                            <div class="detail-item full-width">
+                                                <strong>Ángulo Ano Rectal (Oxford):</strong>
+                                                <span>{{ latest_ficha.oxford_anorectal_angle|linebreaks }}</span>
+                                            </div>
+                                        {% endif %}
+
+                                        <!-- Empujo -->
+                                        {% if latest_ficha.anorectal_opening or latest_ficha.thoracic_rectal_synchronization or latest_ficha.anal_canal_relaxation %}
+                                            <div class="symptoms-section">
+                                                <strong>Empujo:</strong>
+                                                <div class="symptom-badges">
+                                                    {% if latest_ficha.anorectal_opening %}<span class="symptom-badge">Apertura Ano Rectal</span>{% endif %}
+                                                    {% if latest_ficha.thoracic_rectal_synchronization %}<span class="symptom-badge">Sincronización Toraco Rectal</span>{% endif %}
+                                                    {% if latest_ficha.anal_canal_relaxation %}<span class="symptom-badge">Relajación Canal Anal</span>{% endif %}
+                                                </div>
+                                            </div>
+                                        {% endif %}
+
+                                        {% if latest_ficha.coloproctologic_exam_other %}
+                                            <div class="detail-item full-width">
+                                                <strong>Otros:</strong>
+                                                <span>{{ latest_ficha.coloproctologic_exam_other|linebreaks }}</span>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            <!-- Botones de acción -->
                             <div class="ficha-actions">
-                                <a href="{% url 'ficha_clinica_detail' patient.pk latest_ficha.pk %}" class="btn btn-info btn-sm">Ver Detalle</a>
+                                <a href="{% url 'ficha_clinica_detail' patient.pk latest_ficha.pk %}" class="btn btn-info btn-sm">Ver Detalle Completo</a>
                                 <a href="{% url 'ficha_clinica_update' patient.pk latest_ficha.pk %}" class="btn btn-primary btn-sm">Editar</a>
                                 <a href="{% url 'ficha_clinica_list' patient.pk %}" class="btn btn-secondary btn-sm">Ver Todas</a>
                             </div>
@@ -124,7 +736,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!-- SECCIÓN: ANTECEDENTES GINECOLÓGICOS -->
                 <div class="clinical-section">
                     <h3 class="section-title">🩺 Antecedentes Ginecológicos</h3>
@@ -200,519 +811,13 @@
                 {% endif %}
             </div>
         </div>
-
-        <!-- SECCIÓN 3: HÁBITOS DE VIDA -->
-        <div class="clinical-section">
-            <h3 class="section-title">🏃‍♀️ Hábitos de Vida</h3>
-            <div class="section-content">
-                <div class="detail-grid">
-                    {% if patient.smoking %}
-                        <div class="detail-item">
-                            <strong>Fuma:</strong>
-                            <span>{{ patient.get_smoking_display }}</span>
-                        </div>
-                    {% endif %}
-
-                    {% if patient.alcohol %}
-                        <div class="detail-item">
-                            <strong>Alcohol:</strong>
-                            <span>{{ patient.get_alcohol_display }}</span>
-                        </div>
-                    {% endif %}
-
-                    {% if patient.daily_liquid_consumption %}
-                        <div class="detail-item">
-                            <strong>Consumo Líquido Diario:</strong>
-                            <span>{{ patient.daily_liquid_consumption }}</span>
-                        </div>
-                    {% endif %}
-                </div>
-
-                {% if patient.physical_activity %}
-                    <div class="detail-item full-width">
-                        <strong>Actividad Física:</strong>
-                        <span>{{ patient.physical_activity|linebreaks }}</span>
-                    </div>
-                {% endif %}
-
-                {% if patient.diet %}
-                    <div class="detail-item full-width">
-                        <strong>Dieta:</strong>
-                        <span>{{ patient.diet|linebreaks }}</span>
-                    </div>
-                {% endif %}
-            </div>
-        </div>
-
-        <!-- SECCIÓN 4: FUNCIÓN URINARIA -->
-        <div class="clinical-section">
-            <h3 class="section-title">💧 Función Urinaria</h3>
-            <div class="section-content">
-                <div class="detail-grid">
-                    {% if patient.daily_frequency %}
-                        <div class="detail-item">
-                            <strong>Frecuencia Diaria:</strong>
-                            <span>{{ patient.daily_frequency }}</span>
-                        </div>
-                    {% endif %}
-
-                    {% if patient.nocturnal_frequency %}
-                        <div class="detail-item">
-                            <strong>Frecuencia Nocturna:</strong>
-                            <span>{{ patient.nocturnal_frequency }}</span>
-                        </div>
-                    {% endif %}
-                </div>
-
-                <!-- Síntomas urinarios -->
-                {% if patient.pollakiuria or patient.nocturia or patient.urgency or patient.polyuria or patient.dysuria or patient.latency or patient.effort_to_urinate or patient.incomplete_emptying or patient.immediate_need or patient.terminal_dripping or patient.nocturnal_urgency %}
-                    <div class="symptoms-section">
-                        <strong>Síntomas Urinarios:</strong>
-                        <div class="symptom-badges">
-                            {% if patient.pollakiuria %}<span class="symptom-badge">Polaquiuria</span>{% endif %}
-                            {% if patient.nocturia %}<span class="symptom-badge">Nocturia</span>{% endif %}
-                            {% if patient.urgency %}<span class="symptom-badge">Urgencia</span>{% endif %}
-                            {% if patient.polyuria %}<span class="symptom-badge">Poliuria</span>{% endif %}
-                            {% if patient.dysuria %}<span class="symptom-badge">Disuria</span>{% endif %}
-                            {% if patient.latency %}<span class="symptom-badge">Latencia</span>{% endif %}
-                            {% if patient.effort_to_urinate %}<span class="symptom-badge">Esfuerzo para Orinar</span>{% endif %}
-                            {% if patient.incomplete_emptying %}<span class="symptom-badge">Vaciamiento Incompleto</span>{% endif %}
-                            {% if patient.immediate_need %}<span class="symptom-badge">Necesidad Inmediata</span>{% endif %}
-                            {% if patient.terminal_dripping %}<span class="symptom-badge">Goteo Terminal</span>{% endif %}
-                            {% if patient.nocturnal_urgency %}<span class="symptom-badge">Urgencia Nocturna</span>{% endif %}
-                        </div>
-                    </div>
-                {% endif %}
-
-                {% if patient.urination_position %}
-                    <div class="detail-item full-width">
-                        <strong>Posición para Micción:</strong>
-                        <span>{{ patient.urination_position|linebreaks }}</span>
-                    </div>
-                {% endif %}
-
-                {% if patient.stream_description %}
-                    <div class="detail-item full-width">
-                        <strong>Descripción del Chorro:</strong>
-                        <span>{{ patient.stream_description|linebreaks }}</span>
-                    </div>
-                {% endif %}
-            </div>
-        </div>
-
-        <!-- SUBSECCIÓN: INCONTINENCIA ORINA -->
-        {% if patient.iue or patient.iuu or patient.ium or patient.iu_posture or patient.iu_sensitivity or patient.iu_coital or patient.incontinence_other or patient.activities_stopped %}
-            <div class="clinical-section subsection">
-                <h3 class="section-title">💦 Incontinencia Orina</h3>
-                <div class="section-content">
-                    <!-- Tipos de incontinencia -->
-                    {% if patient.iue or patient.iuu or patient.ium or patient.iu_posture or patient.iu_sensitivity or patient.iu_coital %}
-                        <div class="symptoms-section">
-                            <strong>Tipos de Incontinencia:</strong>
-                            <div class="symptom-badges">
-                                {% if patient.iue %}<span class="symptom-badge">IUE</span>{% endif %}
-                                {% if patient.iuu %}<span class="symptom-badge">IUU</span>{% endif %}
-                                {% if patient.ium %}<span class="symptom-badge">IUM</span>{% endif %}
-                                {% if patient.iu_posture %}<span class="symptom-badge">IU Postura</span>{% endif %}
-                                {% if patient.iu_sensitivity %}<span class="symptom-badge">IU Sensibilidad</span>{% endif %}
-                                {% if patient.iu_coital %}<span class="symptom-badge">IU Coital</span>{% endif %}
-                            </div>
-                        </div>
-                    {% endif %}
-                    
-                    {% if patient.activities_stopped %}
-                        <div class="detail-item full-width">
-                            <strong>Actividades Dejadas por el Problema:</strong>
-                            <span>{{ patient.activities_stopped|linebreaks }}</span>
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-        {% endif %}
-
-        <!-- SECCIÓN 5: FUNCIONAMIENTO INTESTINAL -->
-        <div class="clinical-section">
-            <h3 class="section-title">🦴 Funcionamiento Intestinal</h3>
-            <div class="section-content">
-                <!-- Síntomas intestinales -->
-                {% if patient.constipation or patient.fecal_incontinence or patient.gas_incontinence or patient.hemorrhoids or patient.rectocele or patient.position_frequency or patient.gas_stool_discrimination or patient.painful_evacuation or patient.straining_defecation or patient.complete_evacuation or patient.laxatives or patient.plugging_sensation %}
-                    <div class="symptoms-section">
-                        <strong>Síntomas Intestinales:</strong>
-                        <div class="symptom-badges">
-                            {% if patient.constipation %}<span class="symptom-badge">Estreñimiento</span>{% endif %}
-                            {% if patient.fecal_incontinence %}<span class="symptom-badge">Incontinencia</span>{% endif %}
-                            {% if patient.gas_incontinence %}<span class="symptom-badge">Incontinencia Gases</span>{% endif %}
-                            {% if patient.hemorrhoids %}<span class="symptom-badge">Hemorroides</span>{% endif %}
-                            {% if patient.rectocele %}<span class="symptom-badge">Rectocele</span>{% endif %}
-                            {% if patient.position_frequency %}<span class="symptom-badge">Frecuencia Posiciones</span>{% endif %}
-                            {% if patient.gas_stool_discrimination %}<span class="symptom-badge">Discriminación Gas/Caca</span>{% endif %}
-                            {% if patient.painful_evacuation %}<span class="symptom-badge">Evacuación Dolorosa</span>{% endif %}
-                            {% if patient.straining_defecation %}<span class="symptom-badge">Puja para Defecar</span>{% endif %}
-                            {% if patient.complete_evacuation %}<span class="symptom-badge">Evacuación Completa</span>{% endif %}
-                            {% if patient.laxatives %}<span class="symptom-badge">Laxantes</span>{% endif %}
-                            {% if patient.plugging_sensation %}<span class="symptom-badge">Sensación de Tapón</span>{% endif %}
-                        </div>
-                    </div>
-                {% endif %}
-
-                <div class="detail-grid">
-                    {% if patient.bristol_scale %}
-                        <div class="detail-item">
-                            <strong>Escala Bristol:</strong>
-                            <span>{{ patient.bristol_scale }}/7</span>
-                        </div>
-                    {% endif %}
-                </div>
-
-                {% if patient.defecation_position %}
-                    <div class="detail-item full-width">
-                        <strong>Posición para Defecar:</strong>
-                        <span>{{ patient.defecation_position|linebreaks }}</span>
-                    </div>
-                {% endif %}
-
-                {% if patient.bowel_activities_stopped %}
-                    <div class="detail-item full-width">
-                        <strong>Actividades Dejadas por el Problema:</strong>
-                        <span>{{ patient.bowel_activities_stopped|linebreaks }}</span>
-                    </div>
-                {% endif %}
-            </div>
-        </div>
-
-        <!-- SECCIÓN 6: HISTORIAL SEXUAL -->
-        {% if patient.sexually_active or patient.sexual_desire or patient.sexual_excitement or patient.orgasm or patient.dyspareunia or patient.urge_to_urinate_during_sex or patient.vaginal_dryness or patient.impaired_by_incontinence or patient.urinary_incontinence_sexual or patient.fecal_incontinence_sexual %}
-            <div class="clinical-section">
-                <h3 class="section-title">💕 Historial Sexual</h3>
-                <div class="section-content">
-                    {% if patient.sexually_active %}
-                        <div class="detail-item">
-                            <strong>Activo Sexualmente:</strong>
-                            <span>Sí{% if patient.sexually_active_when %} ({{ patient.sexually_active_when }}){% endif %}</span>
-                        </div>
-                    {% endif %}
-                    
-                    <!-- Síntomas sexuales -->
-                    {% if patient.sexual_desire or patient.sexual_excitement or patient.orgasm or patient.dyspareunia or patient.urge_to_urinate_during_sex or patient.vaginal_dryness or patient.impaired_by_incontinence %}
-                        <div class="symptoms-section">
-                            <strong>Síntomas Sexuales:</strong>
-                            <div class="symptom-badges">
-                                {% if patient.sexual_desire %}<span class="symptom-badge">Deseo Sexual</span>{% endif %}
-                                {% if patient.sexual_excitement %}<span class="symptom-badge">Excitación</span>{% endif %}
-                                {% if patient.orgasm %}<span class="symptom-badge">Orgasmo</span>{% endif %}
-                                {% if patient.dyspareunia %}<span class="symptom-badge">Dispareunia</span>{% endif %}
-                                {% if patient.urge_to_urinate_during_sex %}<span class="symptom-badge">Deseo de Orinar Durante</span>{% endif %}
-                                {% if patient.vaginal_dryness %}<span class="symptom-badge">Resequedad</span>{% endif %}
-                                {% if patient.impaired_by_incontinence %}<span class="symptom-badge">Perjudicado por Incontinencia</span>{% endif %}
-                            </div>
-                        </div>
-                    {% endif %}
-                    
-                    <!-- Incontinencia durante actividad sexual -->
-                    {% if patient.urinary_incontinence_sexual or patient.fecal_incontinence_sexual %}
-                        <div class="symptoms-section">
-                            <strong>Incontinencia Durante Actividad Sexual:</strong>
-                            <div class="symptom-badges">
-                                {% if patient.urinary_incontinence_sexual %}<span class="symptom-badge">Incontinencia Orina</span>{% endif %}
-                                {% if patient.fecal_incontinence_sexual %}<span class="symptom-badge">Incontinencia Fecal</span>{% endif %}
-                            </div>
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-        {% endif %}
-
-        <!-- SECCIÓN 7: EXAMEN FÍSICO -->
-        {% if patient.diastasis or patient.scars or patient.adherences or patient.skin_coloration or patient.push_exam or patient.nlp_tone_contraction or patient.nlp_tone_relaxation or patient.nlp_tone_push or patient.nlp_tone_pain or patient.anal_cutaneous_reflex or patient.vulvo_cavernous_reflex or patient.cough_reflex %}
-            <div class="clinical-section">
-                <h3 class="section-title">🔍 Examen Físico</h3>
-                <div class="section-content">
-                    <div class="detail-grid">
-                        {% if patient.push_exam %}
-                            <div class="detail-item">
-                                <strong>Pujo:</strong>
-                                <span>{{ patient.get_push_exam_display }}</span>
-                            </div>
-                        {% endif %}
-                    </div>
-                    
-                    {% if patient.diastasis %}
-                        <div class="detail-item full-width">
-                            <strong>Diastasis:</strong>
-                            <span>{{ patient.diastasis|linebreaks }}</span>
-                        </div>
-                    {% endif %}
-                    
-                    {% if patient.scars %}
-                        <div class="detail-item full-width">
-                            <strong>Cicatrices:</strong>
-                            <span>{{ patient.scars|linebreaks }}</span>
-                        </div>
-                    {% endif %}
-                    
-                    {% if patient.adherences %}
-                        <div class="detail-item full-width">
-                            <strong>Adherencias:</strong>
-                            <span>{{ patient.adherences|linebreaks }}</span>
-                        </div>
-                    {% endif %}
-                    
-                    {% if patient.skin_coloration %}
-                        <div class="detail-item full-width">
-                            <strong>Coloración de la Piel:</strong>
-                            <span>{{ patient.skin_coloration|linebreaks }}</span>
-                        </div>
-                    {% endif %}
-                    
-                    <!-- NLP Tono -->
-                    {% if patient.nlp_tone_contraction or patient.nlp_tone_relaxation or patient.nlp_tone_push or patient.nlp_tone_pain %}
-                        <div class="subsection-detail">
-                            <h4>NLP - Tono</h4>
-                            {% if patient.nlp_tone_contraction %}
-                                <div class="detail-item">
-                                    <strong>Contracción:</strong>
-                                    <span>{{ patient.nlp_tone_contraction|linebreaks }}</span>
-                                </div>
-                            {% endif %}
-                            {% if patient.nlp_tone_relaxation %}
-                                <div class="detail-item">
-                                    <strong>Relajación:</strong>
-                                    <span>{{ patient.nlp_tone_relaxation|linebreaks }}</span>
-                                </div>
-                            {% endif %}
-                            {% if patient.nlp_tone_push %}
-                                <div class="detail-item">
-                                    <strong>Pujo:</strong>
-                                    <span>{{ patient.nlp_tone_push|linebreaks }}</span>
-                                </div>
-                            {% endif %}
-                            {% if patient.nlp_tone_pain %}
-                                <div class="detail-item">
-                                    <strong>Dolor:</strong>
-                                    <span>{{ patient.nlp_tone_pain|linebreaks }}</span>
-                                </div>
-                            {% endif %}
-                        </div>
-                    {% endif %}
-                    
-                    <!-- Reflejos -->
-                    {% if patient.anal_cutaneous_reflex or patient.vulvo_cavernous_reflex or patient.cough_reflex %}
-                        <div class="symptoms-section">
-                            <strong>Sensibilidad y Reflejo (S2-S4):</strong>
-                            <div class="symptom-badges">
-                                {% if patient.anal_cutaneous_reflex %}<span class="symptom-badge">Reflejo Cutáneo Anal</span>{% endif %}
-                                {% if patient.vulvo_cavernous_reflex %}<span class="symptom-badge">Reflejo Vulvo Cavernoso</span>{% endif %}
-                                {% if patient.cough_reflex %}<span class="symptom-badge">Reflejo Tusígeno</span>{% endif %}
-                            </div>
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-        {% endif %}
-
-        <!-- SECCIÓN 8: EXAMEN INTRACAVITARIO -->
-        {% if patient.intracavitary_consent or patient.intracavitary_scars or patient.intracavitary_mucosa or patient.mea_tonicity_rest or patient.mea_perception or patient.mea_contraction or patient.mea_pain_eva or patient.urethral_movement or patient.oxford_force %}
-            <div class="clinical-section">
-                <h3 class="section-title">🔬 Examen Intracavitario</h3>
-                <div class="section-content">
-                    {% if patient.intracavitary_consent %}
-                        <div class="detail-item">
-                            <strong>Consentimiento:</strong>
-                            <span>Sí</span>
-                        </div>
-                    {% endif %}
-                    
-                    {% if patient.intracavitary_scars %}
-                        <div class="detail-item full-width">
-                            <strong>Cicatrices:</strong>
-                            <span>{{ patient.intracavitary_scars|linebreaks }}</span>
-                        </div>
-                    {% endif %}
-                    
-                    {% if patient.intracavitary_mucosa %}
-                        <div class="detail-item full-width">
-                            <strong>Mucosa:</strong>
-                            <span>{{ patient.intracavitary_mucosa|linebreaks }}</span>
-                        </div>
-                    {% endif %}
-                    
-                    <!-- MEA -->
-                    {% if patient.mea_tonicity_rest or patient.mea_perception or patient.mea_contraction or patient.mea_symmetry_rest or patient.mea_symmetry_contraction or patient.mea_voluntary_relaxation %}
-                        <div class="subsection-detail">
-                            <h4>MEA (Músculos del Elevador del Ano)</h4>
-                            <div class="detail-grid">
-                                {% if patient.mea_tonicity_rest %}
-                                    <div class="detail-item">
-                                        <strong>Tonicidad Reposo:</strong>
-                                        <span>{{ patient.mea_tonicity_rest }}</span>
-                                    </div>
-                                {% endif %}
-                                {% if patient.mea_perception %}
-                                    <div class="detail-item">
-                                        <strong>Percepción:</strong>
-                                        <span>{{ patient.mea_perception }}</span>
-                                    </div>
-                                {% endif %}
-                                {% if patient.mea_contraction %}
-                                    <div class="detail-item">
-                                        <strong>Contracción:</strong>
-                                        <span>{{ patient.mea_contraction }}</span>
-                                    </div>
-                                {% endif %}
-                                {% if patient.mea_voluntary_relaxation %}
-                                    <div class="detail-item">
-                                        <strong>Relajación Voluntaria:</strong>
-                                        <span>{{ patient.mea_voluntary_relaxation }}</span>
-                                    </div>
-                                {% endif %}
-                            </div>
-                        </div>
-                    {% endif %}
-                    
-                    <!-- Dolor MEA -->
-                    {% if patient.mea_pain_eva or patient.mea_pain_location or patient.mea_pain_when or patient.mea_pain_description %}
-                        <div class="subsection-detail">
-                            <h4>Dolor MEA</h4>
-                            <div class="detail-grid">
-                                {% if patient.mea_pain_eva %}
-                                    <div class="detail-item">
-                                        <strong>EVA:</strong>
-                                        <span>{{ patient.mea_pain_eva }}/10</span>
-                                    </div>
-                                {% endif %}
-                                {% if patient.mea_pain_location %}
-                                    <div class="detail-item">
-                                        <strong>Dónde:</strong>
-                                        <span>{{ patient.mea_pain_location }}</span>
-                                    </div>
-                                {% endif %}
-                                {% if patient.mea_pain_when %}
-                                    <div class="detail-item">
-                                        <strong>Cuándo:</strong>
-                                        <span>{{ patient.mea_pain_when }}</span>
-                                    </div>
-                                {% endif %}
-                            </div>
-                            {% if patient.mea_pain_description %}
-                                <div class="detail-item full-width">
-                                    <strong>Descripción:</strong>
-                                    <span>{{ patient.mea_pain_description|linebreaks }}</span>
-                                </div>
-                            {% endif %}
-                        </div>
-                    {% endif %}
-                    
-                    {% if patient.oxford_force %}
-                        <div class="detail-item full-width">
-                            <strong>Fuerza (Oxford):</strong>
-                            <span>{{ patient.oxford_force|linebreaks }}</span>
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-        {% endif %}
-
-        <!-- SECCIÓN 9: EXAMEN COLOPROCTOLÓGICO -->
-        {% if patient.coloproctologic_consent or patient.anal_canal_closure or patient.irritation or patient.stool_remains or patient.blind_rectum or patient.coloproctologic_scars or patient.coloproctologic_hemorrhoids or patient.rest_tone or patient.resistance or patient.oxford_anorectal_angle or patient.anorectal_opening or patient.rectal_torso_synchronization or patient.anal_canal_relaxation %}
-            <div class="clinical-section">
-                <h3 class="section-title">🩻 Examen Coloproctológico</h3>
-                <div class="section-content">
-                    {% if patient.coloproctologic_consent %}
-                        <div class="detail-item">
-                            <strong>Consentimiento:</strong>
-                            <span>Sí</span>
-                        </div>
-                    {% endif %}
-                    
-                    <!-- Observaciones -->
-                    {% if patient.anal_canal_closure or patient.irritation or patient.stool_remains or patient.blind_rectum %}
-                        <div class="symptoms-section">
-                            <strong>Observaciones:</strong>
-                            <div class="symptom-badges">
-                                {% if patient.anal_canal_closure %}<span class="symptom-badge">Cierre Canal Anal</span>{% endif %}
-                                {% if patient.irritation %}<span class="symptom-badge">Irritación</span>{% endif %}
-                                {% if patient.stool_remains %}<span class="symptom-badge">Resto de Deposiciones</span>{% endif %}
-                                {% if patient.blind_rectum %}<span class="symptom-badge">Recto Ciego</span>{% endif %}
-                            </div>
-                        </div>
-                    {% endif %}
-                    
-                    {% if patient.coloproctologic_scars %}
-                        <div class="detail-item full-width">
-                            <strong>Cicatrices:</strong>
-                            <span>{{ patient.coloproctologic_scars|linebreaks }}</span>
-                        </div>
-                    {% endif %}
-                    
-                    {% if patient.coloproctologic_hemorrhoids %}
-                        <div class="detail-item full-width">
-                            <strong>Hemorroides:</strong>
-                            <span>{{ patient.coloproctologic_hemorrhoids|linebreaks }}</span>
-                        </div>
-                    {% endif %}
-                    
-                    <!-- Tono y resistencia -->
-                    {% if patient.rest_tone or patient.resistance or patient.eae_tonicity_rest or patient.eae_contraction %}
-                        <div class="subsection-detail">
-                            <h4>Tono y Resistencia</h4>
-                            <div class="detail-grid">
-                                {% if patient.rest_tone %}
-                                    <div class="detail-item">
-                                        <strong>Tono en Reposo:</strong>
-                                        <span>{{ patient.rest_tone }}</span>
-                                    </div>
-                                {% endif %}
-                                {% if patient.resistance %}
-                                    <div class="detail-item">
-                                        <strong>Resistencia:</strong>
-                                        <span>{{ patient.resistance }}</span>
-                                    </div>
-                                {% endif %}
-                                {% if patient.eae_tonicity_rest %}
-                                    <div class="detail-item">
-                                        <strong>Tonicidad EAE Reposo:</strong>
-                                        <span>{{ patient.eae_tonicity_rest }}</span>
-                                    </div>
-                                {% endif %}
-                                {% if patient.eae_contraction %}
-                                    <div class="detail-item">
-                                        <strong>Contracción EAE:</strong>
-                                        <span>{{ patient.eae_contraction }}</span>
-                                    </div>
-                                {% endif %}
-                            </div>
-                        </div>
-                    {% endif %}
-                    
-                    {% if patient.oxford_anorectal_angle %}
-                        <div class="detail-item full-width">
-                            <strong>Ángulo Ano Rectal (Oxford):</strong>
-                            <span>{{ patient.oxford_anorectal_angle|linebreaks }}</span>
-                        </div>
-                    {% endif %}
-                    
-                    <!-- Empujo -->
-                    {% if patient.anorectal_opening or patient.rectal_torso_synchronization or patient.anal_canal_relaxation %}
-                        <div class="symptoms-section">
-                            <strong>Empujo:</strong>
-                            <div class="symptom-badges">
-                                {% if patient.anorectal_opening %}<span class="symptom-badge">Apertura Ano Rectal</span>{% endif %}
-                                {% if patient.rectal_torso_synchronization %}<span class="symptom-badge">Sincronización Torso Rectal</span>{% endif %}
-                                {% if patient.anal_canal_relaxation %}<span class="symptom-badge">Relajación Canal Anal</span>{% endif %}
-                            </div>
-                        </div>
-                    {% endif %}
-                </div>
-            </div>
-        {% endif %}
-
-        </div>
+    </div>
 
         <!-- SIDEBAR: HISTORIAL DE CITAS -->
         <div class="sidebar">
             <div class="appointments-section">
                 <div class="appointments-header">
-                    <h3>📅 Historial de Citas</h3>
+                    <h3>📅 Historial de Evacuación</h3>
                     <a href="{% url 'appointment_create' patient.pk %}" class="btn btn-primary btn-sm">Nueva Cita</a>
                 </div>
 
@@ -720,10 +825,10 @@
                     <div class="appointments-list">
                         {% for appointment in appointments %}
                             <div class="appointment-card">
+                                <div class="appointment-date">
+                                    <strong>{{ appointment.date_time|date:"d/m/Y" }}</strong>
+                                </div>
                                 <div class="appointment-header">
-                                    <div class="appointment-date">
-                                        <strong>{{ appointment.date_time|date:"d/m/Y" }}</strong>
-                                    </div>
                                     {% if appointment.session_description %}
                                         <div class="appointment-description">
                                             <strong>Descripción:</strong>

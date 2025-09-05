@@ -181,12 +181,22 @@
             <div class="section-content">
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="{{ form.daily_frequency.id_for_label }}">Frecuencia Diaria</label>
-                        {{ form.daily_frequency }}
+                        <label for="{{ form.daily_frequency_initial.id_for_label }}">Frecuencia Diaria Inicial</label>
+                        {{ form.daily_frequency_initial }}
                     </div>
                     <div class="form-group">
-                        <label for="{{ form.nocturnal_frequency.id_for_label }}">Frecuencia Nocturna</label>
-                        {{ form.nocturnal_frequency }}
+                        <label for="{{ form.daily_frequency_final.id_for_label }}">Frecuencia Diaria Final</label>
+                        {{ form.daily_frequency_final }}
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="{{ form.nocturnal_frequency_initial.id_for_label }}">Frecuencia Nocturna Inicial</label>
+                        {{ form.nocturnal_frequency_initial }}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.nocturnal_frequency_final.id_for_label }}">Frecuencia Nocturna Final</label>
+                        {{ form.nocturnal_frequency_final }}
                     </div>
                 </div>
                 

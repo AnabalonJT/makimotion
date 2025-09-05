@@ -69,7 +69,7 @@ class PatientForm(forms.ModelForm):
         model = Patient
         fields = [
             # Datos básicos del paciente
-            'full_name', 'age', 'profession', 'address', 'phone', 
+            'full_name', 'birth_date', 'profession', 'address', 'phone', 
             'medications', 'musculoskeletal_history', 'patient_data_other',
             
             # Antecedentes ginecológicos
@@ -89,7 +89,7 @@ class PatientForm(forms.ModelForm):
         widgets = {
             # Datos básicos del paciente
             'full_name': forms.TextInput(attrs={'class': 'form-control', 'required': True}),
-            'age': forms.NumberInput(attrs={'class': 'form-control', 'required': True, 'min': 0, 'max': 120}),
+            'birth_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date', 'required': True}),
             'profession': forms.TextInput(attrs={'class': 'form-control'}),
             'address': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
             'phone': forms.TextInput(attrs={'class': 'form-control'}),
@@ -131,15 +131,23 @@ class PatientForm(forms.ModelForm):
             'alta': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
     
-    def clean_age(self):
-        """Validate age is within reasonable range"""
-        age = self.cleaned_data.get('age')
-        if age is not None:
-            if age < 0:
-                raise forms.ValidationError("La edad no puede ser negativa.")
+    def clean_birth_date(self):
+        """Validate birth date is not in the future and person is not too old"""
+        from datetime import date
+        birth_date = self.cleaned_data.get('birth_date')
+        if birth_date:
+            today = date.today()
+            if birth_date > today:
+                raise forms.ValidationError("La fecha de nacimiento no puede estar en el futuro.")
+            
+            # Calculate age
+            age = today.year - birth_date.year
+            if today.month < birth_date.month or (today.month == birth_date.month and today.day < birth_date.day):
+                age -= 1
+                
             if age > 120:
-                raise forms.ValidationError("Por favor ingresa una edad válida.")
-        return age
+                raise forms.ValidationError("Por favor ingresa una fecha de nacimiento válida.")
+        return birth_date
     
     def clean_full_name(self):
         """Validate full name is not empty and has reasonable length"""
@@ -219,7 +227,7 @@ class FichaClinicaForm(forms.ModelForm):
             'smoking', 'alcohol', 'physical_activity', 'diet', 'daily_liquid_consumption', 'lifestyle_other',
             
             # Función urinaria
-            'daily_frequency', 'nocturnal_frequency',
+            'daily_frequency_initial', 'daily_frequency_final', 'nocturnal_frequency_initial', 'nocturnal_frequency_final',
             'pollakiuria', 'nocturia', 'urgency', 'polyuria', 'dysuria', 'latency',
             'effort_to_urinate', 'incomplete_emptying', 'immediate_need', 'terminal_dripping', 'nocturnal_urgency',
             'urination_position', 'stream_description', 'urinary_function_other',
@@ -298,8 +306,10 @@ class FichaClinicaForm(forms.ModelForm):
             'lifestyle_other': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
             
             # Función urinaria
-            'daily_frequency': forms.TextInput(attrs={'class': 'form-control'}),
-            'nocturnal_frequency': forms.TextInput(attrs={'class': 'form-control'}),
+            'daily_frequency_initial': forms.TextInput(attrs={'class': 'form-control'}),
+            'daily_frequency_final': forms.TextInput(attrs={'class': 'form-control'}),
+            'nocturnal_frequency_initial': forms.TextInput(attrs={'class': 'form-control'}),
+            'nocturnal_frequency_final': forms.TextInput(attrs={'class': 'form-control'}),
             'pollakiuria': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'nocturia': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'urgency': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
@@ -408,10 +418,10 @@ class FichaClinicaForm(forms.ModelForm):
             
             # Examen coloproctológico
             'coloproctologic_consent': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
-            'anal_canal_closure': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
-            'irritation': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
-            'stool_remains': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
-            'rectocele_exam': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
+            'anal_canal_closure': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'irritation': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'stool_remains': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'rectocele_exam': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'coloproctologic_scars': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
             'coloproctologic_hemorrhoids': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
             'rest_tone': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
@@ -420,9 +430,9 @@ class FichaClinicaForm(forms.ModelForm):
             'eae_contraction': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
             'oxford_anorectal_angle': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
             'oxford_notes': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
-            'anorectal_opening': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
-            'thoracic_rectal_synchronization': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
-            'anal_canal_relaxation': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
+            'anorectal_opening': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'thoracic_rectal_synchronization': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'anal_canal_relaxation': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'coloproctologic_exam_other': forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
         }
     
