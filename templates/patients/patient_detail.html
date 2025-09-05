@@ -81,6 +81,12 @@
                                 <span>{{ patient.musculoskeletal_history|linebreaks }}</span>
                             </div>
                         {% endif %}
+                        {% if patient.patient_data_other %}
+                            <div class="detail-item full-width">
+                                <strong>Otros Datos:</strong>
+                                <span>{{ patient.patient_data_other|linebreaks }}</span>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
 

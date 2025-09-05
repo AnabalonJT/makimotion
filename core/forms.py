@@ -70,7 +70,7 @@ class PatientForm(forms.ModelForm):
         fields = [
             # Datos básicos del paciente
             'full_name', 'age', 'profession', 'address', 'phone', 
-            'medications', 'musculoskeletal_history',
+            'medications', 'musculoskeletal_history', 'patient_data_other',
             
             # Antecedentes ginecológicos
             'menopause', 'menopause_time', 'regular_menstrual_cycle', 'previous_surgeries',
@@ -95,6 +95,7 @@ class PatientForm(forms.ModelForm):
             'phone': forms.TextInput(attrs={'class': 'form-control'}),
             'medications': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             'musculoskeletal_history': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'patient_data_other': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
             
             # Antecedentes ginecológicos
             'menopause': forms.Select(attrs={'class': 'form-control'}),

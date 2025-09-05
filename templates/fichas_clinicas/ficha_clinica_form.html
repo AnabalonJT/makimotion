@@ -312,7 +312,7 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="{{ form.position_frequency.id_for_label }}">Frecuencia de Posiciones</label>
+                    <label for="{{ form.position_frequency.id_for_label }}">Frecuencia Deposiciones</label>
                     {{ form.position_frequency }}
                 </div>
                 
@@ -687,7 +687,7 @@
 </div>
 <!-- BOTONES DE ACCIÓN FLOTANTES (fuera del contenedor) -->
 <div class="floating-actions">
-    <button type="submit" form="patient-form" class="btn btn-primary btn-floating">
+    <button type="submit" form="ficha-clinica-form" class="btn btn-primary btn-floating">
         {% if form.instance.pk %}Actualizar{% else %}Crear{% endif %}
     </button>
     <a href="{% url 'dashboard' %}" class="btn btn-secondary btn-floating">Cancelar</a>
