@@ -209,6 +209,9 @@ class FichaClinicaForm(forms.ModelForm):
     class Meta:
         model = FichaClinica
         fields = [
+            # Fecha de la ficha
+            'fecha',
+            
             # Motivo de consulta
             'consultation_reason',
             
@@ -272,6 +275,9 @@ class FichaClinicaForm(forms.ModelForm):
         ]
         
         widgets = {
+            # Fecha de la ficha
+            'fecha': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            
             # Motivo de consulta
             'consultation_reason': forms.Textarea(attrs={'class': 'form-control', 'required': True, 'rows': 3}),
             

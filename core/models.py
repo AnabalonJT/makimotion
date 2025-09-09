@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from datetime import date
+from django.utils import timezone
 
 
 class UserProfile(models.Model):
@@ -21,6 +22,7 @@ class UserProfile(models.Model):
 class FichaClinica(models.Model):
     """Ficha clínica con información detallada del paciente"""
     patient = models.ForeignKey('Patient', on_delete=models.CASCADE, related_name='fichas_clinicas', help_text="Paciente")
+    fecha = models.DateField(default=timezone.now, help_text="Fecha de la ficha clínica")
     
     # === MOTIVO DE CONSULTA ===
     consultation_reason = models.TextField(default="", blank=True, help_text="Motivo de consulta")
@@ -211,10 +213,10 @@ class FichaClinica(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
     def __str__(self):
-        return f"Ficha Clínica - {self.patient.full_name} - {self.created_at.strftime('%d/%m/%Y')}"
+        return f"Ficha Clínica - {self.patient.full_name} - {self.fecha.strftime('%d/%m/%Y')}"
     
     class Meta:
-        ordering = ['-created_at']
+        ordering = ['-fecha', '-created_at']
         verbose_name = "Ficha Clínica"
         verbose_name_plural = "Fichas Clínicas"
 

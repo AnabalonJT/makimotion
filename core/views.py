@@ -87,8 +87,8 @@ def patient_detail(request, pk):
     # Get the latest clinical record
     latest_ficha = patient.get_last_ficha_clinica()
     
-    # Get the latest 3 clinical records for the header
-    recent_fichas = patient.fichas_clinicas.order_by('-created_at')[:3]
+    # Get the latest 3 clinical records for the header (ordered by fecha)
+    recent_fichas = patient.fichas_clinicas.order_by('-fecha', '-created_at')[:3]
     
     context = {
         'patient': patient,

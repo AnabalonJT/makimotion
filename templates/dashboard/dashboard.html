@@ -28,11 +28,7 @@
             </a>
             <a href="?sort=appointment&order=desc"
                 class="sort-link {% if current_sort == 'appointment' and current_order == 'desc' %}active{% endif %}">
-                Última Cita
-            </a>
-            <a href="?sort=appointment&order=asc"
-                class="sort-link {% if current_sort == 'appointment' and current_order == 'asc' %}active{% endif %}">
-                Cita Más Antigua
+                Última Evaluación
             </a>
         </div>
     </div>
@@ -123,7 +119,7 @@
         </div>
 
         <div class="recent-appointments-section">
-            <h3>Citas Recientes</h3>
+            <h3>Evaluaciones Recientes</h3>
             {% if recent_appointments %}
             <div class="appointments-list">
                 {% for appointment in recent_appointments %}

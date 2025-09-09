@@ -9,7 +9,6 @@
             <h2>{{ patient.full_name }}</h2>
             <div class="patient-meta">
                 <span class="patient-age">{{ patient.age }} años</span>
-                <span class="patient-profession">{{ patient.profession|default:"Sin profesión" }}</span>
                 <span class="patient-created">Registrado: {{ patient.created_at|date:"d/m/Y" }}</span>
             </div>
             
@@ -20,7 +19,7 @@
                 <div class="fichas-timeline">
                     {% for ficha in recent_fichas %}
                     <div class="ficha-item">
-                        <div class="ficha-date">{{ ficha.created_at|date:"d/m/Y" }}</div>
+                        <div class="ficha-date">{{ ficha.fecha|date:"d/m/Y" }}</div>
                         <div class="ficha-motivo">
                             <strong>Motivo de consulta:</strong>
                             {{ ficha.consultation_reason|truncatechars:50|default:"Sin motivo especificado" }}
@@ -60,7 +59,7 @@
                             </div>
                             <div class="detail-item">
                                 <strong>Edad:</strong>
-                                <span>{{ patient.age }} años</span>
+                                <span>{{ patient.birth_date }} años</span>
                             </div>
                             <div class="detail-item">
                                 <strong>Profesión:</strong>
@@ -113,7 +112,7 @@
                     <div class="section-header-with-date">
                         <h3 class="section-title">🏥 Ficha Clínica</h3>
                         {% if latest_ficha %}
-                            <span class="ficha-date">{{ latest_ficha.created_at|date:"d/m/Y" }}</span>
+                            <span class="ficha-date">{{ latest_ficha.fecha|date:"d/m/Y" }}</span>
                         {% endif %}
                     </div>
                     <div class="section-content">
@@ -157,7 +156,7 @@
                                 <h4 class="subsection-title">🤰 Aprendizajes Embarazo</h4>
                                 <div class="subsection-content">
                                     <div class="symptoms-section">
-                                        <strong>Aprendizajes:</strong>
+                                        <strong>Taller Preparación Parto:</strong>
                                         <div class="symptom-badges">
                                             <span class="symptom-badge {% if latest_ficha.aprendizaje_emb_oms %}learned{% else %}not-learned{% endif %}">OMS</span>
                                             <span class="symptom-badge {% if latest_ficha.aprendizaje_emb_anatomia %}learned{% else %}not-learned{% endif %}">Anatomía</span>
@@ -817,7 +816,7 @@
         <div class="sidebar">
             <div class="appointments-section">
                 <div class="appointments-header">
-                    <h3>📅 Historial de Evacuación</h3>
+                    <h3>📅 Historial de Evaluación</h3>
                     <a href="{% url 'appointment_create' patient.pk %}" class="btn btn-primary btn-sm">Nueva Cita</a>
                 </div>
 
@@ -831,7 +830,7 @@
                                 <div class="appointment-header">
                                     {% if appointment.session_description %}
                                         <div class="appointment-description">
-                                            <strong>Descripción:</strong>
+                                            <strong>Evolución:</strong>
                                             <p>{{ appointment.session_description }}</p>
                                         </div>
                                     {% endif %}

@@ -31,6 +31,19 @@
     <form method="post" class="clinical-form" id="ficha-clinica-form">
         {% csrf_token %}
         
+        <!-- SECCIÓN 0: FECHA DE LA FICHA -->
+        <div class="form-section">
+            <h3 class="section-title">📅 Fecha de la Ficha Clínica</h3>
+            <div class="section-content">
+                <div class="form-group">
+                    <label for="{{ form.fecha.id_for_label }}">Fecha de la Ficha</label>
+                    {{ form.fecha }}
+                    {% if form.fecha.errors %}<span class="field-error">{{ form.fecha.errors.0 }}</span>{% endif %}
+                    <small class="form-text text-muted">Si no se especifica, se usará la fecha actual</small>
+                </div>
+            </div>
+        </div>
+        
         <!-- SECCIÓN 1: MOTIVO DE CONSULTA -->
         <div class="form-section">
             <h3 class="section-title">📋 Motivo de Consulta</h3>
